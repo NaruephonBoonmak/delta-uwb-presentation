@@ -759,12 +759,13 @@
     modelBox(cargo, [53,41,52], [0,0,0], newMat(0xe3a04d));
     modelBox(cargo, [13,1,52], [0,21,0], newMat(0xf9e5bc));
     const service = meshGroup(scenarios, 0, 0, 0);
+    const serviceRail = meshGroup(service, 0, 0, 0);
     const pathPaint = lightMaterial(0x54cbaa, 0.31), railPaint = newMat(0xf7b94d);
     modelBox(service, [217,1,65], [850,1.6,-180], pathPaint);
     for (const x of [745,815,885,955]) {
-      modelBox(service, [8,83,8], [x,41,-141], railPaint);
+      modelBox(serviceRail, [8,83,8], [x,41,-141], railPaint);
     }
-    for (const y of [45,77]) modelBox(service, [215,7,7], [850,y,-141], railPaint);
+    for (const y of [45,77]) modelBox(serviceRail, [215,7,7], [850,y,-141], railPaint);
     const serviceRing = floorRing(service, 759, -180, 37, 0xffb245, 5);
     const panel = newMat(0x4b6175);
     modelBox(service, [17,113,37], [727,56.5,-180], panel);
@@ -776,6 +777,7 @@
     service.add(accessLabel);
 
     const loading = meshGroup(scenarios, 0, 0, 0);
+    const loadingBay = { x: 894, z: -265 };
     modelBox(loading, [1730, 1, 7], [77, 2, laneZ], guide);
     const bayPaint = lightMaterial(0xffbd65, 0.86), rollerPaint = newMat(0x647b94);
     for (const x of [788,965]) modelBox(loading, [5,1,157], [x,1.6,-265], bayPaint);
@@ -821,7 +823,8 @@
     scenarios.visible = false;
     network.visible = false;
     return { root, ground, wall, agv, agv2, worker, network, anchors, hub, links, packets, lane, pallets, robots,
-      scenarios, automatic, guideBranch, cobot, cobotLabel, cargo, laneZ, dockX, dockZ, service, serviceRing, loading, parcel, handoff,
+      scenarios, automatic, guideBranch, cobot, cobotLabel, cargo, laneZ, dockX, dockZ, service, serviceRail, serviceRing, accessLabel,
+      loading, loadingBay, loadingLabel, parcel, handoff,
       tracking, trackedTags, trackedDock, virtualWaypoints, future, belt: hardware.beltTex };
   }
 
@@ -1077,6 +1080,10 @@
     story.booth.root.visible = slide === 6;
     story.elapsed = 0;
     const f = story.factory;
+    // In the combined scene the rail shields the Cobot service area and leaves the loading aisle open.
+    f.serviceRail.position.set(slide === 8 ? -160 : 0, 0, slide === 8 ? 26 : 0);
+    f.accessLabel.position.x = slide === 8 ? 752 : 867;
+    f.loadingLabel.position.set(slide === 8 ? 1240 : 870, 26, slide === 8 ? -265 : -120);
     f.scenarios.visible = slide <= 4 || slide >= 8;
     f.tracking.visible = slide >= 8;
     f.future.root.visible = slide === 9;
@@ -1224,13 +1231,15 @@
       atHandoff ? "warn" : "info");
   }
 
-  function renderTrackedTags(service, showDock, showRoute, loadingBay = false) {
+  function renderTrackedTags(service, showDock, showRoute, atLoadingBay = false) {
     const f = story.factory;
+    const targetX = atLoadingBay ? f.loadingBay.x : f.dockX;
+    const targetZ = atLoadingBay ? f.loadingBay.z : f.dockZ;
     f.trackedDock.visible = showDock;
-    f.trackedDock.position.set(loadingBay ? 870 : f.dockX,1.5,loadingBay ? -265 : f.dockZ);
+    f.trackedDock.position.set(targetX,1.5,targetZ);
     f.virtualWaypoints.visible = showRoute;
-    f.virtualWaypoints.position.set(loadingBay ? 870 - f.dockX : 0,0,loadingBay ? -60 : 0);
-    f.virtualWaypoints.scale.z = loadingBay ? 1.65 : 1;
+    f.virtualWaypoints.position.set(targetX - f.dockX,0,atLoadingBay ? -60 : 0);
+    f.virtualWaypoints.scale.z = atLoadingBay ? 1.65 : 1;
     // Keep the four anchor models, but use the tracked tags as the range endpoints.
     f.network.visible = true;
     f.lane.visible = false;
@@ -1260,14 +1269,15 @@
 
   function updateLocationPickup(dt, t) {
     const f = story.factory;
+    const bay = f.loadingBay;
     f.worker.root.visible = f.agv2.visible = false;
     f.ground.color.copy(darkFloor);
     f.wall.color.copy(darkWall);
     story.stage.exposure = 0.85;
-    f.agv.position.set(lerp(-560,870,smooth(t,0.25,2.75)),0,lerp(f.laneZ,-265,smooth(t,3.05,5.1)));
+    f.agv.position.set(lerp(-560,bay.x,smooth(t,0.25,2.75)),0,lerp(f.laneZ,bay.z,smooth(t,3.05,5.1)));
     f.agv.rotation.y = lerp(Math.PI / 2,Math.PI,smooth(t,2.75,3.05));
     const handoff = smooth(t,5.2,6.38);
-    f.parcel.position.x = lerp(440,788,smooth(t,0.1,3.6)) + 82 * handoff;
+    f.parcel.position.x = lerp(440,788,smooth(t,0.1,3.6)) + (bay.x - 788) * handoff;
     f.parcel.position.y = -10 * smooth(t,2.75,3.6) - 16 * handoff;
     f.handoff.visible = false;
     if (t < 3.6) f.belt.offset.x -= dt * 0.44;
