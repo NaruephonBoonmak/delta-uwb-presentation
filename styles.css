@@ -105,14 +105,6 @@ html, body {
   color: var(--accent-cyan);
 }
 
-.brand-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 10px var(--accent-cyan);
-}
-
 .brand-title {
   font-size: 13px;
   font-weight: 600;
@@ -1422,12 +1414,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .top-hud .brand-title, .top-hud .phase-pill, .top-hud .hud-btn, .bottom-bar #slide-counter-label {
   color: #394d64 !important;
 }
-.top-hud .brand-badge {
-  border-color: #b5d7e7;
-  background: #e9f4f8;
-  color: #00698e;
-}
-.top-hud .brand-dot { background: #0076a0; box-shadow: none; }
 .top-hud .phase-pill, .top-hud .hud-btn, .bottom-bar .nav-btn {
   background: transparent;
   border-color: #cbd8e2;
@@ -1644,7 +1630,26 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 /* Full-slide cover */
 @media screen {
   .presentation-shell:has(.cover-slide.active) .slide-region { inset: 0; }
-  .presentation-shell:has(.cover-slide.active) > :is(.top-hud, .bottom-bar) { display: none; }
+  .presentation-shell:has(.cover-slide.active) .top-hud {
+    top: 52px;
+    left: 64px;
+    right: auto;
+    height: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    backdrop-filter: none;
+    pointer-events: none;
+  }
+  .presentation-shell:has(.cover-slide.active) :is(.phase-nav, .hud-controls, .brand-title, .bottom-bar) { display: none; }
+  .presentation-shell:has(.cover-slide.active) .slide-logos {
+    --emblem-size: 58px;
+    --team-width: 154px;
+    --team-height: 28px;
+    --delta-width: 98px;
+    --delta-height: 34px;
+    gap: 18px;
+  }
 }
 
 .cover-slide {
@@ -1683,24 +1688,64 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   .cover-radio-waves { display: none; }
   .cover-radio-still { display: inline; }
 }
-.cover-slide::after {
+.cover-slide::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #04101bbf, #04101b48 37%, transparent 57%);
+  background: linear-gradient(90deg, #040d17e0, #04101b80 33%, transparent 61%);
   pointer-events: none;
+  z-index: 1;
 }
 .cover-heading {
   position: absolute;
-  z-index: 1;
-  top: 127px;
+  z-index: 2;
+  top: 167px;
   left: 64px;
 }
-.cover-brand {
-  margin-bottom: 18px;
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: 0.23em;
+.slide-logos {
+  --emblem-size: 40px;
+  --team-width: 126px;
+  --team-height: 23px;
+  --delta-width: 82px;
+  --delta-height: 29px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.slide-logos > span {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  position: relative;
+  flex: none;
+}
+.slide-logo-university {
+  width: var(--emblem-size);
+  height: var(--emblem-size);
+  border-radius: 50%;
+  background: white;
+}
+.slide-logo-university img, .slide-logo-team img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: none;
+  max-height: none;
+  transform: translate(-50%, -50%);
+}
+.slide-logo-university img { width: calc(var(--emblem-size) * 1.66); }
+.slide-logo-team {
+  width: var(--team-width);
+  height: var(--team-height);
+  border-radius: 3px;
+}
+.slide-logo-team img { width: calc(var(--team-width) * 1.123); left: 48%; }
+.slide-logo-delta {
+  width: var(--delta-width);
+  height: var(--delta-height);
+  border-radius: 3px;
+  padding: 4px;
+  background: white;
 }
 .cover-heading h1 {
   font-size: 82px;
