@@ -465,8 +465,10 @@
       });
     });
 
-    // Start / Prev / Next / Replay / Skip / Fullscreen / Q&A Buttons
-    const btnStart = document.getElementById("btn-start-presentation");
+    // Tap the cover to advance on touch devices.
+    document.querySelector(".cover-slide")?.addEventListener("click", () => goToSlide(2));
+
+    // Prev / Next / Replay / Fullscreen / Q&A Buttons
     const btnPrev = document.getElementById("btn-prev-slide");
     const btnNext = document.getElementById("btn-next-slide");
     const btnReplay = document.getElementById("btn-replay-slide");
@@ -474,7 +476,6 @@
     const btnQaOpen = document.getElementById("btn-open-qa");
     const btnQaClose = document.getElementById("btn-close-qa");
 
-    if (btnStart) btnStart.addEventListener("click", () => goToSlide(2));
     if (btnPrev) btnPrev.addEventListener("click", () => goToSlide(currentSlide - 1));
     if (btnNext) btnNext.addEventListener("click", () => goToSlide(currentSlide + 1));
     if (btnReplay) btnReplay.addEventListener("click", () => goToSlide(currentSlide, true));
