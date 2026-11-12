@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=slide-logos" />
+  <link rel="stylesheet" href="styles.css?v=control-room-theme" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -127,10 +127,7 @@
     <section class="slide speaker-slide" data-slide="2">
       <h1>Inside a <span class="accent">Dark Factory</span></h1>
       <div class="story-frame story-factory opening-frame" data-story-view="2" role="img" aria-label="An AGV follows a floor guide, docks, and carries away a carton loaded by a cobot without an operator in the scene.">
-        <div class="opening-caption">
-          <span>สายพาน → Cobot → AGV</span>
-          <strong data-opening-status>AGV วิ่งตามเส้นนำทาง</strong>
-        </div>
+        <span class="story-status" data-opening-status>AGV วิ่งตามเส้นนำทาง</span>
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="2">↻ Replay</button>
@@ -140,10 +137,7 @@
     <section class="slide speaker-slide" data-slide="3">
       <h1><span class="accent">Human</span> Intervention</h1>
       <div class="story-frame story-factory opening-frame" data-story-view="3" role="img" aria-label="The AGV follows its guide line and collects a carton while a technician approaches the same cobot through a guarded path beside its base.">
-        <div class="opening-caption">
-          <span>ช่างเข้าทางซ่อมบำรุงข้างฐาน Cobot</span>
-          <strong data-opening-status>ช่างกำลังเข้าพื้นที่ซ่อมบำรุง</strong>
-        </div>
+        <span class="story-status" data-opening-status data-state="warn">ช่างเดินเข้าหา Cobot</span>
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="3">↻ Replay</button>
@@ -153,10 +147,7 @@
     <section class="slide speaker-slide" data-slide="4">
       <h1><span class="accent">Location-Awareness</span></h1>
       <div class="story-frame story-factory opening-frame" data-story-view="4" role="img" aria-label="A carton waits at the loading bay. The AGV stops on the main guide line because no guide branch enters the bay.">
-        <div class="opening-caption">
-          <span>จุดรับของอยู่นอกเส้นทางหลัก</span>
-          <strong data-opening-status>AGV วิ่งตามเส้นหลัก · กล่องกำลังมาถึงจุดรับ</strong>
-        </div>
+        <span class="story-status" data-opening-status>กล่องกำลังมาถึงจุดรับ</span>
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="4">↻ Replay</button>
@@ -174,8 +165,7 @@
       <div class="story-frame story-comparison" data-story-view="5" role="img" aria-label="รถ AGV เคลื่อนที่ในฉากเดียวกันทั้งสองฝั่ง ฝั่ง LiDAR แสดงลำแสงและมุมอับหลังชั้นวาง ฝั่ง UWB แสดง TAG AGV บนรถและ TAG Belt ที่เอวคนเชื่อมกับ Anchor A1 ถึง A4 ที่ติดสูงในมุมห้องทั้งสี่">
         <span class="comparison-label comparison-left">LiDAR · สแกนจากรถที่กำลังวิ่ง</span>
         <span class="comparison-label comparison-right">UWB · พิกัดร่วม (X, Y)</span>
-        <span class="comparison-status" data-sensing-status data-visible="false">ชั้นวางบังลำแสง · คนอยู่ในมุมอับ</span>
-        <span class="comparison-status comparison-anchor-note">Anchor A1–A4 ติดสูงที่มุมห้องทั้งสี่</span>
+        <span class="story-status" data-sensing-status data-state="warn">ชั้นวางบัง LiDAR</span>
       </div>
       <div class="speaker-controls">
         <span class="story-footnote">ฉากจำลอง · DS-TWR · UWB อาจคลาดเคลื่อนจาก NLOS และ multipath</span>
@@ -197,8 +187,10 @@
         <div class="booth-flow" aria-label="UWB range processing and safety outputs">
           <span>UWB</span><i>→</i><span>Distance</span><i>→</i><span>Safety logic</span><i>→</i><span>PWM / Relay / Buzzer</span>
         </div>
-        <span id="tel-state-badge" class="status-badge safe" aria-live="polite">SAFE</span>
-        <span id="tel-demo-caption" class="booth-caption" data-state="safe">สายพานเดินปกติ · ล้อ AGV ทั้งสองหมุนเต็มความเร็ว</span>
+        <div class="story-status booth-status" data-demo-status data-state="safe" aria-live="polite">
+          <strong id="tel-state-badge">SAFE</strong>
+          <span id="tel-demo-caption">ล้อและสายพานทำงานปกติ</span>
+        </div>
         <span class="booth-caption booth-ranging"><span>TAG AGV</span> / <span>TAG Belt</span> ↔ A1–A4</span>
       </div>
       <div class="speaker-controls demo-controls">
@@ -226,10 +218,11 @@
       <h1>UWB <span class="accent">Calibration</span></h1>
       <div class="result-layout">
         <div class="result-chart">
+          <span class="story-status" data-calibration-status>Range RMSE · ก่อนและหลัง Calibration</span>
           <div id="chart-slide6-main" aria-label="UWB range RMSE and archived XY error charts"></div>
         </div>
         <div class="result-metrics">
-          <div><span>Held-out range RMSE · P9 + P1 return</span><strong>17.71 <em>→</em> 16.15 <small>cm</small></strong><b>−8.85%</b></div>
+          <div class="primary-metric"><span>Held-out range RMSE · P9 + P1 return</span><strong>17.71 <em>→</em> 16.15 <small>cm</small></strong><b>−8.85%</b></div>
           <div><span>Anchor A4 · Held-out</span><strong>10.36 <em>→</em> 2.99 <small>cm</small></strong><b>−71.15%</b></div>
           <div class="sample-count"><strong>50,748</strong><span>range readings</span></div>
         </div>
@@ -250,10 +243,7 @@
       <h1>ปัจจุบัน <span class="accent">·</span> UWB รู้ตำแหน่ง</h1>
       <div class="story-frame story-factory opening-frame" data-story-view="8" role="img" aria-label="ฉากเดียวตั้งแต่ช่างเข้าซ่อมที่ Cobot จนถึงการยืนยันเริ่มงานใหม่และ AGV เข้าจุดรับของด้วยพิกัด">
         <span class="story-tag">ฉากจำลอง · UWB 4 Anchors / 2 Tags</span>
-        <div class="opening-caption">
-          <span data-current-caption>Belt Tag ที่เอวช่าง · AGV Tag บนรถ</span>
-          <strong data-current-status>ช่างกำลังเข้าสู่โซนซ่อมบำรุง</strong>
-        </div>
+        <span class="story-status" data-current-status>UWB อ่านพิกัดช่าง</span>
       </div>
       <div class="speaker-controls current-controls">
         <button class="stage-btn" data-story-replay="8">↻ Replay</button>
@@ -265,16 +255,13 @@
       <h1>อนาคต <span class="accent">·</span> เครื่องจักรประสานงานกัน</h1>
       <div class="story-frame story-factory closing-visual" data-story-view="9" role="img" aria-label="ฉากจำลองอนาคต เมื่อ AGV ถึงจุดโหลด ระบบส่งคำขอให้ PLC เตรียมสายพาน">
         <span class="story-tag">แนวทางต่อยอด · Dark Factory</span>
-        <aside class="opening-caption future-panel" aria-label="แผนต่อยอดและสถานะคำขอ">
-          <span class="future-panel-title">แผนต่อยอด · AGV เข้าจุดรับของ</span>
-          <ol class="future-chain">
-            <li data-future-step="0"><strong>AI / MCP</strong><small>อ่านโซนและส่งคำขอ</small></li>
-            <li data-future-step="1"><strong>MQTT / REST API</strong><small>ส่งผ่าน Gateway</small></li>
-            <li data-future-step="2"><strong>Modbus TCP · PLC</strong><small>ตรวจ Interlock ก่อนสั่งงาน</small></li>
-            <li data-future-step="3"><strong>SCADA</strong><small>เฝ้าดูและบันทึกสถานะ</small></li>
-          </ol>
-          <strong class="future-caption" data-future-status>ตรวจสถานะจากพิกัด AGV</strong>
-        </aside>
+        <span class="story-status" data-future-status>AGV กำลังเข้าจุดรับของ</span>
+        <ol class="future-chain" aria-label="ขั้นตอนในห้องควบคุม">
+          <li data-future-step="0">AI / MCP</li>
+          <li data-future-step="1">MQTT / REST API</li>
+          <li data-future-step="2">Modbus TCP · PLC</li>
+          <li data-future-step="3">SCADA</li>
+        </ol>
       </div>
       <div class="speaker-controls closing-controls">
         <div class="story-steps">
@@ -591,9 +578,9 @@
   </div>
 
   <script src="data.js"></script>
-  <script src="canvases.js"></script>
+  <script src="canvases.js?v=control-room-theme"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js"></script>
+  <script src="scene3d.js?v=control-room-theme"></script>
   <script src="app.js?v=cover-radio"></script>
 </body>
 </html>

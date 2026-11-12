@@ -432,14 +432,11 @@
   const lerp = THREE.MathUtils.lerp;
   const cyan = 0x32ddff, red = 0xff4856;
   const storyViews = {
-    pickup: { az: 0.39, el: 0.62, dist: 1530, tx: 450, ty: 44, tz: -95 },
+    opening: { az: 0.26, el: 0.72, dist: 1490, tx: 220, ty: 42, tz: -72 },
     future: { az: 0.19, el: 0.70, dist: 1810, tx: 750, ty: 36, tz: -85 },
-    controlRoom: { az: 0.09, el: 0.56, dist: 1700, tx: 1220, ty: 59, tz: -168 },
-    openingWide: { az: 0.26, el: 0.75, dist: 2430, tx: 95, ty: 29, tz: -45 },
-    maintenance: { az: 0.45, el: 0.72, dist: 1600, tx: 560, ty: 40, tz: -102 },
-    loading: { az: 0.32, el: 0.72, dist: 1530, tx: 530, ty: 35, tz: -68 },
-    compare: { az: 0.08, el: 1.10, dist: 1760, tx: 0, ty: 90, tz: 0 },
-    booth: { az: 0.07, el: 0.68, dist: 1305, tx: 0, ty: 56, tz: 0 },
+    controlRoom: { az: 0.09, el: 0.51, dist: 1090, tx: 1185, ty: 74, tz: -192 },
+    compare: { az: 0.08, el: 1.10, dist: 1660, tx: 0, ty: 90, tz: 0 },
+    booth: { az: 0.07, el: 0.68, dist: 1210, tx: 0, ty: 56, tz: 0 },
     closing: { az: -0.42, el: 0.64, dist: 2480, tx: 0, ty: 40, tz: 0 }
   };
 
@@ -481,6 +478,11 @@
     return line;
   }
 
+  function setStoryStatus(element, message, state = "info") {
+    if (element.textContent !== message) element.textContent = message;
+    if (element.dataset.state !== state) element.dataset.state = state;
+  }
+
   function moveLine(line, a, b) {
     const p = line.geometry.attributes.position;
     p.setXYZ(0, a.x, a.y, a.z);
@@ -499,9 +501,9 @@
     return ring;
   }
 
-  function makeWorker(parent) {
+  function makeWorker(parent, vestColor = 0xf8a445) {
     const root = meshGroup(parent, 0, 0, 0);
-    const vest = newMat(0xf8a445), uniform = newMat(0x3f6580);
+    const vest = newMat(vestColor), uniform = newMat(0x3f6580);
     const skin = newMat(0xd6a484), helmet = newMat(0xffca46), boot = newMat(0x24313b);
     modelBox(root, [54, 62, 29], [0, 110, 0], vest);
     modelBox(root, [55, 6, 30], [0, 97, 0], newMat(0xf4e8c6));
@@ -682,8 +684,10 @@
     root.add(pulse);
     const stationLink = storyLine(root,nodes[2],fieldOutput,0x55eda5,0.84);
     const stationBeacon = modelCylinder(root,10,10,17,fieldOutput.toArray(),lightMaterial(0x55eda5));
+    const focusLight = new THREE.PointLight(0x6be9ff, 0, 170);
+    root.add(focusLight);
     root.visible = false;
-    return {root,nodes,equipment,edges,pulse,stationLink,stationBeacon};
+    return {root,nodes,equipment,edges,pulse,stationLink,stationBeacon,focusLight};
   }
 
   function makeFactory(parent) {
@@ -719,7 +723,7 @@
     const robots = [makeRobot(root, 242, -410), makeRobot(root, 590, -402)];
     const agv = makeFactoryAGV(root, 0x3f9ed5);
     const agv2 = makeFactoryAGV(root, 0x3286c8);
-    const worker = makeWorker(root);
+    const worker = makeWorker(root, 0xf06032);
     const cabinet = meshGroup(root, 746, 0, -273);
     modelBox(cabinet, [81, 130, 59], [0,65,0], newMat(0x627482));
     modelBox(cabinet, [50, 36, 2], [0,96,30], newMat(0x142737));
@@ -1085,23 +1089,19 @@
       const opening = story.factory;
       opening.automatic.visible = slide <= 3;
       opening.service.visible = slide === 3;
-      opening.serviceRing.material.color.setHex(0xffb245);
+      opening.serviceRing.material.color.setHex(red);
       opening.loading.visible = slide === 4;
       story.openingStatus = container.querySelector("[data-opening-status]");
       story.elapsed = reduceMotion ? (slide <= 3 ? 6 : 5) : 0;
       story.stationTravel = 0;
-      setRig(stage, storyViews[slide === 3 ? "maintenance" : slide === 4 ? "loading" : reduceMotion ? "pickup" : "openingWide"]);
-      if (slide === 2 && !reduceMotion) {
-        story.tween = gsap.to(stage.rig, {...camTween(stage, storyViews.pickup, 2.3), delay: 1.5});
-      }
+      setRig(stage, storyViews.opening);
     } else if (slide === 8) {
       f.automatic.visible = false;
       f.service.visible = f.loading.visible = true;
       f.serviceRing.material.color.setHex(red);
       story.currentStatus = container.querySelector("[data-current-status]");
-      story.currentCaption = container.querySelector("[data-current-caption]");
       story.elapsed = reduceMotion ? 2.25 : 0;
-      setRig(stage, storyViews.future);
+      setRig(stage, storyViews.opening);
     } else if (slide === 9) {
       f.automatic.visible = true;
       f.service.visible = f.loading.visible = false;
@@ -1165,7 +1165,10 @@
       robot.turn.rotation.y = 0.45 * Math.sin(t * 1.3 + i);
       robot.arm.rotation.x = -0.38 + 0.24 * Math.cos(t * 1.2 + i);
     });
-    return t < 4.1 ? "AGV วิ่งตามเส้นนำทาง" : t < 6.38 ? "Cobot หยิบกล่องจากสายพาน" : "AGV รับกล่องและขนส่งต่อ";
+    if (t < 4.1) return "AGV วิ่งตามเส้นนำทาง";
+    if (t < 4.65) return "AGV เข้าเทียบ Cobot";
+    if (t < 6.38) return "Cobot ส่งกล่องให้ AGV";
+    return t < 7.55 ? "กล่องวางบน AGV แล้ว" : "AGV ขนกล่องไปต่อ";
   }
 
   function updateOpening(dt) {
@@ -1175,6 +1178,7 @@
       const service = story.slide === 3;
       f.worker.root.visible = service;
       let status = pickupStatus;
+      let state = "info";
       if (service) {
         const walking = smooth(t, 0.3, 3.3);
         const inspecting = smooth(t, 3.3, 4.2);
@@ -1182,10 +1186,10 @@
           Math.sin(t * 8) * 0.41 * (1 - smooth(t,2.8,3.3)));
         f.worker.limbs[1].arm.rotation.x -= 1.03 * inspecting;
         f.serviceRing.visible = t >= 3.3;
-        status = t >= 3.3 ? "ช่างเข้าซ่อมขณะ Cobot ยังส่งกล่อง เสี่ยงอันตราย"
-          : "ช่างกำลังเข้าพื้นที่ซ่อมบำรุง";
+        status = t >= 3.3 ? "Cobot ยังทำงานขณะช่างเข้าซ่อม" : "ช่างเดินเข้าหา Cobot";
+        state = t >= 3.3 ? "danger" : "warn";
       }
-      if (story.openingStatus.textContent !== status) story.openingStatus.textContent = status;
+      setStoryStatus(story.openingStatus, status, state);
       return;
     }
 
@@ -1216,8 +1220,8 @@
       robot.arm.rotation.x = -0.33 + 0.23 * Math.cos(story.stationTravel * 1.4 + i);
     });
 
-    const status = atHandoff ? "ไม่มีเส้นแยกเข้าจุดรับของ · AGV เข้าไปรับกล่องไม่ได้" : "AGV วิ่งตามเส้นหลัก · กล่องกำลังมาถึงจุดรับ";
-    if (story.openingStatus.textContent !== status) story.openingStatus.textContent = status;
+    setStoryStatus(story.openingStatus, atHandoff ? "AGV เข้าไม่ถึงจุดรับของ" : "กล่องกำลังมาถึงจุดรับ",
+      atHandoff ? "warn" : "info");
   }
 
   function renderTrackedTags(service, showDock, showRoute, loadingBay = false) {
@@ -1240,7 +1244,17 @@
       tag.mount.getWorldPosition(tag.point);
       tag.caption.position.copy(tag.point).add(V3(0,tag.lift,0));
       moveLine(tag.leader, tag.point, tag.caption.position);
-      tag.ranges.forEach((line,i) => moveLine(line,f.anchors[i],tag.point));
+      const scan = story.elapsed / 1.2 + index * 0.45;
+      const activeAnchor = Math.floor(scan) % f.anchors.length;
+      tag.ranges.forEach((line,i) => {
+        moveLine(line, f.anchors[i], tag.point);
+        line.material.opacity = !reduceMotion && i === activeAnchor ? 0.64 : 0.26;
+      });
+      const packet = f.packets[index];
+      packet.visible = !reduceMotion;
+      packet.material.color.setHex(tag.color);
+      const phase = scan % 1;
+      packet.position.lerpVectors(f.anchors[activeAnchor], tag.point, 1 - Math.abs(2 * phase - 1));
     });
   }
 
@@ -1287,15 +1301,11 @@
     f.serviceRing.visible = stopped && t < clear;
     renderTrackedTags(t < clear, true, t >= restart, true);
 
-    const caption = t < clear ? "Belt Tag ที่เอวช่าง · AGV Tag บนรถ" : "AGV ใช้พิกัดเข้าจุดรับของเดิม";
-    if (story.currentCaption.textContent !== caption) story.currentCaption.textContent = caption;
-    const status = t < entry ? "อ่านพิกัด Belt Tag ขณะช่างเดินเข้าโซน"
-      : t < clear ? "จำลองหยุด Cobot สายพาน และ AGV ขณะช่างอยู่ในโซน"
-      : t < restart ? "ช่างออกจากโซน · รอยืนยันเริ่มงานใหม่"
-      : machineTime < 6.38 ? "จำลองยืนยันเริ่มงาน · AGV เข้าจุดรับตามพิกัด"
-      : "AGV รับกล่องที่จุดโหลดสำเร็จ";
-    if (story.currentStatus.textContent !== status) story.currentStatus.textContent = status;
-    story.currentStatus.classList.toggle("scene-stopped", stopped);
+    if (t < entry) setStoryStatus(story.currentStatus, "UWB อ่านพิกัดช่าง");
+    else if (t < clear) setStoryStatus(story.currentStatus, "ช่างเข้าโซน · เครื่องหยุดจำลอง", "danger");
+    else if (t < restart) setStoryStatus(story.currentStatus, "พ้นโซน · รอยืนยันเริ่มงาน", "warn");
+    else if (machineTime < 6.38) setStoryStatus(story.currentStatus, "AGV เข้าจุดรับตามพิกัด");
+    else setStoryStatus(story.currentStatus, "AGV รับกล่องสำเร็จ", "recovery");
   }
 
   function updateFutureScenario(dt) {
@@ -1308,45 +1318,53 @@
     renderTrackedTags(false, true, t >= 2.6);
 
     const timing = [docked, 5.45, 6.95, ready, 9.85];
-    const step = t < timing[0] ? -1 : t < timing[1] ? 0 : t < timing[2] ? 1 : t < timing[3] ? 2 : 3;
+    const nextStep = timing.findIndex(boundary => t < boundary);
+    const activeStep = nextStep === -1 ? flow.equipment.length : nextStep - 1;
     const points = [f.trackedTags[0].point, ...flow.nodes];
     flow.edges.forEach((edge, i) => {
-      edge.visible = i <= step;
-      edge.material.opacity = i === step ? 0.94 : 0.32;
+      edge.visible = i <= activeStep;
+      edge.material.opacity = i === activeStep ? 0.94 : 0.32;
       if (edge.visible) moveLine(edge,points[i],points[i+1]);
     });
-    flow.pulse.visible = step >= 0 && t < timing[4];
+    flow.pulse.visible = activeStep >= 0 && activeStep < flow.equipment.length;
     if (flow.pulse.visible) {
-      const progress = smooth(t,timing[step],timing[step+1]);
-      flow.pulse.position.lerpVectors(points[step],points[step+1],progress);
+      const progress = smooth(t,timing[activeStep],timing[activeStep+1]);
+      flow.pulse.position.lerpVectors(points[activeStep],points[activeStep+1],progress);
+      flow.focusLight.position.copy(flow.nodes[activeStep]);
+      flow.focusLight.position.y += 27;
+      flow.focusLight.position.z += 32;
+      flow.focusLight.intensity = 0.85 + progress * 0.45;
+    } else {
+      flow.focusLight.intensity = 0;
     }
     flow.stationLink.visible = flow.stationBeacon.visible = t >= ready;
     const activeLabels = ["REQUEST", "FORWARD", "CHECKING", "READY"];
     const completedLabels = ["REQUESTED", "FORWARDED", "PERMITTED", "LOGGED"];
     flow.equipment.forEach(({display,lamp},i) => {
-      const active = i === step;
-      const done = i < step;
+      const active = i === activeStep;
+      const done = i < activeStep;
       const readyScreen = i === 3 && active;
       const color = active && !readyScreen ? "#8cecff" : (done || readyScreen) ? "#68e6a8" : "#8ea6b7";
-      const received = active && t >= lerp(timing[step],timing[step + 1],0.78);
+      const received = active && t >= lerp(timing[activeStep],timing[activeStep + 1],0.78);
       display(received ? (readyScreen ? "READY / LOG" : activeLabels[i])
         : active ? "RECEIVING" : done ? completedLabels[i] : "STANDBY",color);
       lamp.material.color.set(color);
     });
-    if (story.futureStep === step) return;
-    story.futureStep = step;
+    if (story.futureStep === activeStep) return;
+    story.futureStep = activeStep;
     const message = [
       "AGV กำลังเข้าจุดรับของ",
-      "ถึงจุดโหลด · AI/MCP สร้างคำขอ",
-      "Gateway ส่งต่อผ่าน MQTT หรือ REST API",
-      "PLC รับผ่าน Modbus TCP และตรวจ Interlock",
-      "PLC ให้สถานีพร้อมรับของ · SCADA แสดงสถานะ"
-    ][step + 1];
-    story.futureStatus.textContent = message;
+      "AI/MCP ส่งคำขอเมื่อถึงจุดโหลด",
+      "Gateway ส่งผ่าน MQTT / REST API",
+      "PLC รับคำขอ · ตรวจ Interlock",
+      "PLC พร้อม · ส่งสถานะให้ SCADA",
+      "SCADA บันทึกสถานะ"
+    ][activeStep + 1];
+    setStoryStatus(story.futureStatus, message, activeStep >= 3 ? "recovery" : "info");
     story.futureSteps.forEach((node,i) => {
-      node.classList.toggle("flow-active", i === step);
-      node.classList.toggle("flow-done", i < step);
-      if (i === step) node.setAttribute("aria-current","step");
+      node.classList.toggle("flow-active", i === activeStep);
+      node.classList.toggle("flow-done", i < activeStep);
+      if (i === activeStep) node.setAttribute("aria-current","step");
       else node.removeAttribute("aria-current");
     });
   }
@@ -1413,10 +1431,7 @@
     moveLine(s.sight, s.source, sightEnd);
     s.sight.material.color.setHex(visible ? s.amber : red);
     s.workerRing.material.color.setHex(visible ? s.amber : red);
-    if (s.status.dataset.visible !== String(visible)) {
-      s.status.dataset.visible = String(visible);
-      s.status.textContent = visible ? "พ้นชั้นวาง · LiDAR ตรวจพบคน" : "ชั้นวางบังลำแสง · คนอยู่ในมุมอับ";
-    }
+    setStoryStatus(s.status, visible ? "LiDAR ตรวจพบคน" : "ชั้นวางบัง LiDAR", visible ? "info" : "warn");
     updateSensingShadow(s);
 
     s.tags.forEach((tag, tagIndex) => {

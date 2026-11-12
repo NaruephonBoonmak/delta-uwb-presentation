@@ -13,10 +13,10 @@ window.DELTA_CANVASES = (function () {
   let previousFrame = performance.now();
 
   const demoStates = {
-    SAFE: {distance: 170, style: "safe", caption: "สายพานเดินปกติ · ล้อ AGV ทั้งสองหมุนเต็มความเร็ว"},
-    WARNING: {distance: 95, style: "warn", caption: "TAG Belt เข้าใกล้ · ล้อทั้งสองค่อย ๆ ชะลอ"},
-    DANGER: {distance: 42, style: "danger", caption: "ล้อทั้งสองและสายพานหยุดทันที · Buzzer ดัง"},
-    RECOVERY: {distance: 160, style: "safe", caption: "TAG Belt ถอยพ้นโซนอันตราย · ล้อและสายพานกลับมาทำงานอัตโนมัติ"}
+    SAFE: {distance: 170, style: "safe", caption: "ล้อและสายพานทำงานปกติ"},
+    WARNING: {distance: 95, style: "warn", caption: "Tag เข้าใกล้ · ล้อ AGV ชะลอ"},
+    DANGER: {distance: 42, style: "danger", caption: "ล้อและสายพานหยุด · Buzzer ดัง"},
+    RECOVERY: {distance: 160, style: "recovery", caption: "พ้นโซน · ล้อและสายพานเริ่มใหม่"}
   };
   const demoLimits = {min: 15, danger: 60, warning: 120, max: 200};
   let demoDistanceCm = 165;
@@ -88,6 +88,7 @@ window.DELTA_CANVASES = (function () {
     const distEl = document.getElementById("tel-distance");
     const stateEl = document.getElementById("tel-state-badge");
     const caption = document.getElementById("tel-demo-caption");
+    const statusEl = document.querySelector("[data-demo-status]");
     const wheelEl = document.getElementById("tel-wheel-pwm");
     const convEl = document.getElementById("tel-conveyor");
     const buzzerEl = document.getElementById("tel-buzzer");
@@ -112,14 +113,13 @@ window.DELTA_CANVASES = (function () {
     }
     if (stateEl && stateEl.textContent !== demoState) {
       stateEl.textContent = demoState;
-      stateEl.className = "status-badge " + demoStates[demoState].style;
     }
+    const {style, caption: stateCaption} = demoStates[demoState];
+    if (statusEl && statusEl.dataset.state !== style) statusEl.dataset.state = style;
     if (caption) {
       const message = demoAutoPhase === "withdraw" && demoState === "RECOVERY"
-        ? "จำลองดึง TAG Belt ถอยออก · ล้อและสายพานกลับมาทำงานอัตโนมัติ"
-        : demoStates[demoState].caption;
+        ? "Tag ถอยออก · ระบบกลับมาทำงาน" : stateCaption;
       if (caption.textContent !== message) caption.textContent = message;
-      caption.dataset.state = demoStates[demoState].style;
     }
 
     // Highlight active state button
@@ -198,6 +198,9 @@ window.DELTA_CANVASES = (function () {
     if (mode) s6ViewMode = mode;
     const container = document.getElementById("chart-slide6-main");
     if (!container || typeof echarts === "undefined") return;
+    const chartStatus = document.querySelector("[data-calibration-status]");
+    if (chartStatus) chartStatus.textContent = s6ViewMode === "heatmap"
+      ? "Archived XY · ค่าคลาดเคลื่อนตำแหน่ง" : "Range RMSE · ก่อนและหลัง Calibration";
 
     if (!s6Chart) {
       s6Chart = echarts.init(container, null, { renderer: "canvas" });
