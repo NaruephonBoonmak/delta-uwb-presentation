@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=control-room-theme" />
+  <link rel="stylesheet" href="styles.css?v=qa-slide" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -32,7 +32,7 @@
   <div class="bg-engineering-grid"></div>
 
   <!-- ========================================================================
-       TOP HUD NAVIGATION BAR
+       PRESENTATION BRANDING
        ======================================================================== -->
   <header class="top-hud">
     <div class="brand-cluster">
@@ -42,46 +42,11 @@
         <span class="slide-logo-team"><img src="assets/cover/mecheci404-wordmark.png" alt="MECHECI404"></span>
       </div>
       <span class="brand-title">BOOTH #15</span>
-      <span class="brand-sub">From Hybrid Factory Safety to Dark Factory Intelligence</span>
-    </div>
-
-    <nav class="phase-nav" aria-label="Presentation Phases">
-      <button class="phase-pill active" data-phase="1" data-start-slide="1">
-        <span class="phase-num">P1</span>
-        <span>Problem &amp; Solution</span>
-      </button>
-      <button class="phase-pill" data-phase="2" data-start-slide="5">
-        <span class="phase-num">P2</span>
-        <span>Why UWB</span>
-      </button>
-      <button class="phase-pill" data-phase="3" data-start-slide="6">
-        <span class="phase-num">P3</span>
-        <span>Demo</span>
-      </button>
-      <button class="phase-pill" data-phase="4" data-start-slide="7">
-        <span class="phase-num">P4</span>
-        <span>Results &amp; Vision</span>
-      </button>
-    </nav>
-
-    <div class="hud-controls">
-      <button class="hud-btn qa-trigger" id="btn-open-qa" title="Open Interactive Technical Q&A (Shortcut: Q)">
-        <span>Q&amp;A</span>
-        <span class="kbd-hint">Q</span>
-      </button>
-      <button class="hud-btn" id="btn-replay-slide" title="Replay Slide Animation (Shortcut: R)">
-        <span>Replay</span>
-        <span class="kbd-hint">R</span>
-      </button>
-      <button class="hud-btn" id="btn-fullscreen" title="Toggle Fullscreen Mode (Shortcut: F)">
-        <span>Fullscreen</span>
-        <span class="kbd-hint">F</span>
-      </button>
     </div>
   </header>
 
   <!-- ========================================================================
-       MAIN 16:9 SLIDE DECK VIEWPORT (9 PRIMARY SLIDES ACROSS 4 PHASES)
+       MAIN 16:9 SLIDE DECK VIEWPORT
        ======================================================================== -->
   <main class="slide-region">
 
@@ -272,6 +237,32 @@
       </div>
     </section>
 
+    <section class="slide speaker-slide qa-slide" data-slide="10" aria-labelledby="qa-slide-title">
+      <h1 id="qa-slide-title" tabindex="-1">Q<span class="accent">&amp;</span>A</h1>
+      <nav class="qa-menu" aria-label="เลือกหมวดเทคนิค">
+        <button class="qa-menu-card" type="button" data-open-qa-tab="cad" aria-haspopup="dialog">
+          <span class="qa-menu-preview"><img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/03_AGV_Assembled_transparent.png" alt=""></span>
+          <span class="qa-menu-label"><strong>3D CAD &amp;<br>Mechanical BOM</strong><small>โมเดล 3D และรายการชิ้นส่วน</small></span>
+          <span class="qa-menu-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="qa-menu-card" type="button" data-open-qa-tab="calibration" aria-haspopup="dialog">
+          <span class="qa-menu-preview"><img src="assets/uwb_report/uwb-report/assets/figures/05_heldout_error_cdf.svg" alt=""></span>
+          <span class="qa-menu-label"><strong>UWB<br>Calibration</strong><small>ผลการทดลองและกราฟ SVG 20 แผ่น</small></span>
+          <span class="qa-menu-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="qa-menu-card" type="button" data-open-qa-tab="wiring" aria-haspopup="dialog">
+          <span class="qa-menu-preview"><img src="assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/01_AGV_MEGA_Combined_R09.svg" alt=""></span>
+          <span class="qa-menu-label"><strong>Electrical &amp;<br>INA226 Wiring</strong><small>ผังวงจรและการต่อขาจริง</small></span>
+          <span class="qa-menu-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="qa-menu-card" type="button" data-open-qa-tab="roadmap" aria-haspopup="dialog">
+          <span class="qa-menu-preview"><img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png" alt=""></span>
+          <span class="qa-menu-label"><strong>AI / IoT<br>SCADA / PLC</strong><small>สถาปัตยกรรมและแผนต่อยอด</small></span>
+          <span class="qa-menu-arrow" aria-hidden="true">→</span>
+        </button>
+      </nav>
+    </section>
+
   </main>
 
   <!-- ========================================================================
@@ -280,7 +271,7 @@
   <footer class="bottom-bar">
     <div style="display:flex;align-items:center;gap:14px;">
       <span id="slide-counter-label" style="font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent-cyan);">
-        SLIDE 01 / 09  •  PHASE 01
+        SLIDE 01 / 10  •  PHASE 01
       </span>
     </div>
 
@@ -294,6 +285,7 @@
       <button class="slide-dot" data-slide-dot="7" title="7. Calibration" aria-label="Slide 7: Calibration"></button>
       <button class="slide-dot" data-slide-dot="8" title="8. UWB Today" aria-label="Slide 8: UWB Today"></button>
       <button class="slide-dot" data-slide-dot="9" title="9. Future Vision" aria-label="Slide 9: Future Vision"></button>
+      <button class="slide-dot slide-dot-qa" data-slide-dot="10" title="10. Q&A (Q)" aria-label="Slide 10: Q&A">Q&amp;A</button>
     </div>
 
     <div class="presenter-nav-btns">
@@ -303,12 +295,12 @@
   </footer>
 
   <!-- ========================================================================
-       INTERACTIVE TECHNICAL Q&A OVERLAY (PRESS Q TO OPEN / ESC TO CLOSE)
+       INTERACTIVE TECHNICAL Q&A DETAILS
        ======================================================================== -->
-  <aside class="qa-overlay" id="qa-overlay" aria-hidden="true">
+  <aside class="qa-overlay" id="qa-overlay" role="dialog" aria-modal="true" aria-labelledby="qa-detail-title" aria-hidden="true" inert>
     <div class="qa-header">
       <div style="display:flex;align-items:center;gap:16px;">
-        <div class="brand-badge">TECHNICAL Q&amp;A VAULT</div>
+        <div class="brand-badge" id="qa-detail-title">TECHNICAL Q&amp;A VAULT</div>
         <div class="qa-tabs">
           <button class="qa-tab active" data-qa-tab="cad">1. 3D CAD &amp; Mechanical BOM</button>
           <button class="qa-tab" data-qa-tab="calibration">2. UWB Calibration (20 SVG Plates)</button>
@@ -318,7 +310,7 @@
       </div>
 
       <button class="hud-btn" id="btn-close-qa" style="border-color:#EF4444;color:#FCA5A5;">
-        <span>Return to Slide</span>
+        <span id="qa-return-label">กลับหน้า Q&amp;A</span>
         <span class="kbd-hint">ESC</span>
       </button>
     </div>
@@ -580,8 +572,8 @@
   <script src="data.js"></script>
   <script src="canvases.js?v=control-room-theme"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=loading-clearance"></script>
-  <script src="app.js?v=cover-radio"></script>
+  <script src="scene3d.js?v=qa-slide"></script>
+  <script src="app.js?v=qa-slide"></script>
 </body>
 </html>
 

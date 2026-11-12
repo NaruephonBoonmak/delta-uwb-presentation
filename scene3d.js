@@ -1524,7 +1524,7 @@
   }
 
   function renderStory(dt) {
-    if (!story.stage || story.slide === 7 || story.slide < 2) return;
+    if (!story.stage || story.slide === 7 || story.slide < 2 || story.slide > 9) return;
     if (story.slide === 5) {
       if (!story.sensing.paused) story.elapsed += dt;
       renderComparison();
@@ -1553,7 +1553,7 @@
     } else if (story.slide === 5 && story.stage) {
       story.elapsed = 4.2;
       setSensingPaused(true);
-    } else if (story.slide >= 8 && story.stage) {
+    } else if ((story.slide === 8 || story.slide === 9) && story.stage) {
       story.elapsed = story.slide === 8 ? 12 : 10;
     }
   };

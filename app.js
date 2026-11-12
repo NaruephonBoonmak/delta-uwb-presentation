@@ -1,6 +1,6 @@
 /* ==========================================================================
    DELTA — MAIN PRESENTATION CONTROLLER, GSAP SEQUENCER & Q&A SYSTEM
-   Supports 9 Primary Slides across 4 Phases + 4-Category Interactive Q&A
+   Supports 10 slides, including a four-category technical Q&A menu
    ========================================================================== */
 
 (function () {
@@ -17,9 +17,16 @@
 
   let currentSlide = 1;
   const totalSlides = document.querySelectorAll(".slide").length;
+  const qaSlide = Number(document.querySelector(".qa-slide").dataset.slide);
+  const slideRegion = document.querySelector(".slide-region");
+  const bottomBar = document.querySelector(".bottom-bar");
+  const btnPrev = document.getElementById("btn-prev-slide");
+  const btnNext = document.getElementById("btn-next-slide");
+  const qaOverlay = document.getElementById("qa-overlay");
+  const btnQaClose = document.getElementById("btn-close-qa");
   let qaOpen = false;
+  let qaTrigger = null;
   let lightboxOpen = false;
-  let activeQaTab = "cad";
   let activeCadModelId = "agv_r20";
   let activeCadImageMode = "assembled"; // assembled | bom | alt
 
@@ -50,22 +57,23 @@
       el.inert = sNum !== currentSlide;
     });
 
-    // Update Top Phase Pills
-    const currentPhase = slideToPhase[currentSlide];
-    document.querySelectorAll(".phase-pill").forEach((pill) => {
-      const pNum = parseInt(pill.getAttribute("data-phase"), 10);
-      pill.classList.toggle("active", pNum === currentPhase);
-    });
-
     // Update Bottom Slide Dots & Counter
     document.querySelectorAll(".slide-dot").forEach((dot) => {
       const dNum = parseInt(dot.getAttribute("data-slide-dot"), 10);
-      dot.classList.toggle("active", dNum === currentSlide);
+      const active = dNum === currentSlide;
+      dot.classList.toggle("active", active);
+      if (active) dot.setAttribute("aria-current", "page");
+      else dot.removeAttribute("aria-current");
     });
+    btnPrev.disabled = currentSlide === 1;
+    btnNext.disabled = currentSlide === totalSlides;
 
     const counterEl = document.getElementById("slide-counter-label");
     if (counterEl) {
-      counterEl.textContent = `SLIDE 0${currentSlide} / 0${totalSlides}  •  PHASE 0${currentPhase}`;
+      const currentPhase = slideToPhase[currentSlide];
+      const slideNumber = String(currentSlide).padStart(2, "0");
+      const phaseLabel = currentPhase ? `  •  PHASE 0${currentPhase}` : "";
+      counterEl.textContent = `SLIDE ${slideNumber} / ${totalSlides}${phaseLabel}`;
     }
 
     // Run GSAP Entrance Animation on Active Slide Elements
@@ -88,6 +96,9 @@
     }
 
     window.DELTA_CANVASES.showStorySlide?.(currentSlide);
+    if (currentSlide === qaSlide && !forceReplay) {
+      document.getElementById("qa-slide-title").focus({ preventScroll: true });
+    }
 
     // Slide-specific hooks
     if (currentSlide === 7) {
@@ -111,42 +122,34 @@
 
 
   /* ------------------------------------------------------------------------
-     INTERACTIVE Q&A MODAL OVERLAY (PRESS Q TO OPEN, ESC TO CLOSE)
+     INTERACTIVE TECHNICAL Q&A DETAILS
      ------------------------------------------------------------------------ */
-  function openQaOverlay(tabId, modelId) {
-    const overlay = document.getElementById("qa-overlay");
-    if (!overlay) return;
+  function openQaOverlay(tabId, trigger) {
+    qaTrigger = trigger;
     qaOpen = true;
-    overlay.classList.add("open");
-
-    if (tabId) {
-      switchQaTab(tabId);
-    } else {
-      switchQaTab(activeQaTab);
-    }
-
-    if (modelId) {
-      selectQaCadModel(modelId);
-    }
+    qaOverlay.inert = false;
+    qaOverlay.setAttribute("aria-hidden", "false");
+    qaOverlay.classList.add("open");
+    slideRegion.inert = true;
+    bottomBar.inert = true;
+    document.getElementById("qa-return-label").textContent = currentSlide === qaSlide
+      ? "กลับหน้า Q&A" : `กลับสไลด์ ${currentSlide}`;
+    switchQaTab(tabId);
+    btnQaClose.focus({ preventScroll: true });
   }
 
   function closeQaOverlay() {
-    const overlay = document.getElementById("qa-overlay");
-    if (!overlay) return;
     qaOpen = false;
-    overlay.classList.remove("open");
-  }
-
-  function toggleQaOverlay() {
-    if (qaOpen) {
-      closeQaOverlay();
-    } else {
-      openQaOverlay();
-    }
+    qaOverlay.inert = true;
+    qaOverlay.setAttribute("aria-hidden", "true");
+    qaOverlay.classList.remove("open");
+    slideRegion.inert = false;
+    bottomBar.inert = false;
+    qaTrigger?.focus({ preventScroll: true });
+    qaTrigger = null;
   }
 
   function switchQaTab(tabId) {
-    activeQaTab = tabId;
     document.querySelectorAll(".qa-tab").forEach((btn) => {
       btn.classList.toggle("active", btn.getAttribute("data-qa-tab") === tabId);
     });
@@ -156,7 +159,9 @@
 
     if (tabId === "cad") {
       setTimeout(() => {
-        window.DELTA_CANVASES.initThreeCadViewer();
+        if (qaOpen && qaOverlay.querySelector('[data-qa-pane="cad"].active')) {
+          window.DELTA_CANVASES.initThreeCadViewer();
+        }
       }, 80);
     }
   }
@@ -447,15 +452,6 @@
       });
     }
 
-    // Top Phase Navigation Pills
-    document.querySelectorAll(".phase-pill").forEach((pill) => {
-      pill.addEventListener("click", () => {
-        const targetSlide = parseInt(pill.getAttribute("data-start-slide"), 10);
-        if (qaOpen) closeQaOverlay();
-        goToSlide(targetSlide);
-      });
-    });
-
     // Bottom Slide Dots
     document.querySelectorAll(".slide-dot").forEach((dot) => {
       dot.addEventListener("click", () => {
@@ -468,20 +464,9 @@
     // Tap the cover to advance on touch devices.
     document.querySelector(".cover-slide")?.addEventListener("click", () => goToSlide(2));
 
-    // Prev / Next / Replay / Fullscreen / Q&A Buttons
-    const btnPrev = document.getElementById("btn-prev-slide");
-    const btnNext = document.getElementById("btn-next-slide");
-    const btnReplay = document.getElementById("btn-replay-slide");
-    const btnFullscreen = document.getElementById("btn-fullscreen");
-    const btnQaOpen = document.getElementById("btn-open-qa");
-    const btnQaClose = document.getElementById("btn-close-qa");
-
-    if (btnPrev) btnPrev.addEventListener("click", () => goToSlide(currentSlide - 1));
-    if (btnNext) btnNext.addEventListener("click", () => goToSlide(currentSlide + 1));
-    if (btnReplay) btnReplay.addEventListener("click", () => goToSlide(currentSlide, true));
-    if (btnFullscreen) btnFullscreen.addEventListener("click", toggleFullscreen);
-    if (btnQaOpen) btnQaOpen.addEventListener("click", () => toggleQaOverlay());
-    if (btnQaClose) btnQaClose.addEventListener("click", () => closeQaOverlay());
+    btnPrev.addEventListener("click", () => goToSlide(currentSlide - 1));
+    btnNext.addEventListener("click", () => goToSlide(currentSlide + 1));
+    btnQaClose.addEventListener("click", closeQaOverlay);
 
     // Q&A Tab Buttons
     document.querySelectorAll(".qa-tab").forEach((tabBtn) => {
@@ -494,8 +479,7 @@
     document.querySelectorAll("[data-open-qa-tab]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const tab = btn.getAttribute("data-open-qa-tab");
-        const model = btn.getAttribute("data-open-qa-model");
-        openQaOverlay(tab, model);
+        openQaOverlay(tab, btn);
       });
     });
 
@@ -554,9 +538,10 @@
         }
       }
 
-      if (e.key === "q" || e.key === "Q") {
+      if (!lightboxOpen && e.key.toLowerCase() === "q") {
         e.preventDefault();
-        toggleQaOverlay();
+        if (qaOpen) closeQaOverlay();
+        else goToSlide(qaSlide);
         return;
       }
 
@@ -582,9 +567,9 @@
       } else if (e.key === "s" || e.key === "S") {
         e.preventDefault();
         skipSlideAnimation();
-      } else if (e.key >= "1" && Number(e.key) <= totalSlides) {
+      } else if (/^[0-9]$/.test(e.key)) {
         e.preventDefault();
-        goToSlide(parseInt(e.key, 10));
+        goToSlide(e.key === "0" ? qaSlide : Number(e.key));
       }
     });
 
