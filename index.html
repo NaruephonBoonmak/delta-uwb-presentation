@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DELTA — UWB Smart Factory Safety & Automation | MECHECI404 (Booth #15)</title>
+
+  <!-- KaTeX for Scientific Equations -->
+  <link rel="stylesheet" href="assets/vendor/katex/katex.min.css" />
+  <script defer src="assets/vendor/katex/katex.min.js"></script>
+  <script defer src="assets/vendor/katex/auto-render.min.js"></script>
+
+  <!-- GSAP 3 for Motion Design -->
+  <script src="assets/vendor/gsap.min.js"></script>
+
+  <!-- Apache ECharts 5 for Scientific Data Visualization -->
+  <script src="assets/vendor/echarts.min.js"></script>
+
+  <!-- Three.js + STLLoader for Interactive 3D CAD & Assembly Inspection -->
+  <script src="assets/vendor/three.min.js"></script>
+  <script src="assets/vendor/STLLoader.js"></script>
+
+  <!-- Main Presentation Stylesheet -->
+  <link rel="stylesheet" href="viewport-base.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="deck-viewport">
+    <div class="deck-stage">
+      <div class="presentation-shell">
+  <!-- Subtle Industrial Engineering Grid Background -->
+  <div class="bg-engineering-grid"></div>
+
+  <!-- ========================================================================
+       TOP HUD NAVIGATION BAR
+       ======================================================================== -->
+  <header class="top-hud">
+    <div class="brand-cluster">
+      <div class="brand-badge">
+        <span class="brand-dot"></span>
+        <span>DELTA<span class="brand-technology"> UWB</span></span>
+      </div>
+      <span class="brand-title">MECHECI404 • BOOTH #15</span>
+      <span class="brand-sub">From Hybrid Factory Safety to Dark Factory Intelligence</span>
+    </div>
+
+    <nav class="phase-nav" aria-label="Presentation Phases">
+      <button class="phase-pill active" data-phase="1" data-start-slide="1">
+        <span class="phase-num">P1</span>
+        <span>Problem &amp; Solution</span>
+      </button>
+      <button class="phase-pill" data-phase="2" data-start-slide="5">
+        <span class="phase-num">P2</span>
+        <span>Why UWB</span>
+      </button>
+      <button class="phase-pill" data-phase="3" data-start-slide="6">
+        <span class="phase-num">P3</span>
+        <span>Demo</span>
+      </button>
+      <button class="phase-pill" data-phase="4" data-start-slide="7">
+        <span class="phase-num">P4</span>
+        <span>Results &amp; Vision</span>
+      </button>
+    </nav>
+
+    <div class="hud-controls">
+      <button class="hud-btn qa-trigger" id="btn-open-qa" title="Open Interactive Technical Q&A (Shortcut: Q)">
+        <span>Q&amp;A</span>
+        <span class="kbd-hint">Q</span>
+      </button>
+      <button class="hud-btn" id="btn-replay-slide" title="Replay Slide Animation (Shortcut: R)">
+        <span>Replay</span>
+        <span class="kbd-hint">R</span>
+      </button>
+      <button class="hud-btn" id="btn-fullscreen" title="Toggle Fullscreen Mode (Shortcut: F)">
+        <span>Fullscreen</span>
+        <span class="kbd-hint">F</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       MAIN 16:9 SLIDE DECK VIEWPORT (9 PRIMARY SLIDES ACROSS 4 PHASES)
+       ======================================================================== -->
+  <main class="slide-region">
+
+    <section class="slide speaker-slide cover-slide active" data-slide="1">
+      <h1>DELTA <span class="accent">· Dark Factory Platform</span></h1>
+      <figure class="story-frame cover-still">
+        <img src="assets/cover/delta-dark-factory-cover.png" alt="ภาพประกอบ Dark Factory จาก CAD ของทีม แสดง Anchor R05 ติดเสา, AGV R20 บนพื้น และ Belt R18 Option A ที่เอวช่าง พร้อมเส้นสัญญาณ UWB">
+        <figcaption class="cover-model-labels">
+          <span>Anchor R05</span>
+          <span>AGV R20</span>
+          <span>Belt R18 Option A</span>
+        </figcaption>
+      </figure>
+      <div class="speaker-controls cover-footer">
+        <span class="story-footnote">UWB Localization · Safety · Automation</span>
+        <span class="story-footnote">ภาพจำลองอ้างอิง CAD ของทีม</span>
+      </div>
+    </section>
+
+    <section class="slide speaker-slide" data-slide="2">
+      <h1>Inside a <span class="accent">Dark Factory</span></h1>
+      <div class="story-frame story-factory opening-frame" data-story-view="2" role="img" aria-label="An AGV follows a floor guide, docks, and carries away a carton loaded by a cobot without an operator in the scene.">
+        <div class="opening-caption">
+          <span>สายพาน → Cobot → AGV</span>
+          <strong data-opening-status>AGV วิ่งตามเส้นนำทาง</strong>
+        </div>
+      </div>
+      <div class="speaker-controls">
+        <button class="stage-btn" data-story-replay="2">↻ Replay</button>
+      </div>
+    </section>
+
+    <section class="slide speaker-slide" data-slide="3">
+      <h1><span class="accent">Human</span> Intervention</h1>
+      <div class="story-frame story-factory opening-frame" data-story-view="3" role="img" aria-label="The AGV follows its guide line and collects a carton while a technician approaches the same cobot through a guarded path beside its base.">
+        <div class="opening-caption">
+          <span>ช่างเข้าทางซ่อมบำรุงข้างฐาน Cobot</span>
+          <strong data-opening-status>ช่างกำลังเข้าพื้นที่ซ่อมบำรุง</strong>
+        </div>
+      </div>
+      <div class="speaker-controls">
+        <button class="stage-btn" data-story-replay="3">↻ Replay</button>
+      </div>
+    </section>
+
+    <section class="slide speaker-slide" data-slide="4">
+      <h1><span class="accent">Location-Awareness</span></h1>
+      <div class="story-frame story-factory opening-frame" data-story-view="4" role="img" aria-label="A carton waits at the loading bay. The AGV stops on the main guide line because no guide branch enters the bay.">
+        <div class="opening-caption">
+          <span>จุดรับของอยู่นอกเส้นทางหลัก</span>
+          <strong data-opening-status>AGV วิ่งตามเส้นหลัก · กล่องกำลังมาถึงจุดรับ</strong>
+        </div>
+      </div>
+      <div class="speaker-controls">
+        <button class="stage-btn" data-story-replay="4">↻ Replay</button>
+      </div>
+    </section>
+
+
+
+    <!-- ======================================================================
+         SLIDE 5 (PHASE 2) — WHY UWB? OVERCOMING LIDAR/SLAM BLIND SPOTS
+         (Merged original Slides 4 + 5 into 1 concise visual comparison)
+         ====================================================================== -->
+    <section class="slide speaker-slide" data-slide="5">
+      <h1>Why <span class="accent">UWB</span>?</h1>
+      <div class="story-frame story-comparison" data-story-view="5" role="img" aria-label="รถ AGV เคลื่อนที่ในฉากเดียวกันทั้งสองฝั่ง ฝั่ง LiDAR แสดงลำแสงและมุมอับหลังชั้นวาง ฝั่ง UWB แสดง TAG AGV บนรถและ TAG Belt ที่เอวคนเชื่อมกับ Anchor A1 ถึง A4 ที่ติดสูงในมุมห้องทั้งสี่">
+        <span class="comparison-label comparison-left">LiDAR · สแกนจากรถที่กำลังวิ่ง</span>
+        <span class="comparison-label comparison-right">UWB · พิกัดร่วม (X, Y)</span>
+        <span class="comparison-status" data-sensing-status data-visible="false">ชั้นวางบังลำแสง · คนอยู่ในมุมอับ</span>
+        <span class="comparison-status comparison-anchor-note">Anchor A1–A4 ติดสูงที่มุมห้องทั้งสี่</span>
+      </div>
+      <div class="speaker-controls">
+        <span class="story-footnote">ฉากจำลอง · DS-TWR · UWB อาจคลาดเคลื่อนจาก NLOS และ multipath</span>
+        <div class="story-steps" aria-label="Scan playback">
+          <button class="stage-btn" data-sensing-play>Ⅱ Pause scan</button>
+          <button class="stage-btn" data-story-replay="5">↻ Replay</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 6 (PHASE 3) — LIVE DEMONSTRATION: 4 SAFETY & CONTROL STATES
+         (Merged Slides 6 + 7 + 8; NO Mode Switcher; Single-Tag Stationary AGV)
+         ====================================================================== -->
+    <section class="slide speaker-slide" data-slide="6">
+      <h1>Distance-based <span class="accent">Safety</span></h1>
+      <div class="story-frame story-booth" data-story-view="6" role="img" aria-label="โต๊ะสาธิตมี Anchor A1 ถึง A4 บนขาตั้งสามขาที่มุมโต๊ะ พัลส์ UWB ส่งไปกลับระหว่าง Anchor กับ TAG AGV และ TAG Belt ขณะที่ TAG Belt เคลื่อนบนสายพานเข้าหารถ">
+        <span class="story-tag">Digital Twin</span>
+        <div class="booth-flow" aria-label="UWB range processing and safety outputs">
+          <span>UWB</span><i>→</i><span>Distance</span><i>→</i><span>Safety logic</span><i>→</i><span>PWM / Relay / Buzzer</span>
+        </div>
+        <span id="tel-state-badge" class="status-badge safe" aria-live="polite">SAFE</span>
+        <span id="tel-demo-caption" class="booth-caption" data-state="safe">สายพานเดินปกติ · ล้อ AGV ทั้งสองหมุนเต็มความเร็ว</span>
+        <span class="booth-caption booth-ranging"><span>TAG AGV</span> / <span>TAG Belt</span> ↔ A1–A4</span>
+      </div>
+      <div class="speaker-controls demo-controls">
+        <div class="story-steps" aria-label="Safety states">
+          <button class="stage-btn state-safe active" data-demo-state-btn="SAFE">SAFE</button>
+          <button class="stage-btn state-warn" data-demo-state-btn="WARNING">WARNING</button>
+          <button class="stage-btn state-danger" data-demo-state-btn="DANGER">DANGER</button>
+          <button class="stage-btn state-recovery" data-demo-state-btn="RECOVERY">RECOVERY</button>
+          <button class="stage-btn" id="btn-demo-autoplay" aria-pressed="false">▶ Auto</button>
+        </div>
+        <label class="demo-range"><span id="tel-distance">165 cm</span><input type="range" id="demo-distance-slider" min="15" max="200" value="165" aria-label="ระยะจำลองจาก TAG Belt ถึง AGV หน่วยเซนติเมตร" /></label>
+        <div class="demo-meters">
+          <div><small>WHEEL PWM</small><strong id="tel-wheel-pwm">100%</strong></div>
+          <div><small>CONVEYOR</small><strong id="tel-conveyor">RUNNING</strong></div>
+          <div><small>BUZZER</small><strong id="tel-buzzer">OFF</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 7 (PHASE 4) — UWB EXPERIMENTAL ACCURACY & CALIBRATION
+         (Merged original Slides 9 + 10 into 1 high-impact scientific dashboard)
+         ====================================================================== -->
+    <section class="slide speaker-slide" data-slide="7">
+      <h1>UWB <span class="accent">Calibration</span></h1>
+      <div class="result-layout">
+        <div class="result-chart">
+          <div id="chart-slide6-main" aria-label="UWB range RMSE and archived XY error charts"></div>
+        </div>
+        <div class="result-metrics">
+          <div><span>Held-out range RMSE · P9 + P1 return</span><strong>17.71 <em>→</em> 16.15 <small>cm</small></strong><b>−8.85%</b></div>
+          <div><span>Anchor A4 · Held-out</span><strong>10.36 <em>→</em> 2.99 <small>cm</small></strong><b>−71.15%</b></div>
+          <div class="sample-count"><strong>50,748</strong><span>range readings</span></div>
+        </div>
+      </div>
+      <div class="speaker-controls">
+        <div class="story-steps" aria-label="Calibration chart">
+          <button class="stage-btn active" data-s6-chart-mode="anchors">Range RMSE</button>
+          <button class="stage-btn" data-s6-chart-mode="heatmap">Archived XY</button>
+        </div>
+        <button class="stage-btn" data-open-qa-tab="calibration">Data &amp; 20 plates →</button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 8 (PHASE 4) — FUTURE FACTORY VISION: HYBRID TO DARK FACTORY
+         ====================================================================== -->
+    <section class="slide speaker-slide" data-slide="8">
+      <h1>ปัจจุบัน <span class="accent">·</span> UWB รู้ตำแหน่ง</h1>
+      <div class="story-frame story-factory opening-frame" data-story-view="8" role="img" aria-label="ฉากเดียวตั้งแต่ช่างเข้าซ่อมที่ Cobot จนถึงการยืนยันเริ่มงานใหม่และ AGV เข้าจุดรับของด้วยพิกัด">
+        <span class="story-tag">ฉากจำลอง · UWB 4 Anchors / 2 Tags</span>
+        <div class="opening-caption">
+          <span data-current-caption>Belt Tag ที่เอวช่าง · AGV Tag บนรถ</span>
+          <strong data-current-status>ช่างกำลังเข้าสู่โซนซ่อมบำรุง</strong>
+        </div>
+      </div>
+      <div class="speaker-controls current-controls">
+        <button class="stage-btn" data-story-replay="8">↻ Replay</button>
+        <span class="story-footnote">มีพิกัด X,Y บน Dashboard · REST / MCP อ่านข้อมูล</span>
+      </div>
+    </section>
+
+    <section class="slide speaker-slide closing-slide" data-slide="9">
+      <h1>อนาคต <span class="accent">·</span> เครื่องจักรประสานงานกัน</h1>
+      <div class="story-frame story-factory closing-visual" data-story-view="9" role="img" aria-label="ฉากจำลองอนาคต เมื่อ AGV ถึงจุดโหลด ระบบส่งคำขอให้ PLC เตรียมสายพาน">
+        <span class="story-tag">แนวทางต่อยอด · Dark Factory</span>
+        <aside class="opening-caption future-panel" aria-label="แผนต่อยอดและสถานะคำขอ">
+          <span class="future-panel-title">แผนต่อยอด · AGV เข้าจุดรับของ</span>
+          <ol class="future-chain">
+            <li data-future-step="0"><strong>AI / MCP</strong><small>อ่านโซนและส่งคำขอ</small></li>
+            <li data-future-step="1"><strong>MQTT / REST API</strong><small>ส่งผ่าน Gateway</small></li>
+            <li data-future-step="2"><strong>Modbus TCP · PLC</strong><small>ตรวจ Interlock ก่อนสั่งงาน</small></li>
+            <li data-future-step="3"><strong>SCADA</strong><small>เฝ้าดูและบันทึกสถานะ</small></li>
+          </ol>
+          <strong class="future-caption" data-future-status>ตรวจสถานะจากพิกัด AGV</strong>
+        </aside>
+      </div>
+      <div class="speaker-controls closing-controls">
+        <div class="story-steps">
+          <button class="stage-btn" data-story-replay="9">↻ Replay</button>
+          <a class="closing-source" href="https://github.com/MechECI404/UWB/tree/48785f3352bf0d741f8e23acb4930fdcc24ef878" target="_blank" rel="noopener noreferrer">GitHub · 48785f3</a>
+        </div>
+        <button class="stage-btn" data-open-qa-tab="roadmap">Roadmap →</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       BOTTOM PRESENTER NAVIGATION & PROGRESS BAR
+       ======================================================================== -->
+  <footer class="bottom-bar">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span id="slide-counter-label" style="font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent-cyan);">
+        SLIDE 01 / 09  •  PHASE 01
+      </span>
+    </div>
+
+    <div class="slide-dots" aria-label="Slide Pagination">
+      <button class="slide-dot active" data-slide-dot="1" title="1. DELTA Dark Factory Platform" aria-label="Slide 1: DELTA Dark Factory Platform"></button>
+      <button class="slide-dot" data-slide-dot="2" title="2. Inside a Dark Factory" aria-label="Slide 2: Inside a Dark Factory"></button>
+      <button class="slide-dot" data-slide-dot="3" title="3. Human Intervention" aria-label="Slide 3: Human Intervention"></button>
+      <button class="slide-dot" data-slide-dot="4" title="4. Location-Awareness" aria-label="Slide 4: Location-Awareness"></button>
+      <button class="slide-dot" data-slide-dot="5" title="5. Why UWB" aria-label="Slide 5: Why UWB"></button>
+      <button class="slide-dot" data-slide-dot="6" title="6. Safety Demo" aria-label="Slide 6: Safety Demo"></button>
+      <button class="slide-dot" data-slide-dot="7" title="7. Calibration" aria-label="Slide 7: Calibration"></button>
+      <button class="slide-dot" data-slide-dot="8" title="8. UWB Today" aria-label="Slide 8: UWB Today"></button>
+      <button class="slide-dot" data-slide-dot="9" title="9. Future Vision" aria-label="Slide 9: Future Vision"></button>
+    </div>
+
+    <div class="presenter-nav-btns">
+      <button class="hud-btn" id="btn-prev-slide">&larr; Prev</button>
+      <button class="hud-btn" id="btn-next-slide" style="border-color:var(--accent-cyan);color:var(--accent-cyan);">Next &rarr;</button>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       INTERACTIVE TECHNICAL Q&A OVERLAY (PRESS Q TO OPEN / ESC TO CLOSE)
+       ======================================================================== -->
+  <aside class="qa-overlay" id="qa-overlay" aria-hidden="true">
+    <div class="qa-header">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="brand-badge">TECHNICAL Q&amp;A VAULT</div>
+        <div class="qa-tabs">
+          <button class="qa-tab active" data-qa-tab="cad">1. 3D CAD &amp; Mechanical BOM</button>
+          <button class="qa-tab" data-qa-tab="calibration">2. UWB Calibration (20 SVG Plates)</button>
+          <button class="qa-tab" data-qa-tab="wiring">3. Electrical &amp; INA226 Wiring</button>
+          <button class="qa-tab" data-qa-tab="roadmap">4. AI / IoT / SCADA / PLC Architecture</button>
+        </div>
+      </div>
+
+      <button class="hud-btn" id="btn-close-qa" style="border-color:#EF4444;color:#FCA5A5;">
+        <span>Return to Slide</span>
+        <span class="kbd-hint">ESC</span>
+      </button>
+    </div>
+
+    <div class="qa-body">
+      <!-- ====================================================================
+           Q&A CATEGORY 1: 3D CAD, MECHANICAL DESIGN & EXPLODED BOM
+           ==================================================================== -->
+      <div class="qa-pane qa-cad-layout active" data-qa-pane="cad">
+        <!-- Col 1: Subsystem Selector -->
+        <div class="eng-panel">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title">SELECT HARDWARE SUBSYSTEM</div>
+          </div>
+          <div class="cad-model-selector" id="qa-cad-selector-list"></div>
+        </div>
+
+        <!-- Col 2: Interactive 3D Three.js Viewer + High-Res Studio CAD/BOM Render -->
+        <div class="eng-panel" style="display:grid;grid-template-rows:1fr 1fr;gap:12px;">
+          <!-- Upper: Interactive Three.js 3D Assembly Stage -->
+          <div style="display:flex;flex-direction:column;min-height:0;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;background:#050911;position:relative;">
+            <div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,21,38,0.9);border-bottom:1px solid var(--border-subtle);">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--accent-cyan);font-weight:700;">
+                INTERACTIVE 3D CAD &amp; EXPLODED VIEW (DRAG TO ROTATE)
+              </span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <label style="font-family:var(--font-mono);font-size:10.5px;color:#CBD5E1;display:flex;align-items:center;gap:4px;">
+                  Explode:
+                  <input type="range" min="0" max="1.5" step="0.05" value="0" oninput="window.DELTA_CANVASES.updateThreeExplode(this.value)" style="width:75px;accent-color:var(--accent-cyan);" />
+                </label>
+                <button class="stage-btn" onclick="window.DELTA_CANVASES.toggleThreeWireframe()">Wireframe</button>
+                <button class="stage-btn" onclick="window.DELTA_CANVASES.toggleThreeAutoRotate()">Auto-Spin</button>
+              </div>
+            </div>
+            <div id="qa-three-stage" style="flex:1;min-height:160px;width:100%;cursor:grab;"></div>
+          </div>
+
+          <!-- Lower: Verified CAD Render / Exploded BOM Image Switcher -->
+          <div style="display:flex;flex-direction:column;min-height:0;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;background:#080E1A;">
+            <div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,21,38,0.9);border-bottom:1px solid var(--border-subtle);">
+              <span style="font-family:var(--font-mono);font-size:11px;color:#6EE7B7;font-weight:700;">
+                VERIFIED CAD STUDIO RENDER &amp; BOM CALLOUT (CLICK IMAGE TO ZOOM)
+              </span>
+              <div class="stage-btn-group">
+                <button class="stage-btn active" data-cad-img-mode="assembled">Assembled CAD</button>
+                <button class="stage-btn" data-cad-img-mode="bom">Exploded BOM</button>
+                <button class="stage-btn" data-cad-img-mode="alt">Detail / Stand View</button>
+              </div>
+            </div>
+            <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden;">
+              <img id="qa-cad-preview-img" src="" alt="CAD Preview" style="max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 3: Verified Dimensions, Specs & BOM Callouts -->
+        <div class="eng-panel" style="overflow-y:auto;">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title" id="qa-cad-title">01_AGV_R20</div>
+          </div>
+          <div id="qa-cad-dims" style="font-family:var(--font-mono);font-size:11.5px;color:#00E5FF;margin-bottom:10px;padding:6px 10px;background:rgba(0,229,255,0.08);border-radius:6px;"></div>
+
+          <table class="eng-table">
+            <tbody id="qa-cad-specs-tbody"></tbody>
+          </table>
+
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent-cyan);font-weight:700;margin:14px 0 6px;">
+            KEY MECHANICAL &amp; BOM COMPONENTS
+          </div>
+          <ul id="qa-cad-bom-list" style="list-style:none;"></ul>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           Q&A CATEGORY 2: UWB CALIBRATION & FULL 20-PLATE SCIENTIFIC ATLAS
+           ==================================================================== -->
+      <div class="qa-pane" data-qa-pane="calibration" style="grid-template-rows:auto 1fr;overflow-y:auto;">
+        <div class="eng-panel">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title">
+              VERIFIED UWB CALIBRATION METHODOLOGY &amp; PER-ANCHOR COEFFICIENTS
+            </div>
+            <span class="status-badge safe">SOURCE: UWB.PIPATINTEGRATION.COM</span>
+          </div>
+          <div style="display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:center;">
+            <div style="background:rgba(6,10,18,0.85);padding:12px;border-radius:8px;border:1px solid var(--border-subtle);">
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent-cyan);margin-bottom:4px;">
+                LINEAR CALIBRATION EQUATION
+              </div>
+              <div style="font-size:13px;text-align:center;padding:4px 0;">
+                $$y = a \cdot u + b \implies u_{\text{corrected}} = \frac{y - b}{a}$$
+              </div>
+              <div style="font-size:11.5px;color:#CBD5E1;margin-top:6px;line-height:1.4;">
+                • <strong>Training Grid:</strong> Perimeter points $P1\text{–}P8$<br/>
+                • <strong>Spatial Held-Out:</strong> Center $P9\ (1.0, 1.0\text{ m})$<br/>
+                • <strong>Temporal Repeat:</strong> P1 → P1_REPEAT (mean range shift)<br/>
+                A1 +24.16 cm · A2 +32.81 cm · A3 -11.14 cm · A4 +5.68 cm<br/>
+                Boot session เปลี่ยน จึงยังแยกสาเหตุของการเปลี่ยนไม่ได้<br/>
+                <strong>MSE = Bias² + Variance</strong><br/>
+                50,748 parsed ranges · 33,669 eligible · 3,492 archived XY snapshots<br/>
+                P9 range RMSE (point means): 13.75 → 12.39 cm
+              </div>
+            </div>
+
+            <table class="eng-table">
+              <thead>
+                <tr>
+                  <th>Anchor (Coords)</th>
+                  <th>Slope ($a$)</th>
+                  <th>Offset ($b$)</th>
+                  <th>Held-Out Raw RMSE</th>
+                  <th>Held-Out Cal RMSE</th>
+                  <th>Change (%)</th>
+                  <th>Engineering Finding</th>
+                </tr>
+              </thead>
+              <tbody id="qa-uwb-anchors-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="eng-panel" style="overflow-y:auto;">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title">
+              COMPLETE 20-PLATE SCIENTIFIC GRAPH ATLAS (CLICK ANY PLATE TO ZOOM HIGH-RES SVG)
+            </div>
+            <span class="status-badge info">PLATES 01–20 VERIFIED</span>
+          </div>
+          <div class="svg-atlas-grid" id="qa-svg-atlas-grid"></div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           Q&A CATEGORY 3: ELECTRICAL CIRCUIT, PINOUT & INA226 POWER MONITORING
+           ==================================================================== -->
+      <div class="qa-pane" data-qa-pane="wiring" style="grid-template-rows:auto auto;overflow-y:auto;">
+        <div class="eng-panel">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title">
+              VERIFIED WIRING DIAGRAMS &amp; PHYSICAL BOARD LAYOUTS (CLICK ANY DIAGRAM TO ZOOM)
+            </div>
+            <span class="status-badge info">R09 INA226 + R05 PHYSICAL PINS</span>
+          </div>
+          <div class="svg-atlas-grid" id="qa-wiring-gallery" style="grid-template-columns:repeat(3, 1fr);"></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="eng-panel">
+            <div class="eng-panel-header">
+              <div class="eng-panel-title">INA226 (CYBERTICE M0903, R100 = 0.1 &Omega;) HIGH-SIDE PIN MAP</div>
+            </div>
+            <table class="eng-table">
+              <thead>
+                <tr>
+                  <th>INA226 Pin / Pad</th>
+                  <th>Connected To</th>
+                  <th>Engineering Function</th>
+                </tr>
+              </thead>
+              <tbody id="qa-ina226-tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="eng-panel">
+            <div class="eng-panel-header">
+              <div class="eng-panel-title">AGV (ESP32 UWB PRO + MEGA 2560 + L298N) &amp; BELT ALERT I/O</div>
+            </div>
+            <table class="eng-table">
+              <thead>
+                <tr>
+                  <th>MCU Pin</th>
+                  <th>Signal Path</th>
+                  <th>Actuation / Function</th>
+                </tr>
+              </thead>
+              <tbody id="qa-mega-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           Q&A CATEGORY 4: AI / IoT / SCADA / PLC INDUSTRIAL ARCHITECTURE
+           ==================================================================== -->
+      <div class="qa-pane" data-qa-pane="roadmap" style="grid-template-rows:auto 1fr;overflow-y:auto;">
+        <div class="eng-panel">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title">
+              CURRENT UWB CODE &amp; INDUSTRIAL ROADMAP
+            </div>
+            <span class="status-badge safe">TRANSPARENT ENGINEERING SCOPE</span>
+          </div>
+          <div class="roadmap-evidence">
+            <p><strong>GitHub main · 48785f3:</strong> RemingtonDualTag → ESP-NOW Gateway → USB Bridge → Local Compute. ซอฟต์แวร์คำนวณ X,Y แสดงบน Dashboard และให้ REST/MCP อ่านพิกัดกับเวลาค้างในโซน</p>
+            <p><strong>ขอบเขตผลทดสอบ:</strong> เฟิร์มแวร์ 0.1.0-alpha.1 ผ่าน Host Tests ตามรายงานโครงการ รุ่นก่อนหน้าวัด X,Y ได้จากสอง Tag แต่ยังพบช่วงข้อมูลขาด การเชื่อม MQTT, Modbus TCP และ SCADA เป็นแผนต่อยอด</p>
+            <p><strong>เส้นทางคำขอในอนาคต:</strong> AI/MCP ส่งคำขอเตรียมสถานีผ่าน Gateway ที่กำหนดสิทธิ์ PLC ตรวจ Interlock และสถานะอุปกรณ์ก่อนสั่งงาน ส่วน SCADA ใช้เฝ้าดูสถานะและเหตุการณ์</p>
+            <p>
+              <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/readme.md" target="_blank" rel="noopener noreferrer">Firmware &amp; runtime status</a>
+              <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/local-compute/mcp_server.py" target="_blank" rel="noopener noreferrer">MCP tools</a>
+              <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/local-compute/app.py" target="_blank" rel="noopener noreferrer">REST endpoints</a>
+            </p>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="svg-plate-card" onclick="window.openDeltaLightbox('assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png', 'Full DELTA System Architecture with IoT / MQTT & Supervisory Integration', false)">
+              <img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png" alt="System Diagram Full" style="height:175px;" />
+              <div class="p-code">ARCHITECTURE A — FULL CONNECTED VISION</div>
+              <div class="p-title">UWB Nodes &rarr; Wireless / MQTT Telemetry &rarr; Dashboard &amp; Machine Interlock</div>
+            </div>
+            <div class="svg-plate-card" onclick="window.openDeltaLightbox('assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram_No_MQTT.png', 'Direct Low-Latency Prototype Architecture (No MQTT Broker Required)', false)">
+              <img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram_No_MQTT.png" alt="System Diagram Direct" style="height:175px;" />
+              <div class="p-code">ARCHITECTURE B — DIRECT PROTOTYPE CONTROL</div>
+              <div class="p-title">Direct UWB Ranging &rarr; Deterministic Safety State Machine &rarr; Motor &amp; Relay Control</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="eng-panel">
+          <div class="eng-panel-header">
+            <div class="eng-panel-title">
+              THREE-TIER IMPLEMENTATION MATRIX (PROTOTYPE VS. BOOTH DEMO VS. FUTURE DARK FACTORY)
+            </div>
+          </div>
+          <table class="eng-table">
+            <thead>
+              <tr>
+                <th style="width:24%;">System Capability</th>
+                <th style="width:25%;">1. Implemented in Prototype</th>
+                <th style="width:25%;">2. Live Booth Demonstration</th>
+                <th style="width:26%;">3. Future Dark Factory Expansion</th>
+              </tr>
+            </thead>
+            <tbody id="qa-roadmap-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       HIGH-RESOLUTION LIGHTBOX MODAL FOR DIAGRAMS & 20 SVG PLATES
+       ======================================================================== -->
+  <div class="lightbox-modal" id="lightbox-modal">
+    <div style="position:absolute;top:20px;right:28px;">
+      <button class="hud-btn" id="btn-close-lightbox" style="border-color:#EF4444;color:#FCA5A5;">
+        Close Preview <span class="kbd-hint">ESC</span>
+      </button>
+    </div>
+    <div class="lightbox-img-container" id="lightbox-img-wrap">
+      <img id="lightbox-img" src="" alt="High-Resolution Technical Preview" />
+    </div>
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+
+  <!-- Application Scripts -->
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="canvases.js"></script>
+  <script src="assets/stl_bundle.js"></script>
+  <script src="scene3d.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
+
