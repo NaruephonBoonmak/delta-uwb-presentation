@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=industrial-cover" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -84,20 +84,14 @@
        ======================================================================== -->
   <main class="slide-region">
 
-    <section class="slide speaker-slide cover-slide active" data-slide="1">
-      <h1>DELTA <span class="accent">· Dark Factory Platform</span></h1>
-      <figure class="story-frame cover-still">
-        <img src="assets/cover/delta-dark-factory-cover.png" alt="ภาพประกอบ Dark Factory จาก CAD ของทีม แสดง Anchor R05 ติดเสา, AGV R20 บนพื้น และ Belt R18 Option A ที่เอวช่าง พร้อมเส้นสัญญาณ UWB">
-        <figcaption class="cover-model-labels">
-          <span>Anchor R05</span>
-          <span>AGV R20</span>
-          <span>Belt R18 Option A</span>
-        </figcaption>
-      </figure>
-      <div class="speaker-controls cover-footer">
-        <span class="story-footnote">UWB Localization · Safety · Automation</span>
-        <span class="story-footnote">ภาพจำลองอ้างอิง CAD ของทีม</span>
+    <section class="slide cover-slide active" data-slide="1" aria-labelledby="cover-title">
+      <img class="cover-image" src="assets/cover/delta-industrial-agv-cover.png" fetchpriority="high" alt="ภาพจำลอง Dark Factory พร้อมรถ AGV อุตสาหกรรมที่ติดกล่อง UWB ของทีม แองเคอร์บนเสา และ Belt Tag ที่เอวช่าง">
+      <div class="cover-heading">
+        <p class="cover-brand">DELTA</p>
+        <h1 id="cover-title">Dark Factory<br><span>Platform</span></h1>
+        <p class="cover-subtitle">UWB Localization · Safety · Automation</p>
       </div>
+      <button class="cover-start" id="btn-start-presentation" type="button">เริ่มนำเสนอ <span aria-hidden="true">→</span></button>
     </section>
 
     <section class="slide speaker-slide" data-slide="2">
@@ -570,7 +564,7 @@
   <script src="canvases.js"></script>
   <script src="assets/stl_bundle.js"></script>
   <script src="scene3d.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=industrial-cover"></script>
 </body>
 </html>
 
