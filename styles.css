@@ -1821,6 +1821,46 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   font-size: 18px;
   font-weight: 500;
 }
+.cover-team {
+  position: absolute;
+  z-index: 2;
+  top: 432px;
+  left: 64px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 28px;
+  width: 692px;
+  margin: 0;
+  padding: 24px;
+  list-style: none;
+  background: #06121ee6;
+  border: 1px solid #85c6d647;
+  border-radius: 16px;
+}
+.cover-team li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  color: #f5faff;
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+.cover-team img {
+  flex: 0 0 88px;
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border: 2px solid #85daec;
+  border-radius: 50%;
+}
+.story-footnote a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 /* Slide 6 shares the interactive CAD viewer with Technical Q&A. */
 .slide-booth-cad {
