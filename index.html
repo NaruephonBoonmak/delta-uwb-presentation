@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,7 +38,7 @@
     <div class="brand-cluster">
       <div class="slide-logos">
         <span class="slide-logo-delta"><img src="assets/cover/delta-logo.png" alt="Delta"></span>
-        <span class="slide-logo-university"><img src="assets/cover/kmitl-emblem.png" alt="สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง"></span>
+        <span class="slide-logo-university"><img src="assets/cover/kmitl-emblem.png" alt="King Mongkut’s Institute of Technology Ladkrabang"></span>
         <span class="slide-logo-team"><img src="assets/cover/mecheci404-wordmark.png" alt="MECHECI404"></span>
       </div>
       <span class="brand-title">BOOTH #15</span>
@@ -51,7 +51,7 @@
   <main class="slide-region">
 
     <section class="slide cover-slide active" data-slide="1" aria-labelledby="cover-title">
-      <img class="cover-image" src="assets/cover/delta-agv-integrated-tag-cover.png" fetchpriority="high" alt="ภาพจำลอง Dark Factory ที่เห็นหน้าจอสีฟ้าของ UWB Tag ฝังในตัวถัง AGV พร้อม Anchor บนเสาที่สื่อสารกับ AGV Tag และ Belt Tag ที่เอวช่าง">
+      <img class="cover-image" src="assets/cover/delta-agv-integrated-tag-cover.png" fetchpriority="high" alt="Dark factory scene showing a UWB anchor communicating with tags on an AGV and on a technician’s belt">
       <svg class="cover-radio" viewBox="0 0 1672 941" aria-hidden="true">
         <defs>
           <path id="cover-route-agv" d="M 908 155 Q 1130 270 1242 655"/>
@@ -91,49 +91,52 @@
 
     <section class="slide speaker-slide" data-slide="2">
       <h1>Inside a <span class="accent">Dark Factory</span></h1>
-      <div class="story-frame story-factory opening-frame" data-story-view="2" role="img" aria-label="An AGV follows a floor guide, docks, and carries away a carton loaded by a cobot without an operator in the scene.">
-        <span class="story-status" data-opening-status>AGV วิ่งตามเส้นนำทาง</span>
+      <div class="story-frame story-factory opening-frame" data-story-view="2" role="img" aria-label="Simulated handoff in which the conveyor delivers a carton, the cobot loads it onto the docked AGV, and the AGV carries it to the next station">
+        <span class="story-status" data-opening-status>AGV follows the guide path</span>
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="2">↻ Replay</button>
+        <span class="story-footnote">Conveyor delivers the carton → Cobot loads the AGV → AGV moves to the next station</span>
       </div>
     </section>
 
     <section class="slide speaker-slide" data-slide="3">
       <h1><span class="accent">Human</span> Intervention</h1>
-      <div class="story-frame story-factory opening-frame" data-story-view="3" role="img" aria-label="The AGV follows its guide line and collects a carton while a technician approaches the same cobot through a guarded path beside its base.">
-        <span class="story-status" data-opening-status data-state="warn">ช่างเดินเข้าหา Cobot</span>
+      <div class="story-frame story-factory opening-frame" data-story-view="3" role="img" aria-label="The technician crosses the AGV route at the point marked in red before reaching the cobot service area">
+        <span class="story-status" data-opening-status data-state="warn">Technician approaches the service area</span>
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="3">↻ Replay</button>
+        <span class="story-footnote">The system needs to know where people approach the AGV route · <a href="https://ira.lib.polyu.edu.hk/handle/10397/87780" target="_blank" rel="noopener noreferrer">Keung et al. (2020)</a></span>
       </div>
     </section>
 
     <section class="slide speaker-slide" data-slide="4">
       <h1><span class="accent">Location-Awareness</span></h1>
-      <div class="story-frame story-factory opening-frame" data-story-view="4" role="img" aria-label="A carton waits at the loading bay. The AGV stops on the main guide line because no guide branch enters the bay.">
-        <span class="story-status" data-opening-status>กล่องกำลังมาถึงจุดรับ</span>
+      <div class="story-frame story-factory opening-frame" data-story-view="4" role="img" aria-label="The AGV stops on its guide path. Separate markers show the AGV position and the pickup bay so the system can check whether the vehicle is in position">
+        <span class="story-status" data-opening-status>Carton approaches the pickup bay</span>
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="4">↻ Replay</button>
+        <span class="story-footnote">Use the AGV and pickup bay coordinates to confirm the vehicle is in position before handoff</span>
       </div>
     </section>
 
 
 
     <!-- ======================================================================
-         SLIDE 5 (PHASE 2) — WHY UWB? OVERCOMING LIDAR/SLAM BLIND SPOTS
-         (Merged original Slides 4 + 5 into 1 concise visual comparison)
+         SLIDE 5 (PHASE 2) — WHY UWB? COMPLEMENTARY SENSING
          ====================================================================== -->
     <section class="slide speaker-slide" data-slide="5">
       <h1>Why <span class="accent">UWB</span>?</h1>
-      <div class="story-frame story-comparison" data-story-view="5" role="img" aria-label="รถ AGV เคลื่อนที่ในฉากเดียวกันทั้งสองฝั่ง ฝั่ง LiDAR แสดงลำแสงและมุมอับหลังชั้นวาง ฝั่ง UWB แสดง TAG AGV บนรถและ TAG Belt ที่เอวคนเชื่อมกับ Anchor A1 ถึง A4 ที่ติดสูงในมุมห้องทั้งสี่">
-        <span class="comparison-label comparison-left">LiDAR · สแกนจากรถที่กำลังวิ่ง</span>
-        <span class="comparison-label comparison-right">UWB · พิกัดร่วม (X, Y)</span>
-        <span class="story-status" data-sensing-status data-state="warn">ชั้นวางบัง LiDAR</span>
+      <div class="story-frame story-comparison" data-story-view="5" role="img" aria-label="LiDAR scans the area around the AGV and shows the blind spot behind the rack. UWB anchors A1–A4 place both tags on a shared map and illustrate a missed position update">
+        <span class="comparison-label comparison-left">LiDAR · Scans the area around the AGV</span>
+        <span class="comparison-label comparison-right">UWB · Shared tag coordinates (X, Y)</span>
+        <span class="story-status" style="top: auto; right: auto; bottom: 16px; left: 16px;" data-sensing-status data-state="warn">Rack blocks the scan</span>
+        <span class="story-status" style="top: auto; bottom: 16px;" data-uwb-status>Both tags share one coordinate frame</span>
       </div>
       <div class="speaker-controls">
-        <span class="story-footnote">ฉากจำลอง · DS-TWR · UWB อาจคลาดเคลื่อนจาก NLOS และ multipath</span>
+        <span class="story-footnote">Simulation · Obstructions and reflections can distort UWB positions or interrupt updates · <a href="https://doi.org/10.3390/electronics11203294" target="_blank" rel="noopener noreferrer">Schjørring et al. (2022)</a> · <a href="https://doi.org/10.1109/TIM.2021.3074403" target="_blank" rel="noopener noreferrer">Barbieri et al. (2021)</a></span>
         <div class="story-steps" aria-label="Scan playback">
           <button class="stage-btn" data-sensing-play>Ⅱ Pause scan</button>
           <button class="stage-btn" data-story-replay="5">↻ Replay</button>
@@ -147,14 +150,14 @@
          ====================================================================== -->
     <section class="slide speaker-slide" data-slide="6">
       <h1>Distance-based <span class="accent">Safety</span></h1>
-      <div class="story-frame story-booth" data-story-view="6" role="img" aria-label="โต๊ะสาธิตมี Anchor A1 ถึง A4 บนขาตั้งสามขาที่มุมโต๊ะ พัลส์ UWB ส่งไปกลับระหว่าง Anchor กับ TAG AGV และ TAG Belt ขณะที่ TAG Belt เคลื่อนบนสายพานเข้าหารถ">
+      <div class="story-frame story-booth" data-story-view="6" role="img" aria-label="Four tripod-mounted anchors exchange UWB signals with the AGV Tag and Belt Tag as the Belt Tag moves toward the AGV on the conveyor">
         <span class="story-tag">Digital Twin</span>
         <div class="booth-flow" aria-label="UWB range processing and safety outputs">
           <span>UWB</span><i>→</i><span>Distance</span><i>→</i><span>Safety logic</span><i>→</i><span>PWM / Relay / Buzzer</span>
         </div>
         <div class="story-status booth-status" data-demo-status data-state="safe" aria-live="polite">
           <strong id="tel-state-badge">SAFE</strong>
-          <span id="tel-demo-caption">ล้อและสายพานทำงานปกติ</span>
+          <span id="tel-demo-caption">AGV and conveyor run normally</span>
         </div>
         <span class="booth-caption booth-ranging"><span>TAG AGV</span> / <span>TAG Belt</span> ↔ A1–A4</span>
       </div>
@@ -166,7 +169,7 @@
           <button class="stage-btn state-recovery" data-demo-state-btn="RECOVERY">RECOVERY</button>
           <button class="stage-btn" id="btn-demo-autoplay" aria-pressed="false">▶ Auto</button>
         </div>
-        <label class="demo-range"><span id="tel-distance">165 cm</span><input type="range" id="demo-distance-slider" min="15" max="200" value="165" aria-label="ระยะจำลองจาก TAG Belt ถึง AGV หน่วยเซนติเมตร" /></label>
+        <label class="demo-range"><span id="tel-distance">165 cm</span><input type="range" id="demo-distance-slider" min="15" max="200" value="165" aria-label="Simulated distance from the Belt Tag to the AGV in centimeters" /></label>
         <div class="demo-meters">
           <div><small>WHEEL PWM</small><strong id="tel-wheel-pwm">100%</strong></div>
           <div><small>CONVEYOR</small><strong id="tel-conveyor">RUNNING</strong></div>
@@ -183,7 +186,7 @@
       <h1>UWB <span class="accent">Calibration</span></h1>
       <div class="result-layout">
         <div class="result-chart">
-          <span class="story-status" data-calibration-status>Range RMSE · ก่อนและหลัง Calibration</span>
+          <span class="story-status" data-calibration-status>Range RMSE · Before and after calibration</span>
           <div id="chart-slide6-main" aria-label="UWB range RMSE and archived XY error charts"></div>
         </div>
         <div class="result-metrics">
@@ -205,23 +208,23 @@
          SLIDE 8 (PHASE 4) — FUTURE FACTORY VISION: HYBRID TO DARK FACTORY
          ====================================================================== -->
     <section class="slide speaker-slide" data-slide="8">
-      <h1>ปัจจุบัน <span class="accent">·</span> UWB รู้ตำแหน่ง</h1>
-      <div class="story-frame story-factory opening-frame" data-story-view="8" role="img" aria-label="ฉากเดียวตั้งแต่ช่างเข้าซ่อมที่ Cobot จนถึงการยืนยันเริ่มงานใหม่และ AGV เข้าจุดรับของด้วยพิกัด">
-        <span class="story-tag">ฉากจำลอง · UWB 4 Anchors / 2 Tags</span>
-        <span class="story-status" data-current-status>UWB อ่านพิกัดช่าง</span>
+      <h1>Today <span class="accent">·</span> UWB Position Tracking</h1>
+      <div class="story-frame story-factory opening-frame" data-story-view="8" role="img" aria-label="A technician enters the cobot service area. After restart is confirmed, the AGV uses coordinates to approach the pickup bay">
+        <span class="story-tag">Simulation · 4 UWB Anchors / 2 Tags</span>
+        <span class="story-status" data-current-status>UWB locates the technician</span>
       </div>
       <div class="speaker-controls current-controls">
         <button class="stage-btn" data-story-replay="8">↻ Replay</button>
-        <span class="story-footnote">มีพิกัด X,Y บน Dashboard · REST / MCP อ่านข้อมูล</span>
+        <span class="story-footnote">Dashboard shows X–Y positions · REST and MCP provide read access</span>
       </div>
     </section>
 
     <section class="slide speaker-slide closing-slide" data-slide="9">
-      <h1>อนาคต <span class="accent">·</span> เครื่องจักรประสานงานกัน</h1>
-      <div class="story-frame story-factory closing-visual" data-story-view="9" role="img" aria-label="ฉากจำลองอนาคต เมื่อ AGV ถึงจุดโหลด ระบบส่งคำขอให้ PLC เตรียมสายพาน">
-        <span class="story-tag">แนวทางต่อยอด · Dark Factory</span>
-        <span class="story-status" data-future-status>AGV กำลังเข้าจุดรับของ</span>
-        <ol class="future-chain" aria-label="ขั้นตอนในห้องควบคุม">
+      <h1>Future <span class="accent">·</span> Machine Coordination</h1>
+      <div class="story-frame story-factory closing-visual" data-story-view="9" role="img" aria-label="Future scenario in which the AGV arrives at the pickup bay and the system asks the PLC to prepare the conveyor">
+        <span class="story-tag">Proposed Dark Factory Integration</span>
+        <span class="story-status" data-future-status>AGV approaches the pickup bay</span>
+        <ol class="future-chain" aria-label="Control room sequence">
           <li data-future-step="0">AI / MCP</li>
           <li data-future-step="1">MQTT / REST API</li>
           <li data-future-step="2">Modbus TCP · PLC</li>
@@ -239,25 +242,25 @@
 
     <section class="slide speaker-slide qa-slide" data-slide="10" aria-labelledby="qa-slide-title">
       <h1 id="qa-slide-title" tabindex="-1">Q<span class="accent">&amp;</span>A</h1>
-      <nav class="qa-menu" aria-label="เลือกหมวดเทคนิค">
+      <nav class="qa-menu" aria-label="Choose a technical topic">
         <button class="qa-menu-card" type="button" data-open-qa-tab="cad" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/03_AGV_Assembled_transparent.png" alt=""></span>
-          <span class="qa-menu-label"><strong>3D CAD &amp;<br>Mechanical BOM</strong><small>โมเดล 3D และรายการชิ้นส่วน</small></span>
+          <span class="qa-menu-label"><strong>3D CAD &amp;<br>Mechanical BOM</strong><small>3D models and parts list</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="calibration" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/uwb_report/uwb-report/assets/figures/05_heldout_error_cdf.svg" alt=""></span>
-          <span class="qa-menu-label"><strong>UWB<br>Calibration</strong><small>ผลการทดลองและกราฟ SVG 20 แผ่น</small></span>
+          <span class="qa-menu-label"><strong>UWB<br>Calibration</strong><small>Test results and 20 SVG figures</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="wiring" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/01_AGV_MEGA_Combined_R09.svg" alt=""></span>
-          <span class="qa-menu-label"><strong>Electrical &amp;<br>INA226 Wiring</strong><small>ผังวงจรและการต่อขาจริง</small></span>
+          <span class="qa-menu-label"><strong>Electrical &amp;<br>INA226 Wiring</strong><small>Wiring diagrams and pin connections</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="roadmap" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png" alt=""></span>
-          <span class="qa-menu-label"><strong>AI / IoT<br>SCADA / PLC</strong><small>สถาปัตยกรรมและแผนต่อยอด</small></span>
+          <span class="qa-menu-label"><strong>AI / IoT<br>SCADA / PLC</strong><small>Architecture and roadmap</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
       </nav>
@@ -310,7 +313,7 @@
       </div>
 
       <button class="hud-btn" id="btn-close-qa" style="border-color:#EF4444;color:#FCA5A5;">
-        <span id="qa-return-label">กลับหน้า Q&amp;A</span>
+        <span id="qa-return-label">Back to Q&amp;A</span>
         <span class="kbd-hint">ESC</span>
       </button>
     </div>
@@ -408,7 +411,7 @@
                 • <strong>Spatial Held-Out:</strong> Center $P9\ (1.0, 1.0\text{ m})$<br/>
                 • <strong>Temporal Repeat:</strong> P1 → P1_REPEAT (mean range shift)<br/>
                 A1 +24.16 cm · A2 +32.81 cm · A3 -11.14 cm · A4 +5.68 cm<br/>
-                Boot session เปลี่ยน จึงยังแยกสาเหตุของการเปลี่ยนไม่ได้<br/>
+                The boot session changed, so the cause of the range shift remains unresolved<br/>
                 <strong>MSE = Bias² + Variance</strong><br/>
                 50,748 parsed ranges · 33,669 eligible · 3,492 archived XY snapshots<br/>
                 P9 range RMSE (point means): 13.75 → 12.39 cm
@@ -504,9 +507,9 @@
             <span class="status-badge safe">TRANSPARENT ENGINEERING SCOPE</span>
           </div>
           <div class="roadmap-evidence">
-            <p><strong>GitHub main · 48785f3:</strong> RemingtonDualTag → ESP-NOW Gateway → USB Bridge → Local Compute. ซอฟต์แวร์คำนวณ X,Y แสดงบน Dashboard และให้ REST/MCP อ่านพิกัดกับเวลาค้างในโซน</p>
-            <p><strong>ขอบเขตผลทดสอบ:</strong> เฟิร์มแวร์ 0.1.0-alpha.1 ผ่าน Host Tests ตามรายงานโครงการ รุ่นก่อนหน้าวัด X,Y ได้จากสอง Tag แต่ยังพบช่วงข้อมูลขาด การเชื่อม MQTT, Modbus TCP และ SCADA เป็นแผนต่อยอด</p>
-            <p><strong>เส้นทางคำขอในอนาคต:</strong> AI/MCP ส่งคำขอเตรียมสถานีผ่าน Gateway ที่กำหนดสิทธิ์ PLC ตรวจ Interlock และสถานะอุปกรณ์ก่อนสั่งงาน ส่วน SCADA ใช้เฝ้าดูสถานะและเหตุการณ์</p>
+            <p><strong>GitHub main · 48785f3:</strong> RemingtonDualTag → ESP-NOW Gateway → USB Bridge → Local Compute. The software computes X–Y positions for the dashboard. REST and MCP provide read access to positions and time spent in each zone.</p>
+            <p><strong>Test scope:</strong> Firmware 0.1.0-alpha.1 passed host tests. The previous version produced X–Y positions for both tags with gaps in the data. MQTT, Modbus TCP, and SCADA integration remain on the roadmap.</p>
+            <p><strong>Proposed request flow:</strong> AI/MCP requests station preparation through an access-controlled gateway. The PLC checks interlocks and equipment status before issuing commands. SCADA monitors status and events.</p>
             <p>
               <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/readme.md" target="_blank" rel="noopener noreferrer">Firmware &amp; runtime status</a>
               <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/local-compute/mcp_server.py" target="_blank" rel="noopener noreferrer">MCP tools</a>
@@ -570,10 +573,10 @@
   </div>
 
   <script src="data.js"></script>
-  <script src="canvases.js?v=control-room-theme"></script>
+  <script src="canvases.js?v=english"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=qa-slide"></script>
-  <script src="app.js?v=qa-slide"></script>
+  <script src="scene3d.js?v=spatial-awareness-en"></script>
+  <script src="app.js?v=english"></script>
 </body>
 </html>
 

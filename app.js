@@ -133,7 +133,7 @@
     slideRegion.inert = true;
     bottomBar.inert = true;
     document.getElementById("qa-return-label").textContent = currentSlide === qaSlide
-      ? "กลับหน้า Q&A" : `กลับสไลด์ ${currentSlide}`;
+      ? "Back to Q&A" : `Back to slide ${currentSlide}`;
     switchQaTab(tabId);
     btnQaClose.focus({ preventScroll: true });
   }
@@ -324,7 +324,7 @@
       gallery.innerHTML = wData.diagrams
         .map(
           (d) => `
-        <div class="svg-plate-card" data-wiring-src="${d.img}" data-wiring-title="${d.title} — ${d.subtitle}">
+        <div class="svg-plate-card" data-wiring-src="${d.svg}" data-wiring-title="${d.title} — ${d.subtitle}">
           <img src="${d.img}" alt="${d.title}" loading="lazy" style="background:#0B1220;height:155px;" />
           <div class="p-title" style="margin-top:4px;">${d.title}</div>
           <div style="font-size:11px;color:#94A3B8;line-height:1.35;">${d.subtitle}</div>

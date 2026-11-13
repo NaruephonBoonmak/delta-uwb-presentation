@@ -13,10 +13,10 @@ window.DELTA_CANVASES = (function () {
   let previousFrame = performance.now();
 
   const demoStates = {
-    SAFE: {distance: 170, style: "safe", caption: "ล้อและสายพานทำงานปกติ"},
-    WARNING: {distance: 95, style: "warn", caption: "Tag เข้าใกล้ · ล้อ AGV ชะลอ"},
-    DANGER: {distance: 42, style: "danger", caption: "ล้อและสายพานหยุด · Buzzer ดัง"},
-    RECOVERY: {distance: 160, style: "recovery", caption: "พ้นโซน · ล้อและสายพานเริ่มใหม่"}
+    SAFE: {distance: 170, style: "safe", caption: "AGV and conveyor run normally"},
+    WARNING: {distance: 95, style: "warn", caption: "Tag approaches · AGV slows down"},
+    DANGER: {distance: 42, style: "danger", caption: "AGV and conveyor stop · Buzzer sounds"},
+    RECOVERY: {distance: 160, style: "recovery", caption: "Zone clear · AGV and conveyor restart"}
   };
   const demoLimits = {min: 15, danger: 60, warning: 120, max: 200};
   let demoDistanceCm = 165;
@@ -118,7 +118,7 @@ window.DELTA_CANVASES = (function () {
     if (statusEl && statusEl.dataset.state !== style) statusEl.dataset.state = style;
     if (caption) {
       const message = demoAutoPhase === "withdraw" && demoState === "RECOVERY"
-        ? "Tag ถอยออก · ระบบกลับมาทำงาน" : stateCaption;
+        ? "Tag moves away · System resumes" : stateCaption;
       if (caption.textContent !== message) caption.textContent = message;
     }
 
@@ -200,7 +200,7 @@ window.DELTA_CANVASES = (function () {
     if (!container || typeof echarts === "undefined") return;
     const chartStatus = document.querySelector("[data-calibration-status]");
     if (chartStatus) chartStatus.textContent = s6ViewMode === "heatmap"
-      ? "Archived XY · ค่าคลาดเคลื่อนตำแหน่ง" : "Range RMSE · ก่อนและหลัง Calibration";
+      ? "Archived XY · Position error" : "Range RMSE · Before and after calibration";
 
     if (!s6Chart) {
       s6Chart = echarts.init(container, null, { renderer: "canvas" });

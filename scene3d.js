@@ -767,6 +767,13 @@
     }
     for (const y of [45,77]) modelBox(serviceRail, [215,7,7], [850,y,-141], railPaint);
     const serviceRing = floorRing(service, 759, -180, 37, 0xffb245, 5);
+    const crossingX = 465;
+    const crossingRing = floorRing(service, crossingX, laneZ, 66, red, 8);
+    const crossingLabel = makeLabel("AGV CROSSING", "#ffadb2", {width: 340, fontSize: 53});
+    crossingLabel.material.opacity = 1;
+    crossingLabel.scale.set(205, 49, 1);
+    crossingLabel.position.set(crossingX, 88, laneZ + 44);
+    service.add(crossingLabel);
     const panel = newMat(0x4b6175);
     modelBox(service, [17,113,37], [727,56.5,-180], panel);
     modelBox(service, [2,22,25], [736,91,-180], lightMaterial(0xe6a741));
@@ -798,6 +805,18 @@
     modelBox(parcel, [12,1,59], [0,138,0], tape);
     modelBox(parcel, [1,10,32], [33.5,117,0], tape);
     const handoff = floorRing(loading, 790, -265, 63, 0xffb245, 6);
+    const pickupMarkers = meshGroup(loading, 0, 0, 0);
+    floorRing(pickupMarkers, 870, laneZ, 92, cyan, 7);
+    for (const [text, color, x, y, z] of [
+      ["AGV POSITION", "#8fe6ff", 865, 95, laneZ + 86],
+      ["PICKUP BAY", "#ffd382", 793, 192, -265]
+    ]) {
+      const label = makeLabel(text, color, {width: 250, fontSize: 55});
+      label.material.opacity = 1;
+      label.scale.set(148, 54, 1);
+      label.position.set(x, y, z);
+      pickupMarkers.add(label);
+    }
     const tracking = meshGroup(root, 0, 0, 0);
     const trackedDock = floorRing(tracking, dockX, dockZ, 89, cyan, 5);
     const virtualWaypoints = meshGroup(tracking, 0,0,0);
@@ -824,7 +843,7 @@
     network.visible = false;
     return { root, ground, wall, agv, agv2, worker, network, anchors, hub, links, packets, lane, pallets, robots,
       scenarios, automatic, guideBranch, cobot, cobotLabel, cargo, laneZ, dockX, dockZ, service, serviceRail, serviceRing, accessLabel,
-      loading, loadingBay, loadingLabel, parcel, handoff,
+      crossingX, crossingRing, crossingLabel, loading, loadingBay, loadingLabel, parcel, handoff, pickupMarkers,
       tracking, trackedTags, trackedDock, virtualWaypoints, future, belt: hardware.beltTex };
   }
 
@@ -876,6 +895,7 @@
 
     const radio = meshGroup(root, 0, 0, 0);
     const green = 0x76edb3;
+    const beltFix = floorRing(radio, 220, -123, 41, green, 5);
     const agvTag = meshGroup(agv, -13, 65, -29);
     const beltTag = meshGroup(worker.root, 24, 84, 12);
     const tags = [
@@ -922,7 +942,7 @@
       return point;
     });
     return {root, optical, radio, agv, route, scanner, sensorPoint, roomBox, rackBox, workerBox,
-      rays, sweep, sight, hitPoint, workerRing, shadow, shadowEdges, tags, anchors, amber,
+      rays, sweep, sight, hitPoint, workerRing, shadow, shadowEdges, tags, anchors, amber, beltFix,
       source: V3(0,0,0), endpoint: V3(0,0,0), scanRay: new THREE.Ray(), rackHit: V3(0,0,0),
       workerHit: V3(0,0,0), person: V3(220,0,-123), labelEnd: V3(0,0,0), paused: reduceMotion};
   }
@@ -1086,6 +1106,7 @@
     f.loadingLabel.position.set(slide === 8 ? 1240 : 870, 26, slide === 8 ? -265 : -120);
     f.scenarios.visible = slide <= 4 || slide >= 8;
     f.tracking.visible = slide >= 8;
+    f.crossingRing.visible = f.crossingLabel.visible = f.pickupMarkers.visible = false;
     f.future.root.visible = slide === 9;
     f.trackedTags.forEach(tag => { tag.mount.visible = slide >= 8; });
     f.guideBranch.visible = true;
@@ -1125,6 +1146,7 @@
       setRig(stage, storyViews[slide === 5 ? "compare" : "booth"]);
       if (slide === 5) {
         story.sensing.status = container.querySelector("[data-sensing-status]");
+        story.sensing.uwbStatus = container.querySelector("[data-uwb-status]");
         setSensingPaused(reduceMotion);
       }
     }
@@ -1172,10 +1194,10 @@
       robot.turn.rotation.y = 0.45 * Math.sin(t * 1.3 + i);
       robot.arm.rotation.x = -0.38 + 0.24 * Math.cos(t * 1.2 + i);
     });
-    if (t < 4.1) return "AGV วิ่งตามเส้นนำทาง";
-    if (t < 4.65) return "AGV เข้าเทียบ Cobot";
-    if (t < 6.38) return "Cobot ส่งกล่องให้ AGV";
-    return t < 7.55 ? "กล่องวางบน AGV แล้ว" : "AGV ขนกล่องไปต่อ";
+    if (t < 4.1) return "AGV follows the guide path";
+    if (t < 4.65) return "AGV docks at the cobot";
+    if (t < 6.38) return "Cobot loads the carton onto the AGV";
+    return t < 7.55 ? "Carton is on the AGV" : "AGV carries the carton to the next station";
   }
 
   function updateOpening(dt) {
@@ -1187,14 +1209,15 @@
       let status = pickupStatus;
       let state = "info";
       if (service) {
-        const walking = smooth(t, 0.3, 3.3);
-        const inspecting = smooth(t, 3.3, 4.2);
-        walkWorker(f.worker, lerp(930,760,walking), -180, -Math.PI / 2,
-          Math.sin(t * 8) * 0.41 * (1 - smooth(t,2.8,3.3)));
+        const towardCobot = smooth(t, 2.75, 4.4);
+        const inspecting = smooth(t, 4.4, 5.2);
+        walkWorker(f.worker, lerp(f.crossingX,760,towardCobot), lerp(245,-180,smooth(t,0.2,2.75)),
+          t < 2.75 ? Math.PI : Math.PI / 2, Math.sin(t * 8) * 0.41 * (1 - smooth(t,4,4.4)));
         f.worker.limbs[1].arm.rotation.x -= 1.03 * inspecting;
-        f.serviceRing.visible = t >= 3.3;
-        status = t >= 3.3 ? "Cobot ยังทำงานขณะช่างเข้าซ่อม" : "ช่างเดินเข้าหา Cobot";
-        state = t >= 3.3 ? "danger" : "warn";
+        f.crossingRing.visible = f.crossingLabel.visible = t >= 0.6;
+        f.serviceRing.visible = t >= 4.4;
+        status = t >= 4.4 ? "Technician reaches the service area · Cobot is still running" : t >= 0.6 ? "Technician crosses the AGV route" : "Technician approaches the service area";
+        state = t >= 0.6 ? "danger" : "warn";
       }
       setStoryStatus(story.openingStatus, status, state);
       return;
@@ -1211,6 +1234,7 @@
 
     f.network.visible = false;
     f.handoff.visible = atHandoff;
+    f.pickupMarkers.visible = atHandoff;
     const advance = smooth(t,0.1,3.6);
     f.parcel.position.x = lerp(440,788,advance);
     f.parcel.position.y = -10 * smooth(advance,0.77,0.99);
@@ -1227,7 +1251,7 @@
       robot.arm.rotation.x = -0.33 + 0.23 * Math.cos(story.stationTravel * 1.4 + i);
     });
 
-    setStoryStatus(story.openingStatus, atHandoff ? "AGV เข้าไม่ถึงจุดรับของ" : "กล่องกำลังมาถึงจุดรับ",
+    setStoryStatus(story.openingStatus, atHandoff ? "AGV stops on the guide path outside the pickup bay" : "Carton approaches the pickup bay",
       atHandoff ? "warn" : "info");
   }
 
@@ -1311,11 +1335,11 @@
     f.serviceRing.visible = stopped && t < clear;
     renderTrackedTags(t < clear, true, t >= restart, true);
 
-    if (t < entry) setStoryStatus(story.currentStatus, "UWB อ่านพิกัดช่าง");
-    else if (t < clear) setStoryStatus(story.currentStatus, "ช่างเข้าโซน · เครื่องหยุดจำลอง", "danger");
-    else if (t < restart) setStoryStatus(story.currentStatus, "พ้นโซน · รอยืนยันเริ่มงาน", "warn");
-    else if (machineTime < 6.38) setStoryStatus(story.currentStatus, "AGV เข้าจุดรับตามพิกัด");
-    else setStoryStatus(story.currentStatus, "AGV รับกล่องสำเร็จ", "recovery");
+    if (t < entry) setStoryStatus(story.currentStatus, "UWB locates the technician");
+    else if (t < clear) setStoryStatus(story.currentStatus, "Technician enters the zone · Simulated stop", "danger");
+    else if (t < restart) setStoryStatus(story.currentStatus, "Zone clear · Awaiting restart confirmation", "warn");
+    else if (machineTime < 6.38) setStoryStatus(story.currentStatus, "AGV approaches the pickup bay using coordinates");
+    else setStoryStatus(story.currentStatus, "AGV receives the carton", "recovery");
   }
 
   function updateFutureScenario(dt) {
@@ -1363,12 +1387,12 @@
     if (story.futureStep === activeStep) return;
     story.futureStep = activeStep;
     const message = [
-      "AGV กำลังเข้าจุดรับของ",
-      "AI/MCP ส่งคำขอเมื่อถึงจุดโหลด",
-      "Gateway ส่งผ่าน MQTT / REST API",
-      "PLC รับคำขอ · ตรวจ Interlock",
-      "PLC พร้อม · ส่งสถานะให้ SCADA",
-      "SCADA บันทึกสถานะ"
+      "AGV approaches the pickup bay",
+      "AI/MCP sends a request when the AGV arrives",
+      "Gateway forwards the request via MQTT / REST API",
+      "PLC receives the request and checks interlocks",
+      "PLC sends its ready status to SCADA",
+      "SCADA logs the status"
     ][activeStep + 1];
     setStoryStatus(story.futureStatus, message, activeStep >= 3 ? "recovery" : "info");
     story.futureSteps.forEach((node,i) => {
@@ -1441,9 +1465,15 @@
     moveLine(s.sight, s.source, sightEnd);
     s.sight.material.color.setHex(visible ? s.amber : red);
     s.workerRing.material.color.setHex(visible ? s.amber : red);
-    setStoryStatus(s.status, visible ? "LiDAR ตรวจพบคน" : "ชั้นวางบัง LiDAR", visible ? "info" : "warn");
+    setStoryStatus(s.status, visible ? "Scan reaches the technician" : "Rack blocks the scan", visible ? "info" : "warn");
     updateSensingShadow(s);
 
+    // Illustrate a missed update for the worker tag independently of the optical scan.
+    const missingBeltFix = routePhase >= 0.21 && routePhase < 0.43;
+    s.beltFix.material.opacity = missingBeltFix ? 0.3 : 0.8;
+    s.beltFix.material.color.setHex(missingBeltFix ? s.amber : s.tags[1].color);
+    setStoryStatus(s.uwbStatus, missingBeltFix ? "Belt Tag update missing · Last known position" : "A1–A4 · Both tags share one X–Y map",
+      missingBeltFix ? "warn" : "info");
     s.tags.forEach((tag, tagIndex) => {
       tag.mount.getWorldPosition(tag.point);
       tag.label.position.copy(tag.point);
@@ -1453,10 +1483,12 @@
       moveLine(tag.leader, tag.point, s.labelEnd);
       tag.links.forEach(({line, pulse}, i) => {
         const anchor = s.anchors[i];
+        const missingRange = tagIndex === 1 && missingBeltFix && i !== 1;
         moveLine(line, anchor, tag.point);
         const phase = (t * 0.95 + i * 0.22 + tagIndex * 0.36) % 1;
         pulse.position.lerpVectors(anchor, tag.point, 1 - Math.abs(2 * phase - 1));
-        line.material.opacity = 0.29 + 0.33 * Math.sin(phase * Math.PI) ** 2;
+        pulse.visible = !missingRange;
+        line.material.opacity = missingRange ? 0.07 : 0.29 + 0.33 * Math.sin(phase * Math.PI) ** 2;
       });
     });
   }
