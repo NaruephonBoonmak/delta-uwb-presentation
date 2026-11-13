@@ -480,6 +480,7 @@
   const cyan = 0x32ddff, red = 0xff4856;
   const storyViews = {
     opening: { az: 0.26, el: 0.72, dist: 1490, tx: 220, ty: 42, tz: -72 },
+    twin: { az: 0.22, el: 0.77, dist: 1740, tx: 100, ty: 55, tz: -100 },
     future: { az: 0.19, el: 0.70, dist: 1810, tx: 750, ty: 36, tz: -85 },
     controlRoom: { az: 0.09, el: 0.51, dist: 1090, tx: 1185, ty: 74, tz: -192 },
     compare: { az: 0.08, el: 1.10, dist: 1660, tx: 0, ty: 90, tz: 0 },
@@ -1148,10 +1149,6 @@
     story.booth.root.visible = slide === 6;
     story.elapsed = 0;
     const f = story.factory;
-    // In the combined scene the rail shields the Cobot service area and leaves the loading aisle open.
-    f.serviceRail.position.set(slide === 8 ? -160 : 0, 0, slide === 8 ? 26 : 0);
-    f.accessLabel.position.x = slide === 8 ? 752 : 867;
-    f.loadingLabel.position.set(slide === 8 ? 1240 : 870, 26, slide === 8 ? -265 : -120);
     f.scenarios.visible = slide <= 4 || slide >= 8;
     f.tracking.visible = slide >= 8;
     f.crossingRing.visible = f.crossingLabel.visible = f.pickupMarkers.visible = false;
@@ -1172,12 +1169,12 @@
       story.stationTravel = 0;
       setRig(stage, storyViews.opening);
     } else if (slide === 8) {
-      f.automatic.visible = false;
-      f.service.visible = f.loading.visible = true;
-      f.serviceRing.material.color.setHex(red);
+      f.automatic.visible = true;
+      f.service.visible = f.loading.visible = false;
+      f.guideBranch.visible = false;
       story.currentStatus = container.querySelector("[data-current-status]");
-      story.elapsed = reduceMotion ? 2.25 : 0;
-      setRig(stage, storyViews.opening);
+      story.elapsed = reduceMotion ? 8 : 0;
+      setRig(stage, storyViews.twin);
     } else if (slide === 9) {
       f.automatic.visible = true;
       f.service.visible = f.loading.visible = false;
@@ -1340,55 +1337,20 @@
     });
   }
 
-  function updateLocationPickup(dt, t) {
-    const f = story.factory;
-    const bay = f.loadingBay;
-    f.worker.root.visible = f.agv2.visible = false;
-    f.ground.color.copy(darkFloor);
-    f.wall.color.copy(darkWall);
-    story.stage.exposure = 0.85;
-    f.agv.position.set(lerp(-560,bay.x,smooth(t,0.25,2.75)),0,lerp(f.laneZ,bay.z,smooth(t,3.05,5.1)));
-    f.agv.rotation.y = lerp(Math.PI / 2,Math.PI,smooth(t,2.75,3.05));
-    const handoff = smooth(t,5.2,6.38);
-    f.parcel.position.x = lerp(440,788,smooth(t,0.1,3.6)) + (bay.x - 788) * handoff;
-    f.parcel.position.y = -10 * smooth(t,2.75,3.6) - 16 * handoff;
-    f.handoff.visible = false;
-    if (t < 3.6) f.belt.offset.x -= dt * 0.44;
-    f.pallets.forEach((box,i) => {
-      box.visible = i < 2;
-      box.position.x = 180 + i * 137;
-    });
-    f.robots.forEach((robot,i) => {
-      robot.turn.rotation.y = 0.49 * Math.sin(t * 1.25 + i);
-      robot.arm.rotation.x = -0.33 + 0.23 * Math.cos(t * 1.4 + i);
-    });
-  }
-
-  function updateCurrentScenario(dt) {
+  function updateTwinScenario(dt) {
     const f = story.factory, t = story.elapsed;
-    const entry = 2.25, leave = 4.25, clear = 6.55, restart = 7.1;
-    const stopped = t >= entry && t < restart;
-    const machineTime = t < entry ? t : stopped ? entry : t - (restart - entry);
-    updateLocationPickup(stopped ? 0 : dt, machineTime);
-    // The AGV, carton and arm share the same clock before and after the simulated stop.
-    const armTravel = 0.5 + 0.5 * Math.sin(machineTime * 1.55);
-    aimCobot(f.cobot, V3(lerp(608,656,armTravel), 140 + 22 * armTravel, -265));
+    const docked = 4.1, handoff = 5.5, transferEnd = 6.38;
+    const completed = handoff + transferEnd - docked;
+    const pausedAtDock = t >= docked && t < handoff;
+    const motion = t < docked ? t : Math.min(transferEnd, docked + Math.max(0, t - handoff));
+    updateAutomaticPickup(pausedAtDock ? 0 : dt, motion);
+    f.worker.root.visible = false;
+    renderTrackedTags(false, true, false);
 
-    const walkingIn = smooth(t, 0, entry);
-    const walkingOut = smooth(t, leave, clear);
-    const workerX = lerp(930,760,walkingIn) + 170 * walkingOut;
-    const walking = (t < entry || (t >= leave && t < clear)) && !reduceMotion;
-    f.worker.root.visible = t < clear;
-    walkWorker(f.worker, workerX, -180, t < leave ? -Math.PI / 2 : Math.PI / 2,
-      walking ? Math.sin(t * 8) * 0.41 : 0);
-    f.serviceRing.visible = stopped && t < clear;
-    renderTrackedTags(t < clear, true, t >= restart, true);
-
-    if (t < entry) setStoryStatus(story.currentStatus, "UWB locates the technician");
-    else if (t < clear) setStoryStatus(story.currentStatus, "Technician enters the zone · Simulated stop", "danger");
-    else if (t < restart) setStoryStatus(story.currentStatus, "Zone clear · Awaiting restart confirmation", "warn");
-    else if (machineTime < 6.38) setStoryStatus(story.currentStatus, "AGV approaches the pickup bay using coordinates");
-    else setStoryStatus(story.currentStatus, "AGV receives the carton", "recovery");
+    if (t < docked) setStoryStatus(story.currentStatus, "Approaching the pickup bay");
+    else if (t < handoff) setStoryStatus(story.currentStatus, "Docked · Virtual AGV in position", "safe");
+    else if (t < completed) setStoryStatus(story.currentStatus, "Docked · Testing carton transfer", "safe");
+    else setStoryStatus(story.currentStatus, "Carton received · Simulated handoff complete", "recovery");
   }
 
   function updateFutureScenario(dt) {
@@ -1441,12 +1403,12 @@
       "AGV approaches the pickup bay",
       "AGV docks at the pickup bay",
       "UWB confirms the AGV position and the system reports it",
-      "PLC checks the conveyor interlocks",
-      "SCADA displays the conveyor running status",
-      "SCADA logs the conveyor start"
+      "AS Series PLC checks the conveyor interlocks",
+      "VTScada displays the conveyor running status",
+      "VTScada logs the conveyor start"
     ][activeStep + 1];
     setStoryStatus(story.futureStatus, activeStep === 2 && t >= ready
-      ? "PLC commands the conveyor to start" : message, t >= ready ? "recovery" : "info");
+      ? "PLC commands the ME300 to run the conveyor" : message, t >= ready ? "recovery" : "info");
     if (story.futureStep === activeStep) return;
     story.futureStep = activeStep;
     story.futureSteps.forEach((node,i) => {
@@ -1618,7 +1580,7 @@
     story.elapsed += step;
     if (story.slide === 6) updateBooth(story.booth, step, C.getDemoSnapshot(), story.elapsed);
     else if (story.slide <= 4) updateOpening(step);
-    else if (story.slide === 8) updateCurrentScenario(step);
+    else if (story.slide === 8) updateTwinScenario(step);
     else updateFutureScenario(step);
     story.stage.render();
   }
@@ -1638,7 +1600,7 @@
       story.elapsed = 4.2;
       setSensingPaused(true);
     } else if ((story.slide === 8 || story.slide === 9) && story.stage) {
-      story.elapsed = story.slide === 8 ? 12 : 10;
+      story.elapsed = story.slide === 8 ? 8 : 10;
     }
   };
 

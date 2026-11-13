@@ -1646,6 +1646,64 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .future-chain small { margin-top: 3px; color: #40596e; font-size: 13px; }
 .future-chain .flow-active { border-color: #1980a1; background: #e3f5fb; }
 .future-chain .flow-done { border-color: #9ac6b2; background: #edf7f2; }
+.twin-layout {
+  display: grid;
+  grid-template-columns: 305px minmax(0, 1fr);
+  flex: 1 1 0;
+  min-height: 0;
+  gap: 16px;
+}
+.twin-capture, .twin-model {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.twin-capture {
+  background: #fff;
+  border: 1px solid #cbdce8;
+  border-radius: 12px;
+  padding: 17px 19px;
+}
+.twin-layout h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+  line-height: 1.25;
+  color: #172f45;
+}
+.twin-capture p { margin: 0; font-size: 13px; color: #486278; }
+.twin-map {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 106px;
+  max-height: 244px;
+  align-self: center;
+  aspect-ratio: 1 / 2;
+  margin: 18px 22px 23px;
+  border: 1px solid #92a9bf;
+  background: repeating-linear-gradient(to top, #e3f1f7 0 1px, transparent 1px 25%), linear-gradient(90deg, transparent 49%, #e3f1f7 49% 51%, transparent 51%), #f4f9fc;
+}
+.twin-anchor, .twin-tag {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  transform: translate(-50%, -50%);
+  border-radius: 4px;
+  padding: 2px 5px;
+  font: 700 11px/1.2 system-ui, sans-serif;
+}
+.twin-anchor { background: #23435a; color: white; }
+.twin-tag { background: #006486; color: white; }
+.twin-axis-x, .twin-axis-y { position: absolute; color: #486278; font-size: 11px; white-space: nowrap; }
+.twin-axis-x { left: 50%; top: 100%; transform: translate(-50%, 4px); }
+.twin-axis-y { top: 50%; right: 100%; margin-right: 8px; }
+.twin-readings { margin: 0 0 8px; font-size: 14px; }
+.twin-readings div { display: flex; justify-content: space-between; gap: 8px; }
+.twin-readings dt { font-weight: 700; }
+.twin-readings dd { margin: 0; font-variant-numeric: tabular-nums; }
+.twin-capture .twin-quality { color: #754705; }
+.twin-model h2 { flex: none; }
+.twin-scene { width: 100%; }
+.twin-chain { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .closing-controls .story-steps { gap: 12px; }
 
 .qa-references {
