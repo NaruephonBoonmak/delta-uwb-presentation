@@ -374,9 +374,9 @@ window.DELTA_DATA = {
   wiringData: {
     diagrams: [
       {
-        title: "AGV R20 · Rev B",
-        subtitle: "ESP32 direct control · 5 V supply, 3.3 V GPIO and separate motor power",
-        svg: "assets/wiring/AGV_ESP32_Schematic.svg?v=rev-b"
+        title: "AGV R20 · Rev D",
+        subtitle: "L298N wiring as reported · Motor operation unverified",
+        svg: "assets/wiring/AGV_ESP32_Schematic.svg?v=rev-d"
       },
       {
         title: "Wearable Belt Tag · R13",

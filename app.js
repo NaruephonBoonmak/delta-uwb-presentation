@@ -25,6 +25,11 @@
   const btnNext = document.getElementById("btn-next-slide");
   const qaOverlay = document.getElementById("qa-overlay");
   const btnQaClose = document.getElementById("btn-close-qa");
+  const boothCad = document.getElementById("slide-booth-cad");
+  const boothCadButton = document.getElementById("btn-booth-cad");
+  const cadPane = qaOverlay.querySelector('[data-qa-pane="cad"]');
+  const cadViewer = cadPane.querySelector(".qa-cad-viewer");
+  const cadSelector = document.getElementById("qa-cad-model");
   let qaOpen = false;
   let qaTrigger = null;
   let lightboxOpen = false;
@@ -48,6 +53,7 @@
   function goToSlide(targetIdx, forceReplay = false) {
     const idx = Math.max(1, Math.min(totalSlides, parseInt(targetIdx, 10)));
     if (idx === currentSlide && !forceReplay) return;
+    if (idx !== 6 && !boothCad.hidden) setBoothCad(false);
     currentSlide = idx;
 
     // Toggle slide active class
@@ -172,7 +178,25 @@
     }
   }
 
+  function setBoothCad(show) {
+    const slide = boothCad.closest(".slide");
+    const viewer = window.DELTA_CANVASES;
+    boothCad.hidden = !show;
+    slide.classList.toggle("show-booth-cad", show);
+    boothCadButton.setAttribute("aria-pressed", String(show));
+    boothCadButton.textContent = show ? "Back to Simulation" : "3D Booth Layout";
+    if (show) {
+      boothCad.appendChild(cadViewer);
+      cadSelector.value = "booth_layout";
+      viewer.selectCadModel(cadSelector.value);
+      viewer.initThreeCadViewer();
+    } else {
+      cadPane.appendChild(cadViewer);
+    }
+  }
+
   function initQaCadViewer() {
+    boothCadButton.addEventListener("click", () => setBoothCad(boothCad.hidden));
     const modelSelect = document.getElementById("qa-cad-model");
     const explode = document.getElementById("qa-cad-explode");
     const wireframe = document.getElementById("qa-cad-wireframe");
@@ -421,6 +445,11 @@
         }
         if (qaOpen) {
           closeQaOverlay();
+          return;
+        }
+        if (!boothCad.hidden) {
+          setBoothCad(false);
+          boothCadButton.focus({ preventScroll: true });
           return;
         }
       }

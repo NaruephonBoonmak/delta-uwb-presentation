@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
 <title id="title">AGV R20 electrical schematic</title>
-<desc id="desc">ESP32 UWB Pro v1.2 controls a DRV8833 dual H-bridge and a 3.3 V compatible piezo buzzer. An INA228 monitors the protected logic battery through its shunt. Motor and logic batteries have separate positive supplies and a common system return.</desc>
+<desc id="desc">ESP32 UWB Pro v1.2 connects to IN1–IN4 of an L298N dual H-bridge module and a 3.3 V compatible piezo buzzer. An INA228 monitors the protected logic battery through its shunt. Motor and logic batteries have separate positive supplies and a common system return.</desc>
 <rect width="1600" height="1120" fill="white"/>
 <rect x="22" y="22" width="1556" height="1076" fill="white" stroke="#111" stroke-width="1.4"/>
 <text x="50" y="66" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="31" font-weight="700" text-anchor="start">AGV R20 ELECTRICAL SCHEMATIC</text>
@@ -99,36 +99,37 @@
 <text x="72" y="720" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">J2-10 GPIO22</text>
 <rect x="590" y="474" width="300" height="259" fill="white" stroke="#111" stroke-width="2.4"/>
 <text x="604" y="501" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">U4</text>
-<text x="604" y="525" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start">DRV8833 dual H-bridge carrier</text>
+<text x="604" y="525" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start">L298N dual H-bridge module</text>
 <polyline points="378,602 590,602" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="604" y="608" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">AIN1</text>
+<text x="604" y="608" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">IN1</text>
 <polyline points="378,630 590,630" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="604" y="636" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">AIN2</text>
+<text x="604" y="636" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">IN2</text>
 <polyline points="378,658 590,658" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="604" y="664" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">BIN1</text>
+<text x="604" y="664" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">IN3</text>
 <polyline points="378,686 590,686" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="604" y="692" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">BIN2</text>
-<text x="604" y="558" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="400" text-anchor="start">SLP</text>
+<text x="604" y="692" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="400" text-anchor="start">IN4</text>
+<text x="604" y="558" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="400" text-anchor="start">VSS / 5V</text>
 <polyline points="590,552 518,552" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="565" y="541" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" text-anchor="end">+3V3</text>
-<text x="847" y="543" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="middle">VM</text>
+<text x="568" y="541" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" text-anchor="end">+5V_SW</text>
+<text x="604" y="581" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15">ENA / ENB · unused*</text>
+<text x="847" y="543" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="middle">VS</text>
 <polyline points="847,474 847,454 1393,454" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="1165" y="475" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="start">VM_SW · 4 × AA</text>
+<text x="1165" y="475" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="start">VS_SW · 4 × AA</text>
 <text x="771" y="720" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="400" text-anchor="start">GND</text>
 <polyline points="804,733 804,762" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
 <polyline points="804,762 804,776" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
 <text x="804" y="794" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" text-anchor="middle">0V_SYS</text>
-<text x="880" y="563" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">AOUT1</text>
+<text x="880" y="563" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">OUT1</text>
 <polyline points="890,558 949,558 949,549 978,549 978,554" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="880" y="603" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">AOUT2</text>
+<text x="880" y="603" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">OUT2</text>
 <polyline points="890,598 949,598 949,607 978,607 978,602" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
 <circle cx="978" cy="578" r="24" fill="white" stroke="#111" stroke-width="2"/>
 <text x="978" y="585" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle">M</text>
 <text x="1012" y="577" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="start">M1</text>
 <text x="1012" y="600" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">Left TT DC motor</text>
-<text x="880" y="656" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">BOUT1</text>
+<text x="880" y="656" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">OUT3</text>
 <polyline points="890,651 949,651 949,642 978,642 978,647" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
-<text x="880" y="696" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">BOUT2</text>
+<text x="880" y="696" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">OUT4</text>
 <polyline points="890,691 949,691 949,700 978,700 978,695" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
 <circle cx="978" cy="671" r="24" fill="white" stroke="#111" stroke-width="2"/>
 <text x="978" y="678" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle">M</text>
@@ -173,15 +174,17 @@
 <text x="627" y="884" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle">+3V3</text>
 <polyline points="699,852 699,866" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/>
 <text x="699" y="884" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle">0V_SYS</text>
-<text x="770" y="840" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">Seeed Grove Buzzer or equivalent with 3.3 V input</text>
+<text x="770" y="828" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16">No flyback diodes fitted. Motor operation is unverified.</text>
+<text x="770" y="853" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16">Remove 5V-EN regulator jumper before feeding +5V_SW into the 5V terminal.</text>
+<text x="770" y="878" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16">* ENA/ENB are not used by the ESP32. Internal enable wiring is unverified.</text>
 <polyline points="22,907 1578,907" fill="none" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/>
 <text x="50" y="933" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">Drawing references: IEC 61082-1 for document layout · IEC 60617 for graphical symbols</text>
 <text x="50" y="958" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">Identical net names are connected. Solid dots mark joins. 0V_SYS is the shared DC return. Keep BAT_RET separate outside U2.</text>
 <text x="50" y="982" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">* Confirm the INA228 module pinout and shunt value. Connect V+ to I+ and V− to 0V_SYS only on the matching variant.</text>
 <text x="50" y="1006" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">S1/S2 are shown open. 1 and 2 are drawing identifiers. Verify switch pinout, motor stall current and ESP32 firmware on the bench.</text>
-<text x="50" y="1030" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">IEC 60204-1 safety review pending: overcurrent protection and stopping. This schematic shows the proposed prototype wiring.</text>
+<text x="50" y="1030" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">Hardware record only. ST requires flyback protection for inductive loads. Do not energize the motors as shown.</text>
 <polyline points="22,1053 1578,1053" fill="none" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/>
 <text x="50" y="1082" fill="#111" font-family="DejaVu Sans, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start">MECHECI404  /  DELTA</text>
-<text x="800" y="1082" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="700" text-anchor="middle">AGV-EL-01   |   REV B   |   PROPOSED</text>
+<text x="800" y="1082" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="700" text-anchor="middle">AGV-EL-01   |   REV D   |   AS REPORTED</text>
 <text x="1549" y="1082" fill="#111" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" text-anchor="end">SHEET 1 OF 1</text>
 </svg>

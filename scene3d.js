@@ -1619,8 +1619,9 @@
     const qaOpen = document.getElementById("qa-overlay") && document.getElementById("qa-overlay").classList.contains("open");
 
     if (story.tween?.isActive() || story.tween?.paused()) story.tween.paused(qaOpen);
-    if (!qaOpen) renderStory(dt);
-    if (qa.stage && qaOpen) qa.stage.render();
+    const boothCadOpen = story.slide === 6 && !document.getElementById("slide-booth-cad").hidden;
+    if (!qaOpen && !boothCadOpen) renderStory(dt);
+    if (qa.stage && (qaOpen || boothCadOpen)) qa.stage.render();
     requestAnimationFrame(loop);
   }
 

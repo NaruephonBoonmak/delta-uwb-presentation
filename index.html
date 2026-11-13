@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=research-citations" />
+  <link rel="stylesheet" href="styles.css?v=l298n-booth" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -145,7 +145,11 @@
           <div><small>BUZZER</small><strong id="tel-buzzer">OFF</strong></div>
         </div>
       </div>
-      <p class="story-footnote">Related UWB research · Measuring time in traffic conflict zones · <a href="https://doi.org/10.3390/s23177551" target="_blank" rel="noopener noreferrer">Fakhoury &amp; Ismail (2023)</a></p>
+      <div class="slide-booth-cad" id="slide-booth-cad" hidden></div>
+      <div class="speaker-controls booth-view-controls">
+        <p class="story-footnote">Related UWB research · Measuring time in traffic conflict zones · <a href="https://doi.org/10.3390/s23177551" target="_blank" rel="noopener noreferrer">Fakhoury &amp; Ismail (2023)</a></p>
+        <button class="stage-btn" type="button" id="btn-booth-cad" aria-controls="slide-booth-cad" aria-pressed="false">3D Booth Layout</button>
+      </div>
     </section>
 
     <!-- ======================================================================
@@ -222,8 +226,8 @@
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="wiring" aria-haspopup="dialog">
-          <span class="qa-menu-preview"><img src="assets/qa/covers/schematics.webp" width="840" height="460" alt=""></span>
-          <span class="qa-menu-label"><strong>Electrical<br>Schematics</strong><small>AGV Rev B and Belt R13</small></span>
+          <span class="qa-menu-preview"><img src="assets/qa/covers/schematics-l298n.webp?v=rev-d" width="840" height="460" alt=""></span>
+          <span class="qa-menu-label"><strong>Electrical<br>Schematics</strong><small>AGV L298N and Belt R13</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card qa-evidence-card" type="button" data-open-qa-tab="references" aria-haspopup="dialog">
@@ -383,6 +387,7 @@
         <div class="qa-wiring-notes">
           <p>Review AGV overcurrent protection and stopping functions before machinery integration.</p>
           <nav aria-label="Electrical drawing and safety references">
+            <a href="https://www.st.com/resource/en/datasheet/cd00000240.pdf" target="_blank" rel="noopener noreferrer">ST L298 datasheet</a>
             <a href="https://webstore.iec.ch/en/publication/4469" target="_blank" rel="noopener noreferrer">IEC 61082-1 · Drawing conventions</a>
             <a href="https://webstore.iec.ch/en/publication/2723" target="_blank" rel="noopener noreferrer">IEC 60617 · Graphical symbols</a>
             <a href="https://webstore.iec.ch/en/publication/71256" target="_blank" rel="noopener noreferrer">IEC 60204-1 · Machinery safety review</a>
@@ -406,7 +411,7 @@
         <section class="eng-panel evidence-group" aria-labelledby="evidence-team">
           <h2 id="evidence-team">Prototype test evidence</h2>
           <ul>
-            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/agvuart/VALIDATION.md" target="_blank" rel="noopener noreferrer">AGV UART validation ↗</a><p>Slide 6 · Host tests and firmware builds for the earlier UART prototype. Rev B hardware validation is pending.</p></li>
+            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/agvuart/VALIDATION.md" target="_blank" rel="noopener noreferrer">AGV UART validation ↗</a><p>Slide 6 · Host tests and firmware builds for the earlier UART prototype. Rev D hardware validation is pending.</p></li>
             <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-espnow/calibration_series_20261024/assessment/README.md" target="_blank" rel="noopener noreferrer">Held-out range calibration ↗</a><p>Slide 7 · Static range RMSE fell from 17.71 to 16.15 cm across held-out point means. Five of eight point–anchor pairs improved.</p></li>
             <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Two-tag live capture ↗</a><p>Slides 4 and 8 · Shared lab coordinates and X–Y for both tags. Some records had incomplete or stale ranges.</p></li>
           </ul>
@@ -444,10 +449,10 @@
     </div>
   </div>
 
-  <script src="data.js?v=qa-refresh"></script>
+  <script src="data.js?v=l298n-rev-d"></script>
   <script src="canvases.js?v=research"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=qa-refresh"></script>
-  <script src="app.js?v=factory-progress"></script>
+  <script src="scene3d.js?v=l298n-booth"></script>
+  <script src="app.js?v=l298n-booth"></script>
 </body>
 </html>

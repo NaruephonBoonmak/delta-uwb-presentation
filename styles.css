@@ -1821,3 +1821,24 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   font-size: 18px;
   font-weight: 500;
 }
+
+/* Slide 6 shares the interactive CAD viewer with Technical Q&A. */
+.slide-booth-cad {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  --border-subtle: #cbd9e3;
+}
+.slide-booth-cad[hidden], .show-booth-cad .story-booth, .show-booth-cad .demo-controls { display: none; }
+.slide-booth-cad .qa-cad-toolbar,
+.slide-booth-cad .qa-cad-parts { padding: 8px 10px; gap: 6px; }
+.slide-booth-cad .stage-btn {
+  color: #15354b;
+  background: #fff;
+  border-color: #b9cbd8;
+}
+.slide-booth-cad .stage-btn[aria-pressed="true"],
+.slide-booth-cad .stage-btn:hover { background: #dff1f9; border-color: #2795b8; }
+.slide-booth-cad .qa-cad-help { color: #486278; }
+.booth-view-controls { min-height: 32px; }
+.booth-view-controls button { white-space: nowrap; }
