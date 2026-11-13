@@ -51,7 +51,7 @@
     x.fillStyle = "#F8FAFC";
     x.font = `700 ${fontSize}px 'JetBrains Mono', monospace`;
     x.textAlign = "center"; x.textBaseline = "middle";
-    x.fillText(text, width / 2, 58);
+    x.fillText(text, width / 2, 58, width - 32);
     const tex = new THREE.CanvasTexture(c);
     const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, opacity: 0 });
     const s = new THREE.Sprite(mat);
@@ -858,9 +858,9 @@
       ["AGV POSITION", "#8fe6ff", 865, 95, laneZ + 86],
       ["PICKUP BAY", "#ffd382", 793, 192, -265]
     ]) {
-      const label = makeLabel(text, color, {width: 250, fontSize: 55});
+      const label = makeLabel(text, color, {width: 416, fontSize: 50});
       label.material.opacity = 1;
-      label.scale.set(148, 54, 1);
+      label.scale.set(193, 52, 1);
       label.position.set(x, y, z);
       pickupMarkers.add(label);
     }
