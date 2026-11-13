@@ -20,6 +20,7 @@
   const qaSlide = Number(document.querySelector(".qa-slide").dataset.slide);
   const slideRegion = document.querySelector(".slide-region");
   const bottomBar = document.querySelector(".bottom-bar");
+  const factoryProgress = document.querySelector(".factory-progress");
   const btnPrev = document.getElementById("btn-prev-slide");
   const btnNext = document.getElementById("btn-next-slide");
   const qaOverlay = document.getElementById("qa-overlay");
@@ -56,7 +57,10 @@
       el.inert = sNum !== currentSlide;
     });
 
-    // Update Bottom Slide Dots & Counter
+    const storyProgress = Math.max(0, Math.min(1, (currentSlide - 2) / (qaSlide - 3)));
+    factoryProgress.style.setProperty("--factory-fill", `${storyProgress * 100}%`);
+
+    // Update bottom navigation
     document.querySelectorAll(".slide-dot").forEach((dot) => {
       const dNum = parseInt(dot.getAttribute("data-slide-dot"), 10);
       const active = dNum === currentSlide;

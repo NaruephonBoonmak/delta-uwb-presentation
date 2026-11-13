@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=cover" />
+  <link rel="stylesheet" href="styles.css?v=factory-progress" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -250,18 +250,30 @@
       </span>
     </div>
 
-    <div class="slide-dots" aria-label="Slide Pagination">
-      <button class="slide-dot active" data-slide-dot="1" title="1. Spatial Intelligence Platform for Future Dark Factory Operations" aria-label="Slide 1: Spatial Intelligence Platform for Future Dark Factory Operations"></button>
-      <button class="slide-dot" data-slide-dot="2" title="2. Inside a Dark Factory" aria-label="Slide 2: Inside a Dark Factory"></button>
-      <button class="slide-dot" data-slide-dot="3" title="3. Human Intervention" aria-label="Slide 3: Human Intervention"></button>
-      <button class="slide-dot" data-slide-dot="4" title="4. Location-Awareness" aria-label="Slide 4: Location-Awareness"></button>
-      <button class="slide-dot" data-slide-dot="5" title="5. Why UWB" aria-label="Slide 5: Why UWB"></button>
-      <button class="slide-dot" data-slide-dot="6" title="6. Safety Demo" aria-label="Slide 6: Safety Demo"></button>
-      <button class="slide-dot" data-slide-dot="7" title="7. Calibration" aria-label="Slide 7: Calibration"></button>
-      <button class="slide-dot" data-slide-dot="8" title="8. UWB Today" aria-label="Slide 8: UWB Today"></button>
-      <button class="slide-dot" data-slide-dot="9" title="9. AGV &amp; Conveyor Handoff" aria-label="Slide 9: AGV &amp; Conveyor Handoff"></button>
+    <nav class="factory-navigation" aria-label="Slide navigation">
+      <div class="factory-progress">
+        <div class="factory-progress-labels" aria-hidden="true">
+          <span>Hybrid Factory</span>
+          <span>Dark Factory</span>
+        </div>
+        <div class="factory-track">
+          <img class="factory-scene" src="assets/factory-progress/hybrid.webp" width="1200" height="104" alt="Hybrid factory with technicians, robots, a conveyor, and an AGV">
+          <img class="factory-scene factory-scene-dark" src="assets/factory-progress/dark.webp" width="1200" height="104" alt="Dark factory with robots, a conveyor, and an AGV operating without people on the floor">
+          <div class="factory-stops">
+          <button class="slide-dot active" data-slide-dot="1" title="1. Spatial Intelligence Platform for Future Dark Factory Operations" aria-label="Slide 1: Spatial Intelligence Platform for Future Dark Factory Operations"></button>
+          <button class="slide-dot" data-slide-dot="2" title="2. Inside a Dark Factory" aria-label="Slide 2: Inside a Dark Factory"></button>
+          <button class="slide-dot" data-slide-dot="3" title="3. Human Intervention" aria-label="Slide 3: Human Intervention"></button>
+          <button class="slide-dot" data-slide-dot="4" title="4. Location-Awareness" aria-label="Slide 4: Location-Awareness"></button>
+          <button class="slide-dot" data-slide-dot="5" title="5. Why UWB" aria-label="Slide 5: Why UWB"></button>
+          <button class="slide-dot" data-slide-dot="6" title="6. Safety Demo" aria-label="Slide 6: Safety Demo"></button>
+          <button class="slide-dot" data-slide-dot="7" title="7. Calibration" aria-label="Slide 7: Calibration"></button>
+          <button class="slide-dot" data-slide-dot="8" title="8. UWB Today" aria-label="Slide 8: UWB Today"></button>
+          <button class="slide-dot" data-slide-dot="9" title="9. AGV &amp; Conveyor Handoff" aria-label="Slide 9: AGV &amp; Conveyor Handoff"></button>
+          </div>
+        </div>
+      </div>
       <button class="slide-dot slide-dot-qa" data-slide-dot="10" title="10. Q&A (Q)" aria-label="Slide 10: Q&A">Q&amp;A</button>
-    </div>
+    </nav>
 
     <div class="presenter-nav-btns">
       <button class="hud-btn" id="btn-prev-slide">&larr; Prev</button>
@@ -439,6 +451,6 @@
   <script src="canvases.js?v=research"></script>
   <script src="assets/stl_bundle.js"></script>
   <script src="scene3d.js?v=qa-refresh"></script>
-  <script src="app.js?v=qa-refresh"></script>
+  <script src="app.js?v=factory-progress"></script>
 </body>
 </html>
