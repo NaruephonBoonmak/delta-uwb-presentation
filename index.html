@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=handoff-evidence" />
+  <link rel="stylesheet" href="styles.css?v=qa-refresh" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -238,7 +238,6 @@
           <a class="closing-source" href="https://www.deltaww.com/en-US/press/35638" target="_blank" rel="noopener noreferrer">AS Series + ME300 ↗</a>
           <a class="closing-source" href="https://www.deltaww.com/en-US/solutions/virtual-machine-development-platform" target="_blank" rel="noopener noreferrer">DIATwin ↗</a>
         </div>
-        <button class="stage-btn" data-open-qa-tab="roadmap" aria-haspopup="dialog">Integration details →</button>
       </div>
     </section>
 
@@ -251,7 +250,7 @@
             <img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/01_BELT_Assembled_transparent.png" alt="">
             <img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/02_ANCHOR_Assembled_transparent.png" alt="">
           </span>
-          <span class="qa-menu-label"><strong>3D CAD &amp;<br>Mechanical BOM</strong><small>AGV R20 · Belt R18A · Anchor R05</small></span>
+          <span class="qa-menu-label"><strong>3D CAD<br>Viewer</strong><small>Explore assemblies and individual parts</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="calibration" aria-haspopup="dialog">
@@ -260,13 +259,11 @@
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="wiring" aria-haspopup="dialog">
-          <span class="qa-menu-preview"><img src="assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/01_AGV_MEGA_Combined_R09.svg" alt=""></span>
-          <span class="qa-menu-label"><strong>Electrical &amp;<br>INA226 Wiring</strong><small>Module wiring and physical pin maps</small></span>
-          <span class="qa-menu-arrow" aria-hidden="true">→</span>
-        </button>
-        <button class="qa-menu-card" type="button" data-open-qa-tab="roadmap" aria-haspopup="dialog">
-          <span class="qa-menu-preview"><img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png" alt=""></span>
-          <span class="qa-menu-label"><strong>Integration<br>Roadmap</strong><small>Prototype architecture and future PLC / SCADA integration</small></span>
+          <span class="qa-menu-preview qa-schematic-preview">
+            <img src="assets/wiring/AGV_ESP32_Schematic.svg?v=rev-b" alt="">
+            <img src="assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/02_BELT_No_Extra_Board_R09.svg?v=r13" alt="">
+          </span>
+          <span class="qa-menu-label"><strong>Electrical<br>Schematics</strong><small>AGV Rev B and Belt R13</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card qa-evidence-card" type="button" data-open-qa-tab="references" aria-haspopup="dialog">
@@ -317,96 +314,40 @@
        ======================================================================== -->
   <aside class="qa-overlay" id="qa-overlay" role="dialog" aria-modal="true" aria-labelledby="qa-detail-title" aria-hidden="true" inert>
     <div class="qa-header">
-      <div style="display:flex;align-items:center;gap:16px;">
-        <div class="brand-badge" id="qa-detail-title">TECHNICAL Q&amp;A</div>
-        <div class="qa-tabs">
-          <button class="qa-tab active" data-qa-tab="cad">CAD &amp; BOM</button>
+      <div class="qa-navigation">
+        <h2 id="qa-detail-title">Technical Q&amp;A</h2>
+        <nav class="qa-tabs" aria-label="Technical Q&amp;A topics">
+          <button class="qa-tab active" data-qa-tab="cad">3D CAD</button>
           <button class="qa-tab" data-qa-tab="calibration">Calibration</button>
-          <button class="qa-tab" data-qa-tab="wiring">Electrical Wiring</button>
-          <button class="qa-tab" data-qa-tab="roadmap">Roadmap</button>
+          <button class="qa-tab" data-qa-tab="wiring">Schematics</button>
           <button class="qa-tab" data-qa-tab="references">References &amp; Test Evidence</button>
-        </div>
+        </nav>
       </div>
 
-      <button class="hud-btn" id="btn-close-qa" style="border-color:#EF4444;color:#FCA5A5;">
+      <button class="hud-btn" id="btn-close-qa" type="button">
         <span id="qa-return-label">Back to Q&amp;A</span>
         <span class="kbd-hint">ESC</span>
       </button>
     </div>
 
     <div class="qa-body">
-      <!-- ====================================================================
-           Q&A CATEGORY 1: 3D CAD, MECHANICAL DESIGN & EXPLODED BOM
-           ==================================================================== -->
-      <div class="qa-pane qa-cad-layout active" data-qa-pane="cad">
-        <!-- Col 1: Subsystem Selector -->
-        <div class="eng-panel">
-          <div class="eng-panel-header">
-            <div class="eng-panel-title">SELECT HARDWARE SUBSYSTEM</div>
+      <section class="qa-pane qa-cad-layout active" data-qa-pane="cad" aria-label="3D CAD">
+        <div class="qa-cad-viewer">
+          <div class="qa-cad-toolbar">
+            <label>Assembly <select id="qa-cad-model"></select></label>
+            <label>Explode <input id="qa-cad-explode" type="range" min="0" max="1.5" step="0.05" value="0"></label>
+            <button class="stage-btn" id="qa-cad-wireframe" type="button" aria-pressed="false">Wireframe</button>
+            <button class="stage-btn" id="qa-cad-spin" type="button" aria-pressed="false">Auto-spin</button>
+            <span class="qa-cad-help">Drag to rotate · Scroll to zoom · Select a part to highlight</span>
           </div>
-          <div class="cad-model-selector" id="qa-cad-selector-list"></div>
+          <div id="qa-three-stage"></div>
         </div>
-
-        <!-- Col 2: Interactive 3D Three.js Viewer + High-Res Studio CAD/BOM Render -->
-        <div class="eng-panel" style="display:grid;grid-template-rows:1fr 1fr;gap:12px;">
-          <!-- Upper: Interactive Three.js 3D Assembly Stage -->
-          <div style="display:flex;flex-direction:column;min-height:0;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;background:#050911;position:relative;">
-            <div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,21,38,0.9);border-bottom:1px solid var(--border-subtle);">
-              <span style="font-family:var(--font-mono);font-size:11px;color:var(--accent-cyan);font-weight:700;">
-                INTERACTIVE 3D CAD &amp; EXPLODED VIEW (DRAG TO ROTATE)
-              </span>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <label style="font-family:var(--font-mono);font-size:10.5px;color:#CBD5E1;display:flex;align-items:center;gap:4px;">
-                  Explode:
-                  <input type="range" min="0" max="1.5" step="0.05" value="0" oninput="window.DELTA_CANVASES.updateThreeExplode(this.value)" style="width:75px;accent-color:var(--accent-cyan);" />
-                </label>
-                <button class="stage-btn" onclick="window.DELTA_CANVASES.toggleThreeWireframe()">Wireframe</button>
-                <button class="stage-btn" onclick="window.DELTA_CANVASES.toggleThreeAutoRotate()">Auto-Spin</button>
-              </div>
-            </div>
-            <div id="qa-three-stage" style="flex:1;min-height:160px;width:100%;cursor:grab;"></div>
-          </div>
-
-          <!-- Lower: Verified CAD Render / Exploded BOM Image Switcher -->
-          <div style="display:flex;flex-direction:column;min-height:0;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;background:#080E1A;">
-            <div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:rgba(13,21,38,0.9);border-bottom:1px solid var(--border-subtle);">
-              <span style="font-family:var(--font-mono);font-size:11px;color:#6EE7B7;font-weight:700;">
-                VERIFIED CAD STUDIO RENDER &amp; BOM CALLOUT (CLICK IMAGE TO ZOOM)
-              </span>
-              <div class="stage-btn-group">
-                <button class="stage-btn active" data-cad-img-mode="assembled">Assembled CAD</button>
-                <button class="stage-btn" data-cad-img-mode="bom">Exploded BOM</button>
-                <button class="stage-btn" data-cad-img-mode="alt">Detail / Stand View</button>
-              </div>
-            </div>
-            <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden;">
-              <img id="qa-cad-preview-img" src="" alt="CAD Preview" style="max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Col 3: Verified Dimensions, Specs & BOM Callouts -->
-        <div class="eng-panel" style="overflow-y:auto;">
-          <div class="eng-panel-header">
-            <div class="eng-panel-title" id="qa-cad-title">01_AGV_R20</div>
-          </div>
-          <div id="qa-cad-dims" style="font-family:var(--font-mono);font-size:11.5px;color:#00E5FF;margin-bottom:10px;padding:6px 10px;background:rgba(0,229,255,0.08);border-radius:6px;"></div>
-
-          <table class="eng-table">
-            <tbody id="qa-cad-specs-tbody"></tbody>
-          </table>
-
-          <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent-cyan);font-weight:700;margin:14px 0 6px;">
-            KEY MECHANICAL &amp; BOM COMPONENTS
-          </div>
-          <ul id="qa-cad-bom-list" style="list-style:none;"></ul>
-        </div>
-      </div>
+      </section>
 
       <!-- ====================================================================
            Q&A CATEGORY 2: UWB CALIBRATION & FULL 20-PLATE SCIENTIFIC ATLAS
            ==================================================================== -->
-      <div class="qa-pane" data-qa-pane="calibration" style="grid-template-rows:auto 1fr;overflow-y:auto;">
+      <div class="qa-pane qa-calibration" data-qa-pane="calibration">
         <div class="eng-panel">
           <div class="eng-panel-header">
             <div class="eng-panel-title">
@@ -414,15 +355,15 @@
             </div>
             <span class="status-badge safe">SOURCE: UWB.PIPATINTEGRATION.COM</span>
           </div>
-          <div style="display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:center;">
-            <div style="background:rgba(6,10,18,0.85);padding:12px;border-radius:8px;border:1px solid var(--border-subtle);">
-              <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent-cyan);margin-bottom:4px;">
+          <div class="qa-calibration-summary">
+            <div class="qa-calibration-method">
+              <div class="eng-panel-title">
                 LINEAR CALIBRATION EQUATION
               </div>
               <div style="font-size:13px;text-align:center;padding:4px 0;">
                 $$y = a \cdot u + b \implies u_{\text{corrected}} = \frac{y - b}{a}$$
               </div>
-              <div style="font-size:11.5px;color:#CBD5E1;margin-top:6px;line-height:1.4;">
+              <div class="qa-calibration-description">
                 • <strong>Training Grid:</strong> Perimeter points $P1\text{–}P8$<br/>
                 • <strong>Spatial Held-Out:</strong> Center $P9\ (1.0, 1.0\text{ m})$<br/>
                 • <strong>Temporal Repeat:</strong> P1 → P1_REPEAT (mean range shift)<br/>
@@ -434,7 +375,8 @@
               </div>
             </div>
 
-            <table class="eng-table">
+            <div class="qa-table-scroll">
+              <table class="eng-table">
               <thead>
                 <tr>
                   <th>Anchor (Coords)</th>
@@ -446,12 +388,13 @@
                   <th>Engineering Finding</th>
                 </tr>
               </thead>
-              <tbody id="qa-uwb-anchors-tbody"></tbody>
-            </table>
+                <tbody id="qa-uwb-anchors-tbody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div class="eng-panel" style="overflow-y:auto;">
+        <div class="eng-panel">
           <div class="eng-panel-header">
             <div class="eng-panel-title">
               COMPLETE 20-PLATE SCIENTIFIC GRAPH ATLAS (CLICK ANY PLATE TO ZOOM HIGH-RES SVG)
@@ -462,109 +405,22 @@
         </div>
       </div>
 
-      <!-- ====================================================================
-           Q&A CATEGORY 3: ELECTRICAL CIRCUIT, PINOUT & INA226 POWER MONITORING
-           ==================================================================== -->
-      <div class="qa-pane" data-qa-pane="wiring" style="grid-template-rows:auto auto;overflow-y:auto;">
-        <div class="eng-panel">
-          <div class="eng-panel-header">
-            <div class="eng-panel-title">
-              VERIFIED WIRING DIAGRAMS &amp; PHYSICAL BOARD LAYOUTS (CLICK ANY DIAGRAM TO ZOOM)
-            </div>
-            <span class="status-badge info">R09 INA226 + R05 PHYSICAL PINS</span>
-          </div>
-          <div class="svg-atlas-grid" id="qa-wiring-gallery" style="grid-template-columns:repeat(3, 1fr);"></div>
+      <section class="qa-pane qa-wiring" data-qa-pane="wiring" aria-label="Electrical schematics">
+        <div class="qa-wiring-heading">
+          <h2>Electrical schematics</h2>
+          <p>Select a drawing to enlarge it.</p>
         </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="eng-panel">
-            <div class="eng-panel-header">
-              <div class="eng-panel-title">INA226 (CYBERTICE M0903, R100 = 0.1 &Omega;) HIGH-SIDE PIN MAP</div>
-            </div>
-            <table class="eng-table">
-              <thead>
-                <tr>
-                  <th>INA226 Pin / Pad</th>
-                  <th>Connected To</th>
-                  <th>Engineering Function</th>
-                </tr>
-              </thead>
-              <tbody id="qa-ina226-tbody"></tbody>
-            </table>
-          </div>
-
-          <div class="eng-panel">
-            <div class="eng-panel-header">
-              <div class="eng-panel-title">AGV (ESP32 UWB PRO + MEGA 2560 + L298N) &amp; BELT ALERT I/O</div>
-            </div>
-            <table class="eng-table">
-              <thead>
-                <tr>
-                  <th>MCU Pin</th>
-                  <th>Signal Path</th>
-                  <th>Actuation / Function</th>
-                </tr>
-              </thead>
-              <tbody id="qa-mega-tbody"></tbody>
-            </table>
-          </div>
+        <div class="qa-wiring-gallery" id="qa-wiring-gallery"></div>
+        <div class="qa-wiring-notes">
+          <p>Review AGV overcurrent protection and stopping functions before machinery integration.</p>
+          <nav aria-label="Electrical drawing and safety references">
+            <a href="https://webstore.iec.ch/en/publication/4469" target="_blank" rel="noopener noreferrer">IEC 61082-1 · Drawing conventions</a>
+            <a href="https://webstore.iec.ch/en/publication/2723" target="_blank" rel="noopener noreferrer">IEC 60617 · Graphical symbols</a>
+            <a href="https://webstore.iec.ch/en/publication/71256" target="_blank" rel="noopener noreferrer">IEC 60204-1 · Machinery safety review</a>
+          </nav>
         </div>
-      </div>
+      </section>
 
-      <!-- ====================================================================
-           Q&A CATEGORY 4: AI / IoT / SCADA / PLC INDUSTRIAL ARCHITECTURE
-           ==================================================================== -->
-      <div class="qa-pane" data-qa-pane="roadmap" style="grid-template-rows:auto 1fr;overflow-y:auto;">
-        <div class="eng-panel">
-          <div class="eng-panel-header">
-            <div class="eng-panel-title">
-              CURRENT UWB CODE &amp; INDUSTRIAL ROADMAP
-            </div>
-            <span class="status-badge safe">TRANSPARENT ENGINEERING SCOPE</span>
-          </div>
-          <div class="roadmap-evidence">
-            <p><strong>GitHub main · 48785f3:</strong> RemingtonDualTag → ESP-NOW Gateway → USB Bridge → Local Compute. The software computes X–Y positions for the dashboard. REST and MCP provide read access to positions and time spent in each zone.</p>
-            <p><strong>Test scope:</strong> Firmware 0.1.0-alpha.1 passed host tests. The previous version produced X–Y positions for both tags with gaps in the data. MQTT, Modbus TCP, and SCADA integration remain on the roadmap.</p>
-            <p><strong>Proposed handoff:</strong> UWB confirms the AGV is in the pickup bay. The system reports that event to the PLC. After checking interlocks and equipment readiness, the PLC commands the conveyor. SCADA displays its status and logs the event.</p>
-            <p>
-              <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/readme.md" target="_blank" rel="noopener noreferrer">Firmware &amp; runtime status</a>
-              <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/local-compute/mcp_server.py" target="_blank" rel="noopener noreferrer">MCP tools</a>
-              <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/local-compute/app.py" target="_blank" rel="noopener noreferrer">REST endpoints</a>
-            </p>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            <div class="svg-plate-card" onclick="window.openDeltaLightbox('assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png', 'Full DELTA System Architecture with IoT / MQTT & Supervisory Integration', false)">
-              <img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png" alt="System Diagram Full" style="height:175px;" />
-              <div class="p-code">ARCHITECTURE A — FULL CONNECTED VISION</div>
-              <div class="p-title">UWB Nodes &rarr; Wireless / MQTT Telemetry &rarr; Dashboard &amp; Machine Interlock</div>
-            </div>
-            <div class="svg-plate-card" onclick="window.openDeltaLightbox('assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram_No_MQTT.png', 'Direct Low-Latency Prototype Architecture (No MQTT Broker Required)', false)">
-              <img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram_No_MQTT.png" alt="System Diagram Direct" style="height:175px;" />
-              <div class="p-code">ARCHITECTURE B — DIRECT PROTOTYPE CONTROL</div>
-              <div class="p-title">Direct UWB Ranging &rarr; Deterministic Safety State Machine &rarr; Motor &amp; Relay Control</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="eng-panel">
-          <div class="eng-panel-header">
-            <div class="eng-panel-title">
-              THREE-TIER IMPLEMENTATION MATRIX (PROTOTYPE VS. BOOTH DEMO VS. FUTURE DARK FACTORY)
-            </div>
-          </div>
-          <table class="eng-table">
-            <thead>
-              <tr>
-                <th style="width:24%;">System Capability</th>
-                <th style="width:25%;">1. Implemented in Prototype</th>
-                <th style="width:25%;">2. Live Booth Demonstration</th>
-                <th style="width:26%;">3. Future Dark Factory Expansion</th>
-              </tr>
-            </thead>
-            <tbody id="qa-roadmap-tbody"></tbody>
-          </table>
-        </div>
-      </div>
       <div class="qa-pane qa-references" data-qa-pane="references">
         <section class="eng-panel evidence-group" aria-labelledby="evidence-research">
           <h2 id="evidence-research">Published research</h2>
@@ -597,9 +453,9 @@
   <!-- ========================================================================
        HIGH-RESOLUTION LIGHTBOX MODAL FOR DIAGRAMS & 20 SVG PLATES
        ======================================================================== -->
-  <div class="lightbox-modal" id="lightbox-modal">
+  <div class="lightbox-modal" id="lightbox-modal" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption" aria-hidden="true" inert>
     <div style="position:absolute;top:20px;right:28px;">
-      <button class="hud-btn" id="btn-close-lightbox" style="border-color:#EF4444;color:#FCA5A5;">
+      <button class="hud-btn" id="btn-close-lightbox" type="button">
         Close Preview <span class="kbd-hint">ESC</span>
       </button>
     </div>
@@ -614,14 +470,10 @@
     </div>
   </div>
 
-  <script src="data.js"></script>
+  <script src="data.js?v=qa-refresh"></script>
   <script src="canvases.js?v=english"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=proposed-handoff"></script>
-  <script src="app.js?v=english"></script>
+  <script src="scene3d.js?v=qa-refresh"></script>
+  <script src="app.js?v=qa-refresh"></script>
 </body>
 </html>
-
-
-
-

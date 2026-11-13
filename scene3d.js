@@ -83,7 +83,7 @@
     container.insertBefore(r.domElement, container.firstChild);
 
     const sc = (this.scene = new THREE.Scene());
-    sc.background = new THREE.Color(0x050911);
+    sc.background = new THREE.Color(opts.background ?? 0x050911);
     if (opts.fog) sc.fog = new THREE.FogExp2(0x050911, 0.00042);
     this.camera = new THREE.PerspectiveCamera(36, 1, 5, 9000);
 
@@ -308,15 +308,15 @@
   }
 
   function makeFloor(stage, w, d) {
-    const fm = new THREE.MeshStandardMaterial({ color: 0x0b1424, metalness: 0.4, roughness: 0.75 });
+    const fm = new THREE.MeshStandardMaterial({ color: 0x9caec2, metalness: 0.15, roughness: 0.85 });
     const floor = new THREE.Mesh(new THREE.BoxGeometry(w, 16, d), fm);
     floor.position.y = -8; floor.receiveShadow = true;
     stage.scene.add(floor);
-    const grid = new THREE.GridHelper(Math.max(w, d), Math.round(Math.max(w, d) / 50), 0x00e5ff, 0x1e3a5f);
+    const grid = new THREE.GridHelper(Math.max(w, d), Math.round(Math.max(w, d) / 50), 0x146d91, 0x45617d);
     grid.position.y = 0.4;
     grid.material.transparent = true; grid.material.opacity = 0.32;
     stage.scene.add(grid);
-    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(floor.geometry), new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.55 }));
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(floor.geometry), new THREE.LineBasicMaterial({ color: 0x146d91, transparent: true, opacity: 0.55 }));
     edges.position.copy(floor.position);
     stage.scene.add(edges);
   }
@@ -372,8 +372,10 @@
     const s = qa.stage;
     if (!qa.chips) {
       qa.chips = document.createElement("div");
-      qa.chips.style.cssText = "position:absolute;left:8px;right:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:5px;z-index:3;max-height:84px;overflow:auto;";
-      s.container.appendChild(qa.chips);
+      qa.chips.className = "qa-cad-parts";
+      qa.chips.setAttribute("role", "group");
+      qa.chips.setAttribute("aria-label", "CAD parts");
+      s.container.after(qa.chips);
     }
     qa.chips.innerHTML = "";
     qa.active = null;
@@ -383,32 +385,40 @@
       seen[p.label] = true;
       const b = document.createElement("button");
       b.className = "stage-btn";
-      b.style.cssText = "font-size:10.5px;padding:3px 8px;";
+      b.type = "button";
+      b.setAttribute("aria-pressed", "false");
       b.textContent = p.label;
-      b.addEventListener("click", () => highlightPart(p, b));
+      b.addEventListener("click", () => highlightPart(p));
       qa.chips.appendChild(b);
     });
   }
 
-  function highlightPart(p, btn) {
+  function highlightPart(p) {
     const s = qa.stage;
-    if (qa.active === p.label) { qa.active = null; s.setFocus(null); qa.chips.querySelectorAll("button").forEach((b) => b.classList.remove("active")); return; }
-    qa.active = p.label;
-    s.setFocus(s.parts.filter((x) => x.label === p.label));
-    qa.chips.querySelectorAll("button").forEach((b) => b.classList.toggle("active", b.textContent === p.label));
+    qa.active = qa.active === p.label ? null : p.label;
+    s.setFocus(qa.active ? s.parts.filter((part) => part.label === qa.active) : null);
+    qa.chips.querySelectorAll("button").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.textContent === qa.active));
+    });
   }
 
   /* ---------------- Public API patch (replaces old procedural viewer) ---------------- */
   const C = window.DELTA_CANVASES || (window.DELTA_CANVASES = {});
   C.initThreeCadViewer = function () {
     const container = document.getElementById("qa-three-stage");
-    if (!container) return;
-    if (!qa.stage) {
-      container.innerHTML = "";
-      qa.stage = new Stage(container, {});
-      makeFloor(qa.stage, 1300, 800);
-      qa.stage.autoSpin = true;
+    if (!container || qa.stage) return;
+    try {
+      qa.stage = new Stage(container, { background: 0xeaf1f6 });
+    } catch (error) {
+      console.warn("[DELTA 3D] CAD viewer unavailable", error);
+      container.innerHTML = '<p class="qa-cad-unavailable">The 3D viewer requires WebGL.</p>';
+      return;
     }
+    container.querySelector(".qa-cad-unavailable")?.remove();
+    qa.stage.onUserMove = () => {
+      document.getElementById("qa-cad-spin").setAttribute("aria-pressed", String(qa.stage.autoSpin));
+    };
+    makeFloor(qa.stage, 1300, 800);
     buildQaModel();
   };
   C.selectCadModel = function (id) { qa.id = id; if (qa.stage) buildQaModel(); };
@@ -416,8 +426,13 @@
   C.toggleThreeWireframe = function () {
     qa.wire = !qa.wire;
     if (qa.stage) qa.stage.parts.forEach((p) => p.mats.forEach((m) => { m.wireframe = qa.wire; }));
+    return qa.wire;
   };
-  C.toggleThreeAutoRotate = function () { if (qa.stage) qa.stage.autoSpin = !qa.stage.autoSpin; };
+  C.toggleThreeAutoRotate = function () {
+    if (!qa.stage) return false;
+    qa.stage.autoSpin = !qa.stage.autoSpin;
+    return qa.stage.autoSpin;
+  };
 
 
   // One renderer and one factory set across the narrative slides.
@@ -1611,10 +1626,3 @@
 
   requestAnimationFrame(loop);
 })();
-
-
-
-
-
-
-

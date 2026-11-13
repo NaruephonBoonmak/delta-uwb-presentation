@@ -27,8 +27,7 @@
   let qaOpen = false;
   let qaTrigger = null;
   let lightboxOpen = false;
-  let activeCadModelId = "agv_r20";
-  let activeCadImageMode = "assembled"; // assembled | bom | alt
+  let lightboxTrigger = null;
 
   const slideToPhase = {
     1: 1,
@@ -151,12 +150,15 @@
 
   function switchQaTab(tabId) {
     document.querySelectorAll(".qa-tab").forEach((btn) => {
-      btn.classList.toggle("active", btn.getAttribute("data-qa-tab") === tabId);
+      const active = btn.dataset.qaTab === tabId;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", String(active));
     });
     document.querySelectorAll(".qa-pane").forEach((pane) => {
       pane.classList.toggle("active", pane.getAttribute("data-qa-pane") === tabId);
     });
 
+    qaOverlay.querySelector(".qa-body").scrollTop = 0;
     if (tabId === "cad") {
       setTimeout(() => {
         if (qaOpen && qaOverlay.querySelector('[data-qa-pane="cad"].active')) {
@@ -166,100 +168,37 @@
     }
   }
 
-  /* ------------------------------------------------------------------------
-     POPULATE Q&A CATEGORY 1: 3D CAD, STUDIO RENDERS & EXPLODED BOM
-     ------------------------------------------------------------------------ */
-  function initQaCategory1Cad() {
-    const selectorContainer = document.getElementById("qa-cad-selector-list");
-    if (!selectorContainer) return;
+  function initQaCadViewer() {
+    const modelSelect = document.getElementById("qa-cad-model");
+    const explode = document.getElementById("qa-cad-explode");
+    const wireframe = document.getElementById("qa-cad-wireframe");
+    const spin = document.getElementById("qa-cad-spin");
+    const viewer = window.DELTA_CANVASES;
+    const names = {
+      agv_r20: "AGV R20",
+      belt_r18a: "Wearable Belt R18A",
+      anchor_r05: "Anchor R05",
+      stand_s01: "AGV Display Stand S01",
+      conveyor_450: "Conveyor 450 mm",
+      relay_r01: "Relay Enclosure R01",
+      booth_layout: "Booth Layout"
+    };
 
-    const models = window.DELTA_DATA.hardwareModels;
-    selectorContainer.innerHTML = models
-      .map(
-        (m) => `
-      <button class="cad-model-btn ${m.id === activeCadModelId ? "active" : ""}" data-cad-id="${m.id}">
-        <span>${m.code}</span>
-        <strong>${m.name}</strong>
-      </button>
-    `
-      )
-      .join("");
-
-    selectorContainer.querySelectorAll(".cad-model-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        selectQaCadModel(btn.getAttribute("data-cad-id"));
-      });
+    window.DELTA_DATA.hardwareModels.forEach((model) => {
+      modelSelect.add(new Option(names[model.id] || model.name, model.id));
     });
-
-    // Image view mode switcher (Assembled Render | Exploded BOM | Detail/Stand)
-    document.querySelectorAll("[data-cad-img-mode]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        activeCadImageMode = btn.getAttribute("data-cad-img-mode");
-        document.querySelectorAll("[data-cad-img-mode]").forEach((b) => {
-          b.classList.toggle("active", b.getAttribute("data-cad-img-mode") === activeCadImageMode);
-        });
-        updateQaCadDetailsDOM();
-      });
+    modelSelect.addEventListener("change", () => viewer.selectCadModel(modelSelect.value));
+    explode.addEventListener("input", () => viewer.updateThreeExplode(explode.value));
+    wireframe.addEventListener("click", () => {
+      const active = viewer.toggleThreeWireframe();
+      wireframe.setAttribute("aria-pressed", String(active ?? wireframe.getAttribute("aria-pressed") !== "true"));
     });
-
-    selectQaCadModel(activeCadModelId);
+    spin.addEventListener("click", () => {
+      const active = viewer.toggleThreeAutoRotate();
+      spin.setAttribute("aria-pressed", String(active ?? spin.getAttribute("aria-pressed") !== "true"));
+    });
   }
 
-  function selectQaCadModel(modelId) {
-    activeCadModelId = modelId;
-    document.querySelectorAll(".cad-model-btn").forEach((btn) => {
-      btn.classList.toggle("active", btn.getAttribute("data-cad-id") === modelId);
-    });
-    window.DELTA_CANVASES.selectCadModel(modelId);
-    updateQaCadDetailsDOM();
-  }
-
-  function updateQaCadDetailsDOM() {
-    const model = window.DELTA_DATA.hardwareModels.find((m) => m.id === activeCadModelId);
-    if (!model) return;
-
-    const titleEl = document.getElementById("qa-cad-title");
-    const dimEl = document.getElementById("qa-cad-dims");
-    const imgEl = document.getElementById("qa-cad-preview-img");
-    const specsBody = document.getElementById("qa-cad-specs-tbody");
-    const bomList = document.getElementById("qa-cad-bom-list");
-
-    if (titleEl) titleEl.textContent = `${model.code} — ${model.name}`;
-    if (dimEl) dimEl.textContent = model.dimensions;
-
-    if (imgEl) {
-      const src =
-        activeCadImageMode === "bom" ? model.bomImg :
-        activeCadImageMode === "alt" ? model.altImg :
-        model.assembledImg;
-      imgEl.src = src;
-      imgEl.alt = model.name;
-      imgEl.onclick = () => openLightbox(src, `${model.code} — ${model.name}`, true);
-    }
-
-    if (specsBody) {
-      specsBody.innerHTML = model.specs
-        .map(
-          (row) => `
-        <tr>
-          <td class="mono" style="color:#94A3B8;width:38%;">${row[0]}</td>
-          <td style="color:#F8FAFC;font-weight:600;">${row[1]}</td>
-        </tr>
-      `
-        )
-        .join("");
-    }
-
-    if (bomList) {
-      bomList.innerHTML = model.bomHighlights
-        .map((item) => `<li style="padding:4px 0;border-bottom:1px dashed rgba(148,163,184,0.14);font-size:12px;color:#CBD5E1;">${item}</li>`)
-        .join("");
-    }
-  }
-
-  /* ------------------------------------------------------------------------
-     POPULATE Q&A CATEGORY 2: UWB CALIBRATION & 20 SVG PLATES
-     ------------------------------------------------------------------------ */
   function initQaCategory2Calibration() {
     const tbody = document.getElementById("qa-uwb-anchors-tbody");
     const grid = document.getElementById("qa-svg-atlas-grid");
@@ -270,15 +209,15 @@
         .map(
           (a) => `
         <tr>
-          <td class="mono" style="color:#00E5FF;font-weight:700;">${a.id} ${a.pos}</td>
+          <td class="mono qa-value">${a.id} ${a.pos}</td>
           <td class="mono">${a.gainA.toFixed(4)}</td>
           <td class="mono">${a.offsetB_cm > 0 ? "+" : ""}${a.offsetB_cm.toFixed(2)} cm</td>
           <td class="mono">${a.heldoutPooledRawCm.toFixed(2)} cm</td>
-          <td class="mono" style="color:#10B981;font-weight:700;">${a.heldoutPooledCalCm.toFixed(2)} cm</td>
-          <td class="mono" style="color:${a.changePct < 0 ? "#10B981" : "#F59E0B"};font-weight:700;">
+          <td class="mono qa-value-good">${a.heldoutPooledCalCm.toFixed(2)} cm</td>
+          <td class="mono ${a.changePct < 0 ? "qa-value-good" : "qa-value-warn"}">
             ${a.changePct > 0 ? "+" : ""}${a.changePct.toFixed(2)}%
           </td>
-          <td style="font-size:11.5px;color:#CBD5E1;">${a.note}</td>
+          <td class="qa-figure-description">${a.note}</td>
         </tr>
       `
         )
@@ -289,12 +228,12 @@
       grid.innerHTML = exp.svgPlates
         .map(
           (p) => `
-        <div class="svg-plate-card" data-plate-src="${p.path}" data-plate-title="${p.code}: ${p.title} — ${p.desc}">
+        <button type="button" class="svg-plate-card" data-plate-src="${p.path}" data-plate-title="${p.code}: ${p.title} — ${p.desc}">
           <img src="${p.path}" alt="${p.title}" loading="lazy" />
-          <div class="p-code">${p.code}</div>
-          <div class="p-title">${p.title}</div>
-          <div style="font-size:11px;color:#94A3B8;line-height:1.35;">${p.desc}</div>
-        </div>
+          <span class="p-code">${p.code}</span>
+          <span class="p-title">${p.title}</span>
+          <span class="qa-figure-description">${p.desc}</span>
+        </button>
       `
         )
         .join("");
@@ -311,87 +250,24 @@
     }
   }
 
-  /* ------------------------------------------------------------------------
-     POPULATE Q&A CATEGORY 3: ELECTRICAL CIRCUIT & INA226 WIRING
-     ------------------------------------------------------------------------ */
-  function initQaCategory3Wiring() {
+  function initQaSchematics() {
     const gallery = document.getElementById("qa-wiring-gallery");
-    const inaBody = document.getElementById("qa-ina226-tbody");
-    const megaBody = document.getElementById("qa-mega-tbody");
-    const wData = window.DELTA_DATA.wiringData;
-
-    if (gallery) {
-      gallery.innerHTML = wData.diagrams
-        .map(
-          (d) => `
-        <div class="svg-plate-card" data-wiring-src="${d.svg}" data-wiring-title="${d.title} — ${d.subtitle}">
-          <img src="${d.img}" alt="${d.title}" loading="lazy" style="background:#0B1220;height:155px;" />
-          <div class="p-title" style="margin-top:4px;">${d.title}</div>
-          <div style="font-size:11px;color:#94A3B8;line-height:1.35;">${d.subtitle}</div>
-        </div>
-      `
-        )
-        .join("");
-
-      gallery.querySelectorAll(".svg-plate-card").forEach((card) => {
-        card.addEventListener("click", () => {
-          openLightbox(
-            card.getAttribute("data-wiring-src"),
-            card.getAttribute("data-wiring-title"),
-            true
-          );
-        });
-      });
-    }
-
-    if (inaBody) {
-      inaBody.innerHTML = wData.pinTables.ina226
-        .map(
-          (r) => `
-        <tr>
-          <td class="mono" style="color:#00E5FF;font-weight:700;">${r[0]}</td>
-          <td class="mono" style="color:#F8FAFC;">${r[1]}</td>
-          <td style="color:#CBD5E1;">${r[2]}</td>
-        </tr>
-      `
-        )
-        .join("");
-    }
-
-    if (megaBody) {
-      megaBody.innerHTML = wData.pinTables.agvMega
-        .map(
-          (r) => `
-        <tr>
-          <td class="mono" style="color:#10B981;font-weight:700;">${r[0]}</td>
-          <td class="mono" style="color:#F8FAFC;">${r[1]}</td>
-          <td style="color:#CBD5E1;">${r[2]}</td>
-        </tr>
-      `
-        )
-        .join("");
-    }
-  }
-
-  /* ------------------------------------------------------------------------
-     POPULATE Q&A CATEGORY 4: AI / IoT / SCADA / PLC INDUSTRIAL ROADMAP
-     ------------------------------------------------------------------------ */
-  function initQaCategory4Roadmap() {
-    const tbody = document.getElementById("qa-roadmap-tbody");
-    if (!tbody) return;
-
-    tbody.innerHTML = window.DELTA_DATA.industrialRoadmap
-      .map(
-        (item) => `
-      <tr>
-        <td style="font-weight:700;color:#F8FAFC;">${item.capability}</td>
-        <td style="color:#6EE7B7;">${item.tier1_prototype}</td>
-        <td style="color:#67E8F9;">${item.tier2_demo}</td>
-        <td style="color:#CBD5E1;">${item.tier3_future}</td>
-      </tr>
-    `
-      )
-      .join("");
+    window.DELTA_DATA.wiringData.diagrams.forEach(({ title, subtitle, svg }) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "qa-wiring-card";
+      const image = new Image();
+      image.src = svg;
+      image.alt = "";
+      image.loading = "lazy";
+      const label = document.createElement("strong");
+      label.textContent = title;
+      const description = document.createElement("span");
+      description.textContent = subtitle;
+      card.append(image, label, description);
+      card.addEventListener("click", () => openLightbox(svg, title));
+      gallery.appendChild(card);
+    });
   }
 
   /* ------------------------------------------------------------------------
@@ -407,14 +283,22 @@
     img.src = src;
     if (cap) cap.textContent = caption || "";
     if (imgWrap) imgWrap.classList.toggle("dark-bg", !!darkBg);
+    lightboxTrigger = document.activeElement;
     lightboxOpen = true;
+    modal.inert = false;
+    modal.setAttribute("aria-hidden", "false");
     modal.classList.add("open");
+    modal.querySelector("#btn-close-lightbox").focus({ preventScroll: true });
   }
 
   function closeLightbox() {
     const modal = document.getElementById("lightbox-modal");
     if (!modal) return;
     lightboxOpen = false;
+    lightboxTrigger?.focus({ preventScroll: true });
+    lightboxTrigger = null;
+    modal.inert = true;
+    modal.setAttribute("aria-hidden", "true");
     modal.classList.remove("open");
   }
 
@@ -437,10 +321,9 @@
     window.DELTA_CANVASES.start();
 
     // Initialize Q&A Panes
-    initQaCategory1Cad();
+    initQaCadViewer();
     initQaCategory2Calibration();
-    initQaCategory3Wiring();
-    initQaCategory4Roadmap();
+    initQaSchematics();
 
     // Render KaTeX formulas if loaded
     if (typeof renderMathInElement !== "undefined") {
@@ -519,7 +402,7 @@
     const lbModal = document.getElementById("lightbox-modal");
     if (lbModal) {
       lbModal.addEventListener("click", (e) => {
-        if (e.target === lbModal || e.target.id === "btn-close-lightbox") {
+        if (e.target === lbModal || e.target.closest("#btn-close-lightbox")) {
           closeLightbox();
         }
       });

@@ -371,106 +371,18 @@ window.DELTA_DATA = {
     ]
   },
 
-  /* ------------------------------------------------------------------------
-     3. ELECTRICAL CIRCUIT & WIRING DATA (Q&A CATEGORY 3)
-     ------------------------------------------------------------------------ */
   wiringData: {
     diagrams: [
       {
-        title: "AGV R20 Combined Power, INA226 & MEGA Motor Wiring (R09)",
-        subtitle: "Dual-rail isolation: 1S LiPo (UWB Pro + INA226) & 4×AA (MEGA + L298N + Dual TT Motors)",
-        img: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/01_AGV_MEGA_Combined_R09.png",
-        svg: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/01_AGV_MEGA_Combined_R09.svg"
+        title: "AGV R20 · Rev B",
+        subtitle: "ESP32 direct control · 5 V supply, 3.3 V GPIO and separate motor power",
+        svg: "assets/wiring/AGV_ESP32_Schematic.svg?v=rev-b"
       },
       {
-        title: "Wearable Belt R18A Complete Wiring with INA226, OLED, Buzzer & Vibration (R09)",
-        subtitle: "1S LiPo → Fuse → INA226 (0.1Ω R100) → J5019 5V Boost → ESP32 UWB, SSD1315 OLED, Buzzer & Vibration",
-        img: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/02_BELT_No_Extra_Board_R09.png",
-        svg: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/02_BELT_No_Extra_Board_R09.svg"
-      },
-      {
-        title: "AGV Physical Pin Mapping — ESP32 UWB Pro & Arduino MEGA 2560 (R05)",
-        subtitle: "Verified header connections and one-way UART link (UWB GPIO25 TX → MEGA D19/RX1)",
-        img: "assets/wiring/agv_belt_wiring_physical_pins_r05_part01/output/AGV_Belt_Physical_Pins_R05/01_AGV_Real_Pins.png",
-        svg: "assets/wiring/agv_belt_wiring_physical_pins_r05_part01/output/AGV_Belt_Physical_Pins_R05/01_AGV_Real_Pins.svg"
-      },
-      {
-        title: "AGV L298N Dual TT Motor Driver Physical Pinout (R05)",
-        subtitle: "PWM speed control (ENA/D5, IN1/D22, IN2/D23, IN3/D9, IN4/D10) & Buzzer (D8)",
-        img: "assets/wiring/agv_belt_wiring_physical_pins_r05_part01/output/AGV_Belt_Physical_Pins_R05/02_AGV_Motor_Real_Pins.png",
-        svg: "assets/wiring/agv_belt_wiring_physical_pins_r05_part01/output/AGV_Belt_Physical_Pins_R05/02_AGV_Motor_Real_Pins.svg"
-      },
-      {
-        title: "Belt R18A Physical Board Layout & Pinout (R05)",
-        subtitle: "Shared I2C bus (GPIO21 SDA / GPIO22 SCL) for SSD1315 OLED + INA226 & Alert I/O (GPIO25/26)",
-        img: "assets/wiring/agv_belt_wiring_physical_pins_r05_part01/output/AGV_Belt_Physical_Pins_R05/03_Belt_Real_Pins.png",
-        svg: "assets/wiring/agv_belt_wiring_physical_pins_r05_part01/output/AGV_Belt_Physical_Pins_R05/03_Belt_Real_Pins.svg"
-      },
-      {
-        title: "Hardware Component Reference Contact Sheet",
-        subtitle: "Actual boards used: Makerfabs ESP32 UWB Pro, Arduino MEGA 2560, CyberTice INA226 M0903, L298N, J5019",
-        img: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/source/assets/references_contact.png",
-        svg: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/source/assets/references_contact.png"
+        title: "Wearable Belt Tag · R13",
+        subtitle: "INA226 battery monitoring · ESP32 UWB Basic · OLED, buzzer and vibration",
+        svg: "assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/02_BELT_No_Extra_Board_R09.svg?v=r13"
       }
-    ],
-    pinTables: {
-      ina226: [
-        ["IN+ (Large Inner Pad)", "From 1S LiPo PACK+ (after Fuse)", "High-side current entry into onboard R100 (0.1 Ω) shunt"],
-        ["IN− (Large Inner Pad)", "To J5019 BAT+ & Load Switch", "High-side current exit (±81.92 mV → ±0.8192 A full-scale range)"],
-        ["VBS (Bus Voltage Pin)", "Connected to fused PACK+ (IN+ side)", "Measures upstream battery bus voltage (0–36 V capability)"],
-        ["VCC / GND", "UWB 3V3 / Common System GND", "Logic power supply for INA226 IC"],
-        ["SDA / SCL (I²C)", "AGV Pro: GPIO4 / GPIO5 | Belt: GPIO21 / GPIO22", "I²C telemetry bus (shared with SSD1315 OLED on Belt)"]
-      ],
-      agvMega: [
-        ["UART Link", "UWB Pro GPIO25 (TX) → MEGA D19 (RX1)", "One-way serial distance/state command (invert=false, 9600 baud)"],
-        ["MEGA D5 (PWM)", "Series LED → L298N ENA", "Left TT Motor PWM Speed Control (ENA jumper removed)"],
-        ["MEGA D22 / D23", "Series LED → L298N IN1 / IN2", "Left TT Motor Direction & Coast/Stop Control"],
-        ["MEGA D9 / D10 (PWM)", "Series LED → L298N IN3 / IN4", "Right TT Motor PWM & Direction (ENB jumper retained)"],
-        ["MEGA D8", "Series LED → MH-FMD Buzzer I/O", "Acoustic proximity alarm trigger on AGV"],
-        ["Belt GPIO25 / GPIO26", "Series LED → Belt Buzzer I/O / Vibration IN", "Dual-sensory audio + haptic alert on Wearable Belt"]
-      ]
-    }
-  },
-
-  /* ------------------------------------------------------------------------
-     4. AI / IoT / SCADA / PLC INDUSTRIAL ROADMAP (SLIDE 7 & Q&A CATEGORY 4)
-     ------------------------------------------------------------------------ */
-  industrialRoadmap: [
-    {
-      capability: "Real-Time UWB DS-TWR Ranging & 2D (X,Y) Multilateration",
-      tier1_prototype: "Implemented & Tested (50,748 samples across A1–A4 & Tags)",
-      tier2_demo: "Live on 1800×600 mm Booth Table with Dashboard",
-      tier3_future: "Multi-cell factory roaming across 50+ synchronized UWB anchors",
-      status: "implemented"
-    },
-    {
-      capability: "Per-Anchor Linear Calibration (y = a·u + b)",
-      tier1_prototype: "Evaluated offline (held-out range RMSE -8.85%; A4 -71.15%)",
-      tier2_demo: "Real-time calibrated range processing in positioning pipeline",
-      tier3_future: "Automated ML/NLOS residual compensation & IMU sensor fusion",
-      status: "implemented"
-    },
-    {
-      capability: "Distance-Based 4-State Safety Control (Safe / Warn / Danger / Recovery)",
-      tier1_prototype: "Implemented on AGV R20, Belt R18A, Conveyor 450mm & Relay R01",
-      tier2_demo: "Stationary AGV wheel speed modulation + Conveyor stop + Buzzer",
-      tier3_future: "Safety PLC (IEC 61508 / ISO 13849) redundant hardwired interlocks",
-      status: "implemented"
-    },
-    {
-      capability: "High-Side Battery Telemetry (INA226 M0903) & Wearable OLED/Haptics",
-      tier1_prototype: "CAD & R09 Wiring Architecture completed (SSD1315 + INA226 0.1Ω)",
-      tier2_demo: "Visual/Audio/Haptic operator warning + battery health monitoring",
-      tier3_future: "Automated AGV opportunity-charging dispatch at low SoC threshold",
-      status: "demo"
-    },
-    {
-      capability: "IoT Telemetry Broker, SCADA Historian & AI Workflow Optimization",
-      tier1_prototype: "Local Compute X,Y Dashboard, REST analytics and read-only AI/MCP",
-      tier2_demo: "Live Digital Twin status visualization on central monitor",
-      tier3_future: "AI/MCP requests through MQTT or REST gateway; Modbus TCP / PLC and SCADA status",
-      status: "future"
-    }
-  ]
+    ]
+  }
 };
-
