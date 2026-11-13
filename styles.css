@@ -1690,7 +1690,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .twin-readings div { display: flex; justify-content: space-between; gap: 8px; }
 .twin-readings dt { font-weight: 700; }
 .twin-readings dd { margin: 0; font-variant-numeric: tabular-nums; }
-.twin-capture .twin-quality { color: #754705; }
+.twin-readings [data-twin-position="agv"] { color: #006486; }
+.twin-readings [data-twin-position="worker"] { color: #854b00; }
 .twin-model h2 { flex: none; }
 .twin-scene { width: 100%; }
 .twin-chain { grid-template-columns: repeat(3, minmax(0, 1fr)); }

@@ -872,16 +872,19 @@
       modelCylinder(virtualWaypoints, 7, 7, 2, [dockX,2,z], lightMaterial(0x71e9ae));
     }
     const trackedTags = [
-      {mount: meshGroup(agv, -38,62,-36), label: "TAG AGV", color: cyan, outline: "#32ddff", lift: 100},
-      {mount: meshGroup(worker.root, -25,85,9), label: "TAG Belt", color: 0x76edb3, outline: "#76edb3", lift: 133}
+      {mount: meshGroup(agv, -38,62,-36), label: "TAG AGV", twinLabel: "T1 AGV", color: cyan, outline: "#32ddff", lift: 100},
+      {mount: meshGroup(worker.root, -25,85,9), label: "TAG Belt", twinLabel: "T2 WORKER", color: 0x76edb3, outline: "#76edb3", lift: 133}
     ].map(tag => {
       modelBox(tag.mount, [28, 13, 22], [0,0,0], newMat(0x172c40));
       modelBox(tag.mount, [21, 3, 17], [0,8,0], lightMaterial(tag.color));
       const caption = makeLabel(tag.label, tag.outline, {width: 310, fontSize: 64});
       caption.material.opacity = 1;
       caption.scale.set(192, 69, 1);
-      tracking.add(caption);
-      return {...tag, caption, point: V3(0,0,0),
+      const twinCaption = makeLabel(tag.twinLabel, tag.outline, {width: 385, fontSize: 55});
+      twinCaption.scale.set(220, 64, 1);
+      twinCaption.material.opacity = 1;
+      tracking.add(caption, twinCaption);
+      return {...tag, caption, twinCaption, point: V3(0,0,0),
         leader: storyLine(tracking,V3(0,0,0),V3(0,0,0),tag.color,0.85),
         ranges: anchors.map(point => storyLine(tracking,point,V3(0,0,0),tag.color,0.44))};
     });
@@ -1138,7 +1141,6 @@
     const floor = new THREE.MeshStandardMaterial({color: 0x244665});
     const stand = new THREE.MeshStandardMaterial({color: 0x8bb7d1});
     const anchor = new THREE.MeshStandardMaterial({color: 0x55c9fb, emissive: 0x185277});
-    const tag = new THREE.MeshStandardMaterial({color: 0xf7bd60, emissive: 0x87501a});
     modelBox(stage.scene, [128, 9, 230], [0, -6, 0], floor);
     const grid = new THREE.GridHelper(200, 8, 0x82b7d6, 0x507c9d);
     grid.scale.x = 0.5;
@@ -1150,24 +1152,47 @@
       marker.material.opacity = 1;
       marker.position.set(x, y, z);
       stage.scene.add(marker);
+      return marker;
     }
 
     const radioHeight = 42;
-    const anchors = [[0, 0], [1, 0], [0, 2], [1, 2]];
+    const anchors = [[0, 0], [2, 0], [0, 1], [2, 1]];
     anchors.forEach(([x, y], index) => {
-      const wx = 100 * (x - 0.5), wz = 100 * (1 - y);
+      const wx = 100 * (y - 0.5), wz = 100 * (1 - x);
       modelCylinder(stage.scene, 1.4, 2.5, radioHeight, [wx, radioHeight / 2, wz], stand);
       modelBox(stage.scene, [14, 12, 10], [wx, radioHeight, wz], anchor);
       label(`A${index + 1}`, "#55c9fb", wx, radioHeight + 21, wz);
     });
-    container.parentElement.querySelectorAll("[data-tag]").forEach(({dataset}) => {
-      const x = 100 * (Number(dataset.x) - 0.5), z = 100 * (1 - Number(dataset.y));
-      modelCylinder(stage.scene, 1, 1.3, radioHeight, [x, radioHeight / 2, z], tag);
-      modelBox(stage.scene, [13, 11, 13], [x, radioHeight, z], tag);
-      label(dataset.tag, "#f7bd60", x, radioHeight + 21, z);
-    });
-    label("X (m)", "#98b6cf", 0, 4, 117);
-    label("Y (m)", "#98b6cf", -69, 4, 0);
+    label("Y (m)", "#98b6cf", 0, 4, 117);
+    label("X (m)", "#98b6cf", -69, 4, 0);
+
+    const agv = makeFactoryAGV(stage.scene, 0x3f9ed5);
+    const worker = makeWorker(stage.scene);
+    agv.scale.setScalar(0.29);
+    worker.root.scale.setScalar(0.28);
+    const agvLabel = label("T1", "#55c9fb", 0, 0, 0);
+    const workerLabel = label("T2", "#f7bd60", 0, 0, 0);
+    const agvReadout = container.parentElement.querySelector('[data-twin-position="agv"]');
+    const workerReadout = container.parentElement.querySelector('[data-twin-position="worker"]');
+    stage.updateActors = (factory, stride, time) => {
+      if (stage.actorTime === time) return;
+      stage.actorTime = time;
+      const vehicle = factory.agv;
+      const person = factory.worker.root;
+      // Both views use the factory pose. Map its footprint to the demo's 2 × 1 m grid.
+      const position = ({x, z}) => [(x + 1075) / 970, (z + 260) / 740];
+      const [agvX, agvY] = position(vehicle.position);
+      const [workerX, workerY] = position(person.position);
+      agv.position.set(100 * (agvY - 0.5), 0, 100 * (1 - agvX));
+      agv.rotation.y = vehicle.rotation.y + Math.PI / 2;
+      walkWorker(worker, 100 * (workerY - 0.5), 100 * (1 - workerX), person.rotation.y + Math.PI / 2, stride);
+      worker.root.position.y *= 0.28;
+      agvLabel.position.copy(agv.position).y = 34;
+      workerLabel.position.copy(worker.root.position).y = 60;
+      setStoryStatus(agvReadout, `(${agvX.toFixed(2)}, ${agvY.toFixed(2)}) m`);
+      setStoryStatus(workerReadout, `(${workerX.toFixed(2)}, ${workerY.toFixed(2)}) m`);
+      stage.needsRender = true;
+    };
 
     const canvas = stage.renderer.domElement;
     canvas.tabIndex = 0;
@@ -1245,7 +1270,7 @@
       f.guideBranch.visible = false;
       story.currentStatus = container.querySelector("[data-current-status]");
       story.elapsed = reduceMotion ? 8 : 0;
-      setRig(stage, storyViews.twin);
+      setRig(stage, {...storyViews.twin, dist: 1940, tz: 15});
     } else if (slide === 9) {
       f.automatic.visible = true;
       f.service.visible = f.loading.visible = false;
@@ -1388,12 +1413,16 @@
     f.packets.forEach(packet => { packet.visible = false; });
     f.trackedTags.forEach((tag, index) => {
       const visible = index === 0 || service;
-      tag.mount.visible = tag.caption.visible = tag.leader.visible = visible;
+      const twin = story.slide === 8;
+      tag.mount.visible = tag.leader.visible = visible;
+      tag.caption.visible = visible && !twin;
+      tag.twinCaption.visible = visible && twin;
       tag.ranges.forEach(line => { line.visible = visible; });
       if (!visible) return;
       tag.mount.getWorldPosition(tag.point);
-      tag.caption.position.copy(tag.point).add(V3(0,tag.lift,0));
-      moveLine(tag.leader, tag.point, tag.caption.position);
+      const caption = twin ? tag.twinCaption : tag.caption;
+      caption.position.copy(tag.point).add(V3(0,tag.lift,0));
+      moveLine(tag.leader, tag.point, caption.position);
       const scan = story.elapsed / 1.2 + index * 0.45;
       const activeAnchor = Math.floor(scan) % f.anchors.length;
       tag.ranges.forEach((line,i) => {
@@ -1415,8 +1444,11 @@
     const pausedAtDock = t >= docked && t < handoff;
     const motion = t < docked ? t : Math.min(transferEnd, docked + Math.max(0, t - handoff));
     updateAutomaticPickup(pausedAtDock ? 0 : dt, motion);
-    f.worker.root.visible = false;
-    renderTrackedTags(false, true, false);
+    const stride = reduceMotion ? 0 : 0.34 * Math.sin(t * 10) * (1 - smooth(t, 5.35, 6.2));
+    walkWorker(f.worker, lerp(-725, 250, smooth(t, 0, 6.2)), 360, Math.PI / 2, stride);
+    f.worker.root.visible = true;
+    renderTrackedTags(true, true, false);
+    story.twinCapture?.updateActors(f, stride, Math.min(t, completed));
 
     if (t < docked) setStoryStatus(story.currentStatus, "Approaching the pickup bay");
     else if (t < handoff) setStoryStatus(story.currentStatus, "Docked · Virtual AGV in position", "safe");

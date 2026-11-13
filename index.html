@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=uwb-capture-3d" />
+  <link rel="stylesheet" href="styles.css?v=twin-sync" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -192,29 +192,28 @@
       <h1>From UWB Tracking to a <span class="accent">Digital Twin</span></h1>
       <div class="twin-layout">
         <section class="twin-capture" aria-labelledby="twin-capture-title">
-          <h2 id="twin-capture-title">Recorded UWB Positions</h2>
-          <p>Two-tag lab capture · 29 Oct 2026</p>
-          <div class="twin-map" data-twin-capture role="group" aria-label="3D view of the recorded X–Y positions on a shared plane">
+          <h2 id="twin-capture-title">Simulated UWB Tracking</h2>
+          <p>Illustrative positions · T1 AGV and T2 Worker</p>
+          <div class="twin-map" data-twin-capture role="group" aria-label="Rotatable 3D view of the simulated AGV and worker">
             <p data-twin-fallback>3D view unavailable</p>
           </div>
-          <p class="twin-map-hint" hidden>Drag or use arrows to rotate · Height illustrative</p>
+          <p class="twin-map-hint" hidden>Drag or use arrows to rotate</p>
           <dl class="twin-readings">
-            <div data-tag="T1" data-x="0.260" data-y="1.419"><dt>T1</dt><dd>(0.260, 1.419) m</dd></div>
-            <div data-tag="T2" data-x="0.529" data-y="0.556"><dt>T2</dt><dd>(0.529, 0.556) m</dd></div>
+            <div><dt>T1 · AGV</dt><dd data-twin-position="agv">Simulated X–Y</dd></div>
+            <div><dt>T2 · Worker</dt><dd data-twin-position="worker">Simulated X–Y</dd></div>
           </dl>
-          <p class="twin-quality">Recorded at 17:51:23 · DEGRADED · Both estimates used 3 of 4 anchors</p>
         </section>
         <section class="twin-model" aria-labelledby="twin-model-title">
           <h2 id="twin-model-title">Proposed Delta DIATwin Model</h2>
-          <div class="story-frame story-factory opening-frame twin-scene" data-story-view="8" role="img" aria-label="Illustrative 3D scenario of an AGV approaching the pickup bay, docking and receiving a carton">
-            <span class="story-tag">Illustrative Simulation</span>
+          <div class="story-frame story-factory opening-frame twin-scene" data-story-view="8" role="img" aria-label="Synchronized 3D scenario showing T1 docking and T2 walking outside the handoff area">
+            <span class="story-tag">Synchronized Concept Demo</span>
             <span class="story-status" data-current-status>Approaching the pickup bay</span>
           </div>
         </section>
       </div>
       <ol class="future-chain twin-chain" aria-label="Proposed digital twin workflow">
-        <li><strong>UWB X–Y and quality</strong><small>Check that the position is current</small></li>
-        <li><strong>Update the virtual AGV</strong><small>Map position to the pickup bay</small></li>
+        <li><strong>Track T1 and T2</strong><small>Read AGV and worker X–Y positions</small></li>
+        <li><strong>Update the digital twin</strong><small>Move both models together</small></li>
         <li><strong>Test the handoff</strong><small>Check the sequence before commissioning</small></li>
       </ol>
       <div class="speaker-controls current-controls">
@@ -486,7 +485,7 @@
   <script src="data.js?v=l298n-rev-d"></script>
   <script src="canvases.js?v=research"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=uwb-capture-3d"></script>
+  <script src="scene3d.js?v=twin-sync"></script>
   <script src="app.js?v=l298n-booth"></script>
 </body>
 </html>
