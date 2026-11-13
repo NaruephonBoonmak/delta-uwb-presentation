@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=factory-progress" />
+  <link rel="stylesheet" href="styles.css?v=slide-references" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -55,6 +55,7 @@
       <div class="cover-heading">
         <h1 id="cover-title" style="font-size: 58px; line-height: 1.04;">Spatial Intelligence<br> Platform for Future<br> <span>Dark Factory Operations</span></h1>
         <p class="cover-subtitle">UWB Localization · Safety · Automation</p>
+        <p class="cover-illustration-credit">Factory concept illustration · MECHECI404 presentation</p>
       </div>
     </section>
 
@@ -65,7 +66,7 @@
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="2">↻ Replay</button>
-        <span class="story-footnote">Conveyor delivers the carton → Cobot loads the AGV → AGV moves to the next station</span>
+        <span class="story-footnote">Conveyor delivers → Cobot loads → AGV moves · Simulation · <a href="https://www.deltaww.com/en-US/press/35638" target="_blank" rel="noopener noreferrer">Delta conveyor example ↗</a></span>
       </div>
     </section>
 
@@ -87,7 +88,7 @@
       </div>
       <div class="speaker-controls">
         <button class="stage-btn" data-story-replay="4">↻ Replay</button>
-        <span class="story-footnote">Compare the AGV and pickup bay coordinates in the same frame to confirm arrival</span>
+        <span class="story-footnote">Compare AGV and pickup bay coordinates in one frame · Simulation · <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Team UWB coordinate record ↗</a></span>
       </div>
     </section>
 
@@ -145,6 +146,7 @@
           <div><small>BUZZER</small><strong id="tel-buzzer">OFF</strong></div>
         </div>
       </div>
+      <p class="story-footnote demo-evidence">Related evidence · <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/agvuart/VALIDATION.md" target="_blank" rel="noopener noreferrer">Earlier AGV RUN/STOP firmware tests ↗</a></p>
     </section>
 
     <!-- ======================================================================
@@ -169,7 +171,7 @@
           <button class="stage-btn active" data-s6-chart-mode="anchors">Range RMSE</button>
           <button class="stage-btn" data-s6-chart-mode="heatmap">Archived XY</button>
         </div>
-        <span class="story-footnote">Linear fit per anchor · Related anchor-position research by <a href="https://doi.org/10.1109/ICRA55743.2025.11127688" target="_blank" rel="noopener noreferrer">Yuan et al. (ICRA 2025)</a></span>
+        <span class="story-footnote"><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-espnow/calibration_series_20261024/assessment/README.md" target="_blank" rel="noopener noreferrer">Team calibration data ↗</a> · Related anchor-position research by <a href="https://doi.org/10.1109/ICRA55743.2025.11127688" target="_blank" rel="noopener noreferrer">Yuan et al. (ICRA 2025) ↗</a></span>
         <button class="stage-btn" data-open-qa-tab="calibration">Data &amp; 20 plates →</button>
       </div>
     </section>
@@ -185,7 +187,7 @@
       </div>
       <div class="speaker-controls current-controls">
         <button class="stage-btn" data-story-replay="8">↻ Replay</button>
-        <span class="story-footnote">Lab capture produced X–Y for both tags with gaps · REST and MCP provide read access</span>
+        <span class="story-footnote">Lab capture produced X–Y for both tags with gaps · REST and MCP provide read access · <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Team live capture ↗</a></span>
       </div>
     </section>
 
@@ -232,7 +234,7 @@
         </button>
         <button class="qa-menu-card qa-evidence-card" type="button" data-open-qa-tab="references" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/qa/covers/references.webp" width="840" height="460" alt=""></span>
-          <span class="qa-menu-label"><strong>References &amp;<br>Test Evidence</strong><small>Sources for slides 3–10</small></span>
+          <span class="qa-menu-label"><strong>References &amp;<br>Test Evidence</strong><small>Research, manuals, and team test records</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
       </nav>
@@ -411,13 +413,13 @@
           <ul>
             <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/agvuart/VALIDATION.md" target="_blank" rel="noopener noreferrer">AGV UART validation ↗</a><p>Slide 6 · Host tests and firmware builds for the earlier UART prototype. Rev B hardware validation is pending.</p></li>
             <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-espnow/calibration_series_20261024/assessment/README.md" target="_blank" rel="noopener noreferrer">Held-out range calibration ↗</a><p>Slide 7 · Static range RMSE fell from 17.71 to 16.15 cm across held-out point means. Five of eight point–anchor pairs improved.</p></li>
-            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Two-tag live capture ↗</a><p>Slide 8 · The solver produced X–Y for both tags. Some records had incomplete or stale ranges.</p></li>
+            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Two-tag live capture ↗</a><p>Slides 4 and 8 · Shared lab coordinates and X–Y for both tags. Some records had incomplete or stale ranges.</p></li>
           </ul>
         </section>
         <section class="eng-panel evidence-group" aria-labelledby="evidence-industry">
           <h2 id="evidence-industry">Industry &amp; hardware</h2>
           <ul>
-            <li><a href="https://www.deltaww.com/en-US/press/35638" target="_blank" rel="noopener noreferrer">Delta AS Series + ME300 ↗</a><p>Slide 9 · Delta’s PLC and drive application for a telescopic conveyor.</p></li>
+            <li><a href="https://www.deltaww.com/en-US/press/35638" target="_blank" rel="noopener noreferrer">Delta AS Series + ME300 ↗</a><p>Slides 2 and 9 · Delta’s PLC and drive application for a telescopic conveyor.</p></li>
             <li><a href="https://www.deltaww.com/en-US/solutions/virtual-machine-development-platform" target="_blank" rel="noopener noreferrer">Delta DIATwin ↗</a><p>Slide 9 · Virtual testing and offline commissioning.</p></li>
             <li><a href="https://doi.org/10.3390/electronics13040751" target="_blank" rel="noopener noreferrer">Benouakta et al. (2024) ↗</a><p>3D CAD · Antenna radiation pattern and polarization can affect UWB ranging.</p></li>
             <li><a href="https://www.qorvo.com/products/p/DW1000" target="_blank" rel="noopener noreferrer">Qorvo DW1000 documentation ↗</a><p>Electrical Schematics &amp; Calibration · APH001 covers DW1000 hardware design. APS014 covers antenna delay calibration.</p></li>
