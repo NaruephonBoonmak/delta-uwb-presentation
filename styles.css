@@ -1609,28 +1609,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .evidence-group li { padding: 15px 0; border-top: 1px solid var(--border-subtle); }
 .evidence-group a { color: var(--accent-cyan); font-size: 17px; font-weight: 650; text-underline-offset: 3px; }
 .evidence-group p { margin: 5px 0 0; color: var(--text-secondary); font-size: 14px; line-height: 1.45; }
-.qa-menu .qa-schematic-preview { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-.qa-menu .qa-model-preview {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-}
-.qa-menu .qa-evidence-preview {
-  grid-template: repeat(3, 1fr) / minmax(0, 1fr);
-  place-items: stretch;
-  gap: 5px;
-  padding: 12px;
-}
-.qa-evidence-preview span {
-  display: grid;
-  align-items: center;
-  padding: 0 9px;
-  border-left: 3px solid #1a87a4;
-  background: #fff;
-  color: #193e54;
-  font-size: 13px;
-  font-weight: 650;
-}
-
 .qa-slide { justify-content: center; gap: 28px; }
 .qa-slide > h1 { font-size: 62px; line-height: 1; }
 .qa-menu {
@@ -1660,14 +1638,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .qa-menu-preview {
   display: grid;
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
-  place-items: center;
   height: 143px;
-  padding: 9px;
   border-radius: 4px;
   background: #eaf1f6;
   overflow: hidden;
 }
-.qa-menu-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.qa-menu-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .qa-menu-label { display: grid; gap: 7px; padding: 0 6px; }
 .qa-menu-label strong { font-size: 22px; line-height: 1.14; }
 .qa-menu-label small { color: #c0d3e4; font-size: 13px; }
