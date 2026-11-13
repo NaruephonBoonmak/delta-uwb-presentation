@@ -87,8 +87,9 @@
     if (opts.fog) sc.fog = new THREE.FogExp2(0x050911, 0.00042);
     this.camera = new THREE.PerspectiveCamera(36, 1, 5, 9000);
 
-    sc.add(new THREE.AmbientLight(0xffffff, 0.42));
-    sc.add(new THREE.HemisphereLight(0x9ecbff, 0x0a0f1a, 0.65));
+    this.ambient = new THREE.AmbientLight(0xffffff, 0.42);
+    this.hemi = new THREE.HemisphereLight(0x9ecbff, 0x0a0f1a, 0.65);
+    sc.add(this.ambient, this.hemi);
     const dl = new THREE.DirectionalLight(0xffffff, 0.95);
     dl.position.set(700, 1100, 600);
     dl.castShadow = true;
@@ -96,7 +97,7 @@
     const sh = dl.shadow.camera;
     sh.left = -900; sh.right = 900; sh.top = 900; sh.bottom = -900; sh.near = 100; sh.far = 3000;
     sc.add(dl);
-    const rim = new THREE.PointLight(0x00e5ff, 0.7, 2600);
+    const rim = (this.rim = new THREE.PointLight(0x00e5ff, 0.7, 2600));
     rim.position.set(-700, 300, -600);
     sc.add(rim);
 
@@ -145,6 +146,7 @@
       this.w = w; this.h = h;
       this.renderer.setSize(w, h, false);
       this.camera.aspect = w / h;
+      this.camera.zoom = this.minCameraAspect ? Math.min(1, this.camera.aspect / this.minCameraAspect) : 1;
       this.camera.updateProjectionMatrix();
     }
     if (this.autoSpin) { this.rig.az += 0.004; this.applyRig(); }
@@ -178,13 +180,23 @@
     });
   };
 
-  Stage.prototype.clearParts = function () {
-    this.parts.forEach((p) => {
-      p.mesh.parent && p.mesh.parent.remove(p.mesh);
-      p.mats.forEach((m) => m.dispose());
+  function disposeCadModel(group) {
+    const cached = new Set(Object.values(geoCache).map(({geo}) => geo));
+    const geometries = new Set(), materials = new Set(), textures = new Set();
+    group.traverse((object) => {
+      if (object.geometry && !object.isSprite && !cached.has(object.geometry)) geometries.add(object.geometry);
+      const mats = object.material;
+      if (Array.isArray(mats)) mats.forEach((material) => materials.add(material));
+      else if (mats) materials.add(mats);
     });
-    this.parts = [];
-  };
+    materials.forEach((material) => {
+      gsap.killTweensOf(material);
+      if (material.map) textures.add(material.map);
+      material.dispose();
+    });
+    textures.forEach((texture) => texture.dispose());
+    geometries.forEach((geometry) => geometry.dispose());
+  }
 
   /* ---------------- Part helpers ---------------- */
   function newMat(color) {
@@ -308,17 +320,29 @@
   }
 
   function makeFloor(stage, w, d) {
+    const group = new THREE.Group();
+    stage.scene.add(group);
     const fm = new THREE.MeshStandardMaterial({ color: 0x9caec2, metalness: 0.15, roughness: 0.85 });
     const floor = new THREE.Mesh(new THREE.BoxGeometry(w, 16, d), fm);
     floor.position.y = -8; floor.receiveShadow = true;
-    stage.scene.add(floor);
+    group.add(floor);
     const grid = new THREE.GridHelper(Math.max(w, d), Math.round(Math.max(w, d) / 50), 0x146d91, 0x45617d);
     grid.position.y = 0.4;
     grid.material.transparent = true; grid.material.opacity = 0.32;
-    stage.scene.add(grid);
+    group.add(grid);
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(floor.geometry), new THREE.LineBasicMaterial({ color: 0x146d91, transparent: true, opacity: 0.55 }));
     edges.position.copy(floor.position);
-    stage.scene.add(edges);
+    group.add(edges);
+    return group;
+  }
+
+  function setSceneLighting(stage, dark) {
+    stage.scene.background.set(dark ? 0x0e1724 : 0xeaf1f6);
+    stage.renderer.shadowMap.enabled = !dark;
+    stage.ambient.intensity = 0.42 * (dark ? 0.67 : 1);
+    stage.hemi.intensity = 0.65 * (dark ? 0.67 : 1);
+    stage.rim.intensity = 0.7 * (dark ? 0.45 : 1);
+    stage.exposure = dark ? 0.93 : 1;
   }
 
   function camTween(stage, kf, dur, ease) {
@@ -329,14 +353,21 @@
   /* ======================================================================
      Q&A CAD VIEWER (Category 1)
      ====================================================================== */
-  const qa = { stage: null, id: "agv_r20", wire: false, chips: null, active: null, group: null };
+  const qa = { stage: null, id: "agv_r20", wire: false, chips: null, active: null, group: null, floor: null };
 
   function buildQaModel() {
     const s = qa.stage; if (!s) return;
-    s.setFocus(null, 0);
-    s.clearParts();
+    if (qa.group) {
+      s.scene.remove(qa.group);
+      disposeCadModel(qa.group);
+    }
+    s.parts = [];
     s.wheels = [];
-    if (qa.group) s.scene.remove(qa.group);
+    const isBooth = qa.id === "booth_layout";
+    qa.floor.visible = !isBooth;
+    setSceneLighting(s, isBooth);
+    s.minCameraAspect = isBooth ? 2.05 : 0;
+    s.w = 0;
     const g = (qa.group = new THREE.Group());
     s.scene.add(g);
     switch (qa.id) {
@@ -345,25 +376,22 @@
       case "conveyor_450": buildConveyor(s, g); break;
       case "relay_r01": buildRelay(s, g); break;
       case "booth_layout": {
-        const a = new THREE.Group(); a.position.set(-300, 0, -20); g.add(a); buildAGV(s, a);
-        const b = new THREE.Group(); b.position.set(0, 0, 150); g.add(b); buildBelt(s, b);
-        const c = new THREE.Group(); c.position.set(200, 0, -90); g.add(c); buildConveyor(s, c);
-        const r = new THREE.Group(); r.position.set(330, 0, 150); g.add(r); buildRelay(s, r);
-        [[-500, -280], [500, -280], [500, 280], [-500, 280]].forEach(([x, z]) => {
-          const an = new THREE.Group(); an.position.set(x, 0, z); g.add(an); buildAnchor(s, an, "anchor");
-        });
+        const booth = makeBooth(g, s);
+        updateBooth(booth, 0, { travel: 0.81, state: "SAFE", pwm: 100 }, 3.85);
         break;
       }
       default: buildAGV(s, g); // agv_r20 & stand_s01
     }
     s.parts.forEach((p) => p.mats.forEach((m) => { m.wireframe = qa.wire; }));
     s.applyExplode();
-    const box = new THREE.Box3().setFromObject(g);
-    const size = new THREE.Vector3(), ctr = new THREE.Vector3();
-    box.getSize(size); box.getCenter(ctr);
-    const maxDim = Math.max(size.x, size.y, size.z);
-    Object.assign(s.rig, { az: 0.6, el: 0.35, dist: maxDim * 2.2, tx: ctr.x, ty: ctr.y, tz: ctr.z });
-    s.applyRig();
+    if (isBooth) {
+      setRig(s, storyViews.booth);
+    } else {
+      const box = new THREE.Box3().setFromObject(g);
+      const size = box.getSize(V3(0,0,0)), ctr = box.getCenter(V3(0,0,0));
+      const maxDim = Math.max(size.x, size.y, size.z);
+      setRig(s, { az: 0.6, el: 0.35, dist: maxDim * 2.2, tx: ctr.x, ty: ctr.y, tz: ctr.z });
+    }
     buildChips();
     if (qa.id === "stand_s01") highlightPart(s.parts[0]);
   }
@@ -418,10 +446,14 @@
     qa.stage.onUserMove = () => {
       document.getElementById("qa-cad-spin").setAttribute("aria-pressed", String(qa.stage.autoSpin));
     };
-    makeFloor(qa.stage, 1300, 800);
+    qa.floor = makeFloor(qa.stage, 1300, 800);
     buildQaModel();
   };
-  C.selectCadModel = function (id) { qa.id = id; if (qa.stage) buildQaModel(); };
+  C.selectCadModel = function (id) {
+    if (qa.id === id) return;
+    qa.id = id;
+    if (qa.stage) buildQaModel();
+  };
   C.updateThreeExplode = function (v) { if (qa.stage) { qa.stage.ex = parseFloat(v) || 0; qa.stage.applyExplode(); } };
   C.toggleThreeWireframe = function () {
     qa.wire = !qa.wire;
@@ -1010,16 +1042,18 @@
     return {stand, antenna, point: V3(0,0,0), led};
   }
 
-  function makeBooth(parent) {
+  function makeBooth(parent, cadStage) {
     const root = meshGroup(parent, 0, 0, 0);
     const desk = newMat(0xbda68a), legs = newMat(0x51687a);
-    modelBox(root, [1040, 30, 500], [0,-15,0], desk);
+    const table = meshGroup(root, 0,0,0);
+    modelBox(table, [1040, 30, 500], [0,-15,0], desk);
     for (const x of [-465,465]) for (const z of [-207,207]) {
-      modelBox(root, [24, 122, 24], [x,-88,z], legs);
+      modelBox(table, [24, 122, 24], [x,-88,z], legs);
     }
+    if (cadStage) addCustom(cadStage, root, "table", table, [desk, legs], table.position, V3(0,0,0), "Booth Table");
     const agv = meshGroup(root, -285,0,0);
     const conveyor = meshGroup(root, 35,0,0);
-    const parts = {parts: []};
+    const parts = cadStage || {parts: []};
     buildAGV(parts, agv);
     buildConveyor(parts, conveyor);
     buildRelay(parts, meshGroup(root, 325,0,0));
@@ -1065,7 +1099,11 @@
     // In the booth plan, the judge faces A1 and A2 at the front edge.
     const corners = [[-447,183], [447,183], [447,-183], [-447,-183]];
     const anchors = corners.map(([x,z], i) => {
-      const anchor = makeTableAnchor(root, parts, `A${i + 1}`, x, z, standMaterial, jointMaterial);
+      const name = `A${i + 1}`;
+      const standMat = cadStage && i > 0 ? standMaterial.clone() : standMaterial;
+      const jointMat = cadStage && i > 0 ? jointMaterial.clone() : jointMaterial;
+      const anchor = makeTableAnchor(root, parts, name, x, z, standMat, jointMat);
+      if (cadStage) addCustom(cadStage, root, name, anchor.stand, [standMat, jointMat], anchor.stand.position, V3(0,0,0), `${name} Tripod`);
       anchor.antenna.getWorldPosition(anchor.point);
       anchor.links = [[agvPoint, cyan], [beltPoint, 0x76edb3]].map(([point, color]) => {
         const line = storyLine(root, anchor.point, point, color, 0.15);
@@ -1080,12 +1118,7 @@
 
   function buildStory(container) {
     const stage = new Stage(container, {});
-    stage.scene.background.set(0x0e1724);
-    stage.renderer.shadowMap.enabled = false;
-    for (const light of stage.scene.children) {
-      if (light.isAmbientLight || light.isHemisphereLight) light.intensity *= 0.67;
-      if (light.isPointLight) light.intensity *= 0.45;
-    }
+    setSceneLighting(stage, true);
     stage.renderer.domElement.style.cursor = "default";
     stage.renderer.domElement.style.pointerEvents = "none";
     story.factory = makeFactory(stage.scene);
@@ -1545,9 +1578,7 @@
     c.updateProjectionMatrix();
   }
 
-  function updateBooth(dt) {
-    const b = story.booth;
-    const {travel, state, pwm} = window.DELTA_CANVASES.getDemoSnapshot();
+  function updateBooth(b, dt, {travel, state, pwm}, elapsed) {
     const stopped = state === "DANGER";
     const color = stopped ? red : state === "WARNING" ? 0xffbb4b : 0x42dfaa;
     b.belt.position.x = lerp(-176, 176, travel);
@@ -1555,7 +1586,7 @@
     if (!stopped) b.parts.beltTex.offset.x = (b.parts.beltTex.offset.x + dt * 0.31) % 1;
     b.beltSignal.getWorldPosition(b.beltPoint);
     moveLine(b.signal, b.agvPoint, b.beltPoint);
-    const cycle = (story.elapsed / 1.65) % b.anchors.length;
+    const cycle = (elapsed / 1.65) % b.anchors.length;
     const activeAnchor = Math.floor(cycle);
     b.anchors.forEach((anchor, i) => {
       const active = !reduceMotion && i === activeAnchor;
@@ -1572,8 +1603,8 @@
     b.treadMark.color.setHex(color);
     b.signal.material.color.setHex(color);
     b.ring.material.color.setHex(color);
-    b.ring.material.opacity = stopped ? 0.72 + Math.sin(story.elapsed * 7) * 0.22 : 0.76;
-    b.beacon.visible = stopped && (reduceMotion || Math.sin(story.elapsed * 7) > -0.25);
+    b.ring.material.opacity = stopped ? 0.72 + Math.sin(elapsed * 7) * 0.22 : 0.76;
+    b.beacon.visible = stopped && (reduceMotion || Math.sin(elapsed * 7) > -0.25);
   }
 
   function renderStory(dt) {
@@ -1585,7 +1616,7 @@
     }
     const step = reduceMotion ? 0 : dt;
     story.elapsed += step;
-    if (story.slide === 6) updateBooth(step);
+    if (story.slide === 6) updateBooth(story.booth, step, C.getDemoSnapshot(), story.elapsed);
     else if (story.slide <= 4) updateOpening(step);
     else if (story.slide === 8) updateCurrentScenario(step);
     else updateFutureScenario(step);
