@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=qa-covers" />
+  <link rel="stylesheet" href="styles.css?v=cover" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -51,38 +51,7 @@
   <main class="slide-region">
 
     <section class="slide cover-slide active" data-slide="1" aria-labelledby="cover-title">
-      <img class="cover-image" src="assets/cover/delta-agv-integrated-tag-cover.png" fetchpriority="high" alt="Dark factory scene showing a UWB anchor communicating with tags on an AGV and on a technician’s belt">
-      <svg class="cover-radio" viewBox="0 0 1672 941" aria-hidden="true">
-        <defs>
-          <path id="cover-route-agv" d="M 908 155 Q 1130 270 1242 655"/>
-          <path id="cover-route-belt" d="M 908 138 Q 1245 103 1563 294"/>
-          <path id="cover-wavefront" d="M -16 -13 Q -5 0 -16 13 M -6 -19 Q 9 0 -6 19 M 5 -25 Q 24 0 5 25"/>
-        </defs>
-        <g class="cover-radio-links">
-          <use href="#cover-route-agv"/>
-          <use href="#cover-route-belt"/>
-        </g>
-        <g class="cover-radio-waves">
-          <g opacity="0">
-            <use href="#cover-wavefront"/>
-            <animateMotion dur="3.8s" begin="-1.1s" rotate="auto" repeatCount="indefinite">
-              <mpath href="#cover-route-agv"/>
-            </animateMotion>
-            <animate attributeName="opacity" dur="3.8s" begin="-1.1s" values="0;1;1;0" keyTimes="0;0.11;0.89;1" repeatCount="indefinite"/>
-          </g>
-          <g opacity="0">
-            <use href="#cover-wavefront"/>
-            <animateMotion dur="3.8s" begin="-2.2s" rotate="auto" repeatCount="indefinite">
-              <mpath href="#cover-route-belt"/>
-            </animateMotion>
-            <animate attributeName="opacity" dur="3.8s" begin="-2.2s" values="0;1;1;0" keyTimes="0;0.11;0.89;1" repeatCount="indefinite"/>
-          </g>
-        </g>
-        <g class="cover-radio-still">
-          <use href="#cover-wavefront" transform="translate(1120 358) rotate(55)"/>
-          <use href="#cover-wavefront" transform="translate(1260 180) rotate(15)"/>
-        </g>
-      </svg>
+      <img class="cover-image" src="assets/cover/delta-agv-integrated-tag-cover.png" fetchpriority="high" alt="Dark factory with an AGV, a wall-mounted UWB anchor, and a technician wearing a belt tag">
       <div class="cover-heading">
         <h1 id="cover-title" style="font-size: 58px; line-height: 1.04;">Spatial Intelligence<br> Platform for Future<br> <span>Dark Factory Operations</span></h1>
         <p class="cover-subtitle">UWB Localization · Safety · Automation</p>
