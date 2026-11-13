@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=qa-slide" />
+  <link rel="stylesheet" href="styles.css?v=handoff-evidence" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -220,23 +220,25 @@
     </section>
 
     <section class="slide speaker-slide closing-slide" data-slide="9">
-      <h1>Future <span class="accent">·</span> Machine Coordination</h1>
-      <div class="story-frame story-factory closing-visual" data-story-view="9" role="img" aria-label="Future scenario in which the AGV arrives at the pickup bay and the system asks the PLC to prepare the conveyor">
-        <span class="story-tag">Proposed Dark Factory Integration</span>
+      <h1>Future <span class="accent">·</span> AGV-to-Conveyor Handoff</h1>
+      <div class="story-frame story-factory closing-visual" data-story-view="9" role="img" aria-label="Proposed simulation of AGV docking, UWB position confirmation, PLC-controlled conveyor start, and SCADA status display">
+        <span class="story-tag">Proposed Integration</span>
         <span class="story-status" data-future-status>AGV approaches the pickup bay</span>
-        <ol class="future-chain" aria-label="Control room sequence">
-          <li data-future-step="0">AI / MCP</li>
-          <li data-future-step="1">MQTT / REST API</li>
-          <li data-future-step="2">Modbus TCP · PLC</li>
-          <li data-future-step="3">SCADA</li>
-        </ol>
       </div>
+      <ol class="future-chain" aria-label="Proposed handoff sequence">
+        <li data-future-step="0"><strong>AGV docks</strong><small>Arrives at the pickup bay</small></li>
+        <li data-future-step="1"><strong>UWB confirms position</strong><small>System reports the AGV in position</small></li>
+        <li data-future-step="2"><strong>PLC starts the conveyor</strong><small>Checks interlocks before issuing the command</small></li>
+        <li data-future-step="3"><strong>SCADA shows status</strong><small>Displays conveyor status and logs the event</small></li>
+      </ol>
       <div class="speaker-controls closing-controls">
         <div class="story-steps">
           <button class="stage-btn" data-story-replay="9">↻ Replay</button>
-          <a class="closing-source" href="https://github.com/MechECI404/UWB/tree/48785f3352bf0d741f8e23acb4930fdcc24ef878" target="_blank" rel="noopener noreferrer">GitHub · 48785f3</a>
+          <span class="story-footnote">Delta industry references</span>
+          <a class="closing-source" href="https://www.deltaww.com/en-US/press/35638" target="_blank" rel="noopener noreferrer">AS Series + ME300 ↗</a>
+          <a class="closing-source" href="https://www.deltaww.com/en-US/solutions/virtual-machine-development-platform" target="_blank" rel="noopener noreferrer">DIATwin ↗</a>
         </div>
-        <button class="stage-btn" data-open-qa-tab="roadmap">Roadmap →</button>
+        <button class="stage-btn" data-open-qa-tab="roadmap" aria-haspopup="dialog">Integration details →</button>
       </div>
     </section>
 
@@ -244,8 +246,12 @@
       <h1 id="qa-slide-title" tabindex="-1">Q<span class="accent">&amp;</span>A</h1>
       <nav class="qa-menu" aria-label="Choose a technical topic">
         <button class="qa-menu-card" type="button" data-open-qa-tab="cad" aria-haspopup="dialog">
-          <span class="qa-menu-preview"><img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/03_AGV_Assembled_transparent.png" alt=""></span>
-          <span class="qa-menu-label"><strong>3D CAD &amp;<br>Mechanical BOM</strong><small>3D models and parts list</small></span>
+          <span class="qa-menu-preview qa-model-preview">
+            <img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/03_AGV_Assembled_transparent.png" alt="">
+            <img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/01_BELT_Assembled_transparent.png" alt="">
+            <img src="assets/cad_assembled/output/Three_Models_Assembled_R20/transparent/02_ANCHOR_Assembled_transparent.png" alt="">
+          </span>
+          <span class="qa-menu-label"><strong>3D CAD &amp;<br>Mechanical BOM</strong><small>AGV R20 · Belt R18A · Anchor R05</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="calibration" aria-haspopup="dialog">
@@ -255,12 +261,21 @@
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="wiring" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/wiring/agv_belt_wiring_ina226_r09/output/AGV_Belt_INA226_R09/01_AGV_MEGA_Combined_R09.svg" alt=""></span>
-          <span class="qa-menu-label"><strong>Electrical &amp;<br>INA226 Wiring</strong><small>Wiring diagrams and pin connections</small></span>
+          <span class="qa-menu-label"><strong>Electrical &amp;<br>INA226 Wiring</strong><small>Module wiring and physical pin maps</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="roadmap" aria-haspopup="dialog">
           <span class="qa-menu-preview"><img src="assets/system/Presentation/system-diagram/Delta_Cup_2026_System_Diagram.png" alt=""></span>
-          <span class="qa-menu-label"><strong>AI / IoT<br>SCADA / PLC</strong><small>Architecture and roadmap</small></span>
+          <span class="qa-menu-label"><strong>Integration<br>Roadmap</strong><small>Prototype architecture and future PLC / SCADA integration</small></span>
+          <span class="qa-menu-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="qa-menu-card qa-evidence-card" type="button" data-open-qa-tab="references" aria-haspopup="dialog">
+          <span class="qa-menu-preview qa-evidence-preview" aria-hidden="true">
+            <span>Published studies</span>
+            <span>Technical manuals</span>
+            <span>Prototype test records</span>
+          </span>
+          <span class="qa-menu-label"><strong>References &amp;<br>Test Evidence</strong><small>Sources for slides 3–9</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
       </nav>
@@ -303,12 +318,13 @@
   <aside class="qa-overlay" id="qa-overlay" role="dialog" aria-modal="true" aria-labelledby="qa-detail-title" aria-hidden="true" inert>
     <div class="qa-header">
       <div style="display:flex;align-items:center;gap:16px;">
-        <div class="brand-badge" id="qa-detail-title">TECHNICAL Q&amp;A VAULT</div>
+        <div class="brand-badge" id="qa-detail-title">TECHNICAL Q&amp;A</div>
         <div class="qa-tabs">
-          <button class="qa-tab active" data-qa-tab="cad">1. 3D CAD &amp; Mechanical BOM</button>
-          <button class="qa-tab" data-qa-tab="calibration">2. UWB Calibration (20 SVG Plates)</button>
-          <button class="qa-tab" data-qa-tab="wiring">3. Electrical &amp; INA226 Wiring</button>
-          <button class="qa-tab" data-qa-tab="roadmap">4. AI / IoT / SCADA / PLC Architecture</button>
+          <button class="qa-tab active" data-qa-tab="cad">CAD &amp; BOM</button>
+          <button class="qa-tab" data-qa-tab="calibration">Calibration</button>
+          <button class="qa-tab" data-qa-tab="wiring">Electrical Wiring</button>
+          <button class="qa-tab" data-qa-tab="roadmap">Roadmap</button>
+          <button class="qa-tab" data-qa-tab="references">References &amp; Test Evidence</button>
         </div>
       </div>
 
@@ -509,7 +525,7 @@
           <div class="roadmap-evidence">
             <p><strong>GitHub main · 48785f3:</strong> RemingtonDualTag → ESP-NOW Gateway → USB Bridge → Local Compute. The software computes X–Y positions for the dashboard. REST and MCP provide read access to positions and time spent in each zone.</p>
             <p><strong>Test scope:</strong> Firmware 0.1.0-alpha.1 passed host tests. The previous version produced X–Y positions for both tags with gaps in the data. MQTT, Modbus TCP, and SCADA integration remain on the roadmap.</p>
-            <p><strong>Proposed request flow:</strong> AI/MCP requests station preparation through an access-controlled gateway. The PLC checks interlocks and equipment status before issuing commands. SCADA monitors status and events.</p>
+            <p><strong>Proposed handoff:</strong> UWB confirms the AGV is in the pickup bay. The system reports that event to the PLC. After checking interlocks and equipment readiness, the PLC commands the conveyor. SCADA displays its status and logs the event.</p>
             <p>
               <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/readme.md" target="_blank" rel="noopener noreferrer">Firmware &amp; runtime status</a>
               <a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/local-compute/mcp_server.py" target="_blank" rel="noopener noreferrer">MCP tools</a>
@@ -549,6 +565,32 @@
           </table>
         </div>
       </div>
+      <div class="qa-pane qa-references" data-qa-pane="references">
+        <section class="eng-panel evidence-group" aria-labelledby="evidence-research">
+          <h2 id="evidence-research">Published research</h2>
+          <ul>
+            <li><a href="https://doi.org/10.1109/ACCESS.2020.2992475" target="_blank" rel="noopener noreferrer">Keung et al. (2020) ↗</a><p>Slide 3 · Mobile robot route conflicts in a fulfillment system.</p></li>
+            <li><a href="https://doi.org/10.3390/electronics11203294" target="_blank" rel="noopener noreferrer">Schjørring et al. (2022) ↗</a><p>Slide 5 · UWB performance in static and mobile industrial scenarios.</p></li>
+            <li><a href="https://doi.org/10.1109/TIM.2021.3074403" target="_blank" rel="noopener noreferrer">Barbieri et al. (2021) ↗</a><p>Slide 5 · Multipath and non-line-of-sight effects on factory UWB positioning.</p></li>
+          </ul>
+        </section>
+        <section class="eng-panel evidence-group" aria-labelledby="evidence-team">
+          <h2 id="evidence-team">Prototype test evidence</h2>
+          <ul>
+            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/agvuart/VALIDATION.md" target="_blank" rel="noopener noreferrer">AGV UART validation ↗</a><p>Slide 6 · Host tests and firmware builds for the RUN / STOP logic.</p></li>
+            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-espnow/calibration_series_20261024/assessment/README.md" target="_blank" rel="noopener noreferrer">Held-out range calibration ↗</a><p>Slide 7 · Static tag-to-anchor range RMSE fell from 17.71 to 16.15 cm at the held-out test points.</p></li>
+            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Two-tag live capture ↗</a><p>Slide 8 · The solver produced X–Y positions for both tags. The log records gaps in tracking.</p></li>
+          </ul>
+        </section>
+        <section class="eng-panel evidence-group" aria-labelledby="evidence-industry">
+          <h2 id="evidence-industry">Industry &amp; hardware</h2>
+          <ul>
+            <li><a href="https://www.deltaww.com/en-US/press/35638" target="_blank" rel="noopener noreferrer">Delta AS Series + ME300 ↗</a><p>Slide 9 · Delta’s PLC and drive application for a telescopic conveyor.</p></li>
+            <li><a href="https://www.deltaww.com/en-US/solutions/virtual-machine-development-platform" target="_blank" rel="noopener noreferrer">Delta DIATwin ↗</a><p>Slide 9 · Virtual testing and offline commissioning.</p></li>
+            <li><a href="https://www.qorvo.com/products/p/DW1000" target="_blank" rel="noopener noreferrer">Qorvo DW1000 documentation ↗</a><p>Slide 10 · Datasheet, antenna design guide, and antenna delay calibration note.</p></li>
+          </ul>
+        </section>
+      </div>
     </div>
   </aside>
 
@@ -575,7 +617,7 @@
   <script src="data.js"></script>
   <script src="canvases.js?v=english"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=spatial-awareness-en"></script>
+  <script src="scene3d.js?v=proposed-handoff"></script>
   <script src="app.js?v=english"></script>
 </body>
 </html>

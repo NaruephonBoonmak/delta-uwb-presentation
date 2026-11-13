@@ -649,7 +649,7 @@
     };
 
     desk(1115,124);
-    const aiDisplay = monitor(1102,75,"AI / MCP");
+    const dockDisplay = monitor(1102,75,"PICKUP BAY");
     modelBox(root,[24,57,37],[1160,107,-316],frame);
     for (const y of [96,105,114]) modelBox(root,[16,2,1],[1160,y,-296],rail);
     modelBox(root,[48,3,16],[1103,82,-286],frame);
@@ -661,7 +661,7 @@
       for (const x of [1241,1251,1261,1271]) modelBox(root,[6,5,2],[x,y,-288],frame);
       modelBox(root,[10,4,2],[1296,y,-288],lightMaterial(0x7dabbf));
     }
-    const gatewayDisplay = makeControlDisplay(root,1267,174,-289,89,44,"GATEWAY");
+    const gatewayDisplay = makeControlDisplay(root,1267,174,-289,89,44,"UWB POSITION");
 
     modelBox(root,[103,162,61],[1421,81,-324],shell);
     modelBox(root,[91,118,4],[1421,90,-291],frame);
@@ -676,7 +676,7 @@
     const scadaDisplay = monitor(1570,116,"SCADA");
     modelBox(root,[67,3,17],[1570,82,-284],frame);
     modelBox(root,[12,3,12],[1616,82,-284],shell);
-    const displays = [aiDisplay,gatewayDisplay,plcDisplay,scadaDisplay];
+    const displays = [dockDisplay,gatewayDisplay,plcDisplay,scadaDisplay];
     const equipment = displays.map((display,i) => ({display, lamp:indicators[i]}));
 
     const edges = nodes.map(point => storyLine(root,point,point,0x6be9ff,0.82));
@@ -1162,7 +1162,7 @@
     cobot.elbow.rotation.x = Math.PI - angle((81**2 + 68**2 - reach**2) / (2 * 81 * 68));
   }
 
-  function updateAutomaticPickup(dt, t = story.elapsed, continuousBelt = false) {
+  function updateAutomaticPickup(dt, t = story.elapsed, continuousBelt = false, conveyorStart = 0.2) {
     const f = story.factory;
     const x = f.dockX, z = f.dockZ, lane = f.laneZ;
     f.agv2.visible = f.network.visible = false;
@@ -1185,7 +1185,8 @@
     if (t < 4.65) hand.y += 22 * (1 - smooth(t,3.8,4.65));
     if (t > 6.38) hand.y += 26 * smooth(t,6.38,6.95);
     aimCobot(f.cobot, hand);
-    if (t < 4.65) f.cargo.position.set(lerp(295,641,smooth(t,0.2,4.35)), 113,-265);
+    const conveyorEnd = continuousBelt ? 4.65 : 4.35;
+    if (t < 4.65) f.cargo.position.set(lerp(295,641,smooth(t,conveyorStart,conveyorEnd)), 113,-265);
     else if (t <= 6.38) f.cargo.position.copy(hand).add(V3(0,-21,0));
     else f.cargo.position.copy(f.agv.position).add(V3(0,81,0));
     if (continuousBelt || t < 4.35) f.belt.offset.x -= dt * 0.46;
@@ -1344,14 +1345,18 @@
 
   function updateFutureScenario(dt) {
     const f = story.factory, t = story.elapsed, flow = f.future;
-    const docked = 4.1, ready = 8.45;
-    const waiting = t >= docked && t < ready;
-    const motion = t < docked ? t : waiting ? docked : t - (ready - docked);
-    updateAutomaticPickup(waiting ? 0 : dt, motion);
+    const docked = 4.1, ready = 8.05;
+    const conveyorTravel = 1.6;
+    const transferStart = 4.65;
+    const sinceStart = t - ready;
+    const motion = t < docked ? t : sinceStart < conveyorTravel
+      ? lerp(docked, transferStart, Math.max(0, sinceStart / conveyorTravel))
+      : transferStart + sinceStart - conveyorTravel;
+    updateAutomaticPickup(sinceStart < 0 || sinceStart >= conveyorTravel ? 0 : dt, motion, true, docked);
     f.worker.root.visible = false;
     renderTrackedTags(false, true, t >= 2.6);
 
-    const timing = [docked, 5.45, 6.95, ready, 9.85];
+    const timing = [docked, 5.45, 6.95, 8.75, 10.05];
     const nextStep = timing.findIndex(boundary => t < boundary);
     const activeStep = nextStep === -1 ? flow.equipment.length : nextStep - 1;
     const points = [f.trackedTags[0].point, ...flow.nodes];
@@ -1372,29 +1377,30 @@
       flow.focusLight.intensity = 0;
     }
     flow.stationLink.visible = flow.stationBeacon.visible = t >= ready;
-    const activeLabels = ["REQUEST", "FORWARD", "CHECKING", "READY"];
-    const completedLabels = ["REQUESTED", "FORWARDED", "PERMITTED", "LOGGED"];
+    const activeLabels = ["DOCKED", "IN POSITION", "CHECKING", "CONVEYOR ON"];
+    const completedLabels = ["DOCKED", "IN POSITION", "START SENT", "LOGGED"];
     flow.equipment.forEach(({display,lamp},i) => {
       const active = i === activeStep;
       const done = i < activeStep;
       const readyScreen = i === 3 && active;
       const color = active && !readyScreen ? "#8cecff" : (done || readyScreen) ? "#68e6a8" : "#8ea6b7";
       const received = active && t >= lerp(timing[activeStep],timing[activeStep + 1],0.78);
-      display(received ? (readyScreen ? "READY / LOG" : activeLabels[i])
+      display(received ? activeLabels[i]
         : active ? "RECEIVING" : done ? completedLabels[i] : "STANDBY",color);
       lamp.material.color.set(color);
     });
-    if (story.futureStep === activeStep) return;
-    story.futureStep = activeStep;
     const message = [
       "AGV approaches the pickup bay",
-      "AI/MCP sends a request when the AGV arrives",
-      "Gateway forwards the request via MQTT / REST API",
-      "PLC receives the request and checks interlocks",
-      "PLC sends its ready status to SCADA",
-      "SCADA logs the status"
+      "AGV docks at the pickup bay",
+      "UWB confirms the AGV position and the system reports it",
+      "PLC checks the conveyor interlocks",
+      "SCADA displays the conveyor running status",
+      "SCADA logs the conveyor start"
     ][activeStep + 1];
-    setStoryStatus(story.futureStatus, message, activeStep >= 3 ? "recovery" : "info");
+    setStoryStatus(story.futureStatus, activeStep === 2 && t >= ready
+      ? "PLC commands the conveyor to start" : message, t >= ready ? "recovery" : "info");
+    if (story.futureStep === activeStep) return;
+    story.futureStep = activeStep;
     story.futureSteps.forEach((node,i) => {
       node.classList.toggle("flow-active", i === activeStep);
       node.classList.toggle("flow-done", i < activeStep);
