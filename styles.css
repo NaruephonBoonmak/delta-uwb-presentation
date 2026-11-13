@@ -1780,6 +1780,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
     --team-height: 28px;
     --delta-width: 98px;
     --delta-height: 34px;
+    --dtia-height: 54px;
     gap: 18px;
   }
 }
@@ -1818,6 +1819,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   --team-height: 23px;
   --delta-width: 82px;
   --delta-height: 29px;
+  --dtia-height: 42px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1850,6 +1852,22 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   border-radius: 3px;
 }
 .slide-logo-team img { width: calc(var(--team-width) * 1.123); left: 48%; }
+.slide-logo-dtia {
+  width: calc(var(--dtia-height) * 1.72);
+  height: var(--dtia-height);
+  border-radius: 4px;
+  background: #fff;
+}
+.slide-logo-dtia img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 133%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  transform: translate(-50%, -50%);
+}
 .slide-logo-delta {
   width: var(--delta-width);
   height: var(--delta-height);
