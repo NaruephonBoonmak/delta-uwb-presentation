@@ -200,7 +200,7 @@ window.DELTA_CANVASES = (function () {
     if (!container || typeof echarts === "undefined") return;
     const chartStatus = document.querySelector("[data-calibration-status]");
     if (chartStatus) chartStatus.textContent = s6ViewMode === "heatmap"
-      ? "Archived XY · Position error" : "Range RMSE · Before and after calibration";
+      ? "Archived XY · Position error" : "Offline range calibration · Before and after";
 
     if (!s6Chart) {
       s6Chart = echarts.init(container, null, { renderer: "canvas" });
