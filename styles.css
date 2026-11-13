@@ -1374,7 +1374,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .story-steps > span { color: #d9ebf8; }
 .story-footnote { color: #9fb3c7; font-size: 14px; }
 .demo-controls { gap: 14px; }
-.demo-evidence { flex: none; text-align: right; }
 .demo-controls .stage-btn { padding-inline: 9px; font-size: 12px; }
 .demo-range {
   display: flex;
@@ -1610,7 +1609,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .closing-chain i { color: #2085a6; font-style: normal; font-size: 18px; text-align: center; }
 .closing-controls { min-height: 30px; }
 .closing-controls .stage-btn { padding-block: 5px; }
-.closing-source { color: #345871; font: 12px var(--font-mono); }
 
 
 .current-controls .story-footnote { text-align: right; }
@@ -1649,7 +1647,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .future-chain .flow-active { border-color: #1980a1; background: #e3f5fb; }
 .future-chain .flow-done { border-color: #9ac6b2; background: #edf7f2; }
 .closing-controls .story-steps { gap: 12px; }
-.closing-source { text-underline-offset: 2px; }
 
 .qa-references {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1818,7 +1815,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   letter-spacing: -0.055em;
 }
 .cover-heading h1 span { color: #75e4fa; }
-.cover-illustration-credit { margin-top: 14px; color: #b8cedc; font-size: 12px; }
 .cover-subtitle {
   margin-top: 22px;
   color: #d8e7f1;
