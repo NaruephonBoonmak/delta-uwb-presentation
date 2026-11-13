@@ -1128,10 +1128,81 @@
     story.stage = stage;
   }
 
+  function buildTwinCapture(container) {
+    const stage = new Stage(container, {background: 0x101d2b});
+    stage.renderer.shadowMap.enabled = false;
+    stage.onUserMove = () => { stage.needsRender = true; };
+    new ResizeObserver(stage.onUserMove).observe(container);
+    setRig(stage, {az: -0.69, el: 0.89, dist: 440, tx: 0, ty: 34, tz: 0});
+
+    const floor = new THREE.MeshStandardMaterial({color: 0x244665});
+    const stand = new THREE.MeshStandardMaterial({color: 0x8bb7d1});
+    const anchor = new THREE.MeshStandardMaterial({color: 0x55c9fb, emissive: 0x185277});
+    const tag = new THREE.MeshStandardMaterial({color: 0xf7bd60, emissive: 0x87501a});
+    modelBox(stage.scene, [128, 9, 230], [0, -6, 0], floor);
+    const grid = new THREE.GridHelper(200, 8, 0x82b7d6, 0x507c9d);
+    grid.scale.x = 0.5;
+    stage.scene.add(grid);
+
+    function label(name, color, x, y, z) {
+      const marker = makeLabel(name, color, {width: 170, fontSize: 52});
+      marker.scale.set(39, 25, 1);
+      marker.material.opacity = 1;
+      marker.position.set(x, y, z);
+      stage.scene.add(marker);
+    }
+
+    const radioHeight = 42;
+    const anchors = [[0, 0], [1, 0], [0, 2], [1, 2]];
+    anchors.forEach(([x, y], index) => {
+      const wx = 100 * (x - 0.5), wz = 100 * (1 - y);
+      modelCylinder(stage.scene, 1.4, 2.5, radioHeight, [wx, radioHeight / 2, wz], stand);
+      modelBox(stage.scene, [14, 12, 10], [wx, radioHeight, wz], anchor);
+      label(`A${index + 1}`, "#55c9fb", wx, radioHeight + 21, wz);
+    });
+    container.parentElement.querySelectorAll("[data-tag]").forEach(({dataset}) => {
+      const x = 100 * (Number(dataset.x) - 0.5), z = 100 * (1 - Number(dataset.y));
+      modelCylinder(stage.scene, 1, 1.3, radioHeight, [x, radioHeight / 2, z], tag);
+      modelBox(stage.scene, [13, 11, 13], [x, radioHeight, z], tag);
+      label(dataset.tag, "#f7bd60", x, radioHeight + 21, z);
+    });
+    label("X (m)", "#98b6cf", 0, 4, 117);
+    label("Y (m)", "#98b6cf", -69, 4, 0);
+
+    const canvas = stage.renderer.domElement;
+    canvas.tabIndex = 0;
+    canvas.setAttribute("aria-label", "Rotate the UWB capture with the arrow keys");
+    canvas.addEventListener("keydown", event => {
+      const direction = {ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1]}[event.key];
+      if (!Array.isArray(direction)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      stage.rig.az += direction[0] * 0.16;
+      stage.rig.el = THREE.MathUtils.clamp(stage.rig.el + direction[1] * 0.12, 0.14, 1.48);
+      stage.applyRig();
+      stage.needsRender = true;
+    });
+    container.querySelector("[data-twin-fallback]").hidden = true;
+    container.nextElementSibling.hidden = false;
+    return stage;
+  }
+
+  function showTwinCapture(container) {
+    if (story.twinCaptureFailed) return;
+    try {
+      story.twinCapture ??= buildTwinCapture(container);
+      story.twinCapture.needsRender = true;
+    } catch (error) {
+      story.twinCaptureFailed = true;
+      console.warn("DELTA UWB capture view could not initialize:", error.message);
+    }
+  }
+
   function showStorySlide(slide) {
     const container = document.querySelector('[data-story-view="' + slide + '"]');
     story.tween?.kill();
     story.slide = slide;
+    if (container && slide === 8) showTwinCapture(container.closest(".slide").querySelector("[data-twin-capture]"));
     if (!container || story.failed) return;
     try {
       if (!story.stage) buildStory(container);
@@ -1614,6 +1685,9 @@
     if (story.tween?.isActive() || story.tween?.paused()) story.tween.paused(qaOpen);
     const boothCadOpen = story.slide === 6 && !document.getElementById("slide-booth-cad").hidden;
     if (!qaOpen && !boothCadOpen) renderStory(dt);
+    if (!qaOpen && story.slide === 8 && story.twinCapture?.needsRender && story.twinCapture.render()) {
+      story.twinCapture.needsRender = false;
+    }
     if (qa.stage && (qaOpen || boothCadOpen)) qa.stage.render();
     requestAnimationFrame(loop);
   }

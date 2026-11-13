@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=digital-twin" />
+  <link rel="stylesheet" href="styles.css?v=uwb-capture-3d" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -194,18 +194,13 @@
         <section class="twin-capture" aria-labelledby="twin-capture-title">
           <h2 id="twin-capture-title">Recorded UWB Positions</h2>
           <p>Two-tag lab capture · 29 Oct 2026</p>
-          <div class="twin-map" role="img" aria-label="Recorded points in metres. T1 X 0.260 Y 1.419. T2 X 0.529 Y 0.556. Anchor coordinates range from 0 to 1 metre in X and 0 to 2 metres in Y.">
-            <span class="twin-anchor" style="--x:0%;--y:100%">A1</span>
-            <span class="twin-anchor" style="--x:100%;--y:100%">A2</span>
-            <span class="twin-anchor" style="--x:0%;--y:0%">A3</span>
-            <span class="twin-anchor" style="--x:100%;--y:0%">A4</span>
-            <span class="twin-tag" style="--x:26%;--y:29.05%">T1</span>
-            <span class="twin-tag" style="--x:52.9%;--y:72.2%">T2</span>
-            <span class="twin-axis-x">X (m)</span><span class="twin-axis-y">Y (m)</span>
+          <div class="twin-map" data-twin-capture role="group" aria-label="3D view of the recorded X–Y positions on a shared plane">
+            <p data-twin-fallback>3D view unavailable</p>
           </div>
+          <p class="twin-map-hint" hidden>Drag or use arrows to rotate · Height illustrative</p>
           <dl class="twin-readings">
-            <div><dt>T1</dt><dd>(0.260, 1.419) m</dd></div>
-            <div><dt>T2</dt><dd>(0.529, 0.556) m</dd></div>
+            <div data-tag="T1" data-x="0.260" data-y="1.419"><dt>T1</dt><dd>(0.260, 1.419) m</dd></div>
+            <div data-tag="T2" data-x="0.529" data-y="0.556"><dt>T2</dt><dd>(0.529, 0.556) m</dd></div>
           </dl>
           <p class="twin-quality">Recorded at 17:51:23 · DEGRADED · Both estimates used 3 of 4 anchors</p>
         </section>
@@ -491,7 +486,7 @@
   <script src="data.js?v=l298n-rev-d"></script>
   <script src="canvases.js?v=research"></script>
   <script src="assets/stl_bundle.js"></script>
-  <script src="scene3d.js?v=digital-twin"></script>
+  <script src="scene3d.js?v=uwb-capture-3d"></script>
   <script src="app.js?v=l298n-booth"></script>
 </body>
 </html>
