@@ -1060,7 +1060,7 @@ html, body {
 .qa-wiring-notes nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 7px; }
 .qa-wiring-notes a { color: var(--accent-cyan); text-underline-offset: 2px; }
 
-/* Lightbox Zoom Modal for High-Res Diagrams & 20 SVG Plates */
+/* Lightbox Zoom Modal for High-Res Diagrams */
 .lightbox-modal {
   position: fixed;
   inset: 0;
@@ -1493,6 +1493,24 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
 .result-metrics b { color: #11684f; }
 .result-metrics > div { border-color: #d4e0e9; }
 
+/* Slide 7 keeps the result dashboard and the deck's existing palette. */
+.calibration-slide .result-chart { display: flex; flex-direction: column; }
+.calibration-slide #chart-slide6-main { flex: 1; height: auto; }
+.calibration-context {
+  flex: none;
+  margin: 6px 8px 0;
+  padding: 12px 4px 2px;
+  border-top: 1px solid #294057;
+  color: #adc0d2;
+  font: 13px/1.5 var(--font-mono);
+  text-align: center;
+}
+.calibration-slide .result-metrics span { line-height: 1.5; }
+.calibration-slide .primary-metric b { display: block; margin-bottom: 5px; }
+.calibration-slide .position-metric b { display: block; margin-top: 7px; font-size: 16px; }
+.calibration-slide .position-metric b small { font: 12px var(--font-sans); }
+.calibration-report { text-decoration: none; white-space: nowrap; }
+
 
 .bottom-bar .presenter-nav-btns .hud-btn {
   color: #123a56;
@@ -1742,6 +1760,18 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-cyan
   overflow: hidden;
 }
 .qa-menu-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.calibration-preview, .reference-preview {
+  grid-template: auto auto auto / minmax(0, 1fr);
+  align-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: #50687e;
+  font-size: 12px;
+}
+.calibration-preview strong { color: #075e82; font-size: 29px; letter-spacing: -0.04em; white-space: nowrap; }
+.calibration-preview i { color: #718ba2; font-style: normal; }
+.calibration-preview small { font-size: 14px; }
+.reference-preview strong { color: #075e82; font-size: 29px; }
 .qa-menu-label { display: grid; gap: 7px; padding: 0 6px; }
 .qa-menu-label strong { font-size: 22px; line-height: 1.14; }
 .qa-menu-label small { color: #c0d3e4; font-size: 13px; }

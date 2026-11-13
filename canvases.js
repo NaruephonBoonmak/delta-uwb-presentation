@@ -4,7 +4,7 @@
    2. Slide 2: Hybrid -> Connected -> Dark Factory Scene Morph
    3. Slide 4: LiDAR/SLAM Blind Spots vs. UWB Shared Positioning (DS-TWR)
    4. Slide 5: Live Booth Demo Twin (Stationary AGV on S01 + Conveyor + Belt)
-   5. Slide 6: ECharts Scientific Calibration & Spatial Accuracy Dashboard
+   5. Slide 7: ECharts Constant vs. Linear Calibration Assessment
    6. Q&A Cat 1: Three.js Interactive 3D CAD & Exploded Assembly Viewer
    ========================================================================== */
 
@@ -26,9 +26,9 @@ window.DELTA_CANVASES = (function () {
   let demoAudio = null;
   let demoTone = null;
 
-  // Slide 6 ECharts instance
+  // Slide 7 ECharts instance (legacy API name retained for the controller)
   let s6Chart = null;
-  let s6ViewMode = "anchors"; // anchors | heatmap | bias
+  let s6ViewMode = "anchors"; // anchors | cross-position | position
 
   // Three.js Q&A Viewer state
   let threeScene = null;
@@ -198,136 +198,108 @@ window.DELTA_CANVASES = (function () {
     if (mode) s6ViewMode = mode;
     const container = document.getElementById("chart-slide6-main");
     if (!container || typeof echarts === "undefined") return;
-    const chartStatus = document.querySelector("[data-calibration-status]");
-    if (chartStatus) chartStatus.textContent = s6ViewMode === "heatmap"
-      ? "Archived XY · Position error" : "Offline range calibration · Before and after";
+    if (!s6Chart) s6Chart = echarts.init(container, null, { renderer: "canvas" });
 
-    if (!s6Chart) {
-      s6Chart = echarts.init(container, null, { renderer: "canvas" });
-    }
-
-    const exp = window.DELTA_DATA.uwbExperiment;
-
-    if (s6ViewMode === "anchors") {
-      const categories = [...exp.anchors.map(anchor => anchor.id), "P9", "P9 + P1 return"];
-      const rawData = [...exp.anchors.map(anchor => anchor.heldoutPooledRawCm), exp.centerP9.rawRmseCm, exp.overallPooled.rawRmseCm].map(v => +v.toFixed(2));
-      const calData = [...exp.anchors.map(anchor => anchor.heldoutPooledCalCm), exp.centerP9.calRmseCm, exp.overallPooled.calRmseCm].map(v => +v.toFixed(2));
-
-      s6Chart.setOption({
-        backgroundColor: "transparent",
-        color: ["#657b91", "#08a8ce"],
-        animation: !matchMedia("(prefers-reduced-motion: reduce)").matches,
-        tooltip: {
-          trigger: "axis",
-          axisPointer: { type: "shadow" },
-          backgroundColor: "rgba(6, 10, 18, 0.94)",
-          borderColor: "#00E5FF",
-          textStyle: { color: "#F8FAFC", fontFamily: "Consolas", fontSize: 14 }
-        },
-        legend: {
-          data: ["Raw Range RMSE (cm)", "Calibrated Range RMSE (cm)"],
-          itemWidth: 16,
-          itemHeight: 8,
-          textStyle: { color: "#CBD5E1", fontFamily: "Segoe UI", fontSize: 14 },
-          top: 4
-        },
-        grid: { left: 48, right: 24, top: 42, bottom: 44 },
-        xAxis: {
-          type: "category",
-          data: categories,
-          axisLabel: { color: "#CBD5E1", fontFamily: "Consolas", fontSize: 12, interval: 0 },
-          axisLine: { lineStyle: { color: "rgba(148,163,184,0.3)" } }
-        },
-        yAxis: {
-          type: "value",
-          name: "RMSE (cm)",
-          minInterval: 5,
-          nameTextStyle: { color: "#94A3B8", fontFamily: "Consolas" },
-          axisLabel: { color: "#94A3B8", fontFamily: "Consolas" },
-          splitLine: { lineStyle: { color: "rgba(148,163,184,0.12)" } }
-        },
+    const assessment = window.DELTA_DATA.uwbCalibrationAssessment;
+    const ranging = [...assessment.anchors, { id: "Overall", ...assessment.overall }];
+    const views = {
+      anchors: {
+        status: "Range RMSE · Per-position medians",
+        context: "Fixed offsets (cm): " + assessment.anchors.map(a => `${a.id} +${a.offsetCm.toFixed(2)}`).join(" · "),
+        categories: ranging.map(a => a.id),
+        axis: "Range RMSE (cm)",
         series: [
-          {
-            name: "Raw Range RMSE (cm)",
-            type: "bar",
-            data: rawData,
-            barGap: "18%",
-            itemStyle: { color: "#64748B", borderRadius: [4, 4, 0, 0] },
-            label: { show: true, position: "top", color: "#94A3B8", fontFamily: "Consolas", fontSize: 10, formatter: "{c}" }
-          },
-          {
-            name: "Calibrated Range RMSE (cm)",
-            type: "bar",
-            data: calData.map((value, i) => i === 3 ? {value, itemStyle: {color: "#10B981"}} : value),
-            itemStyle: { color: "#00E5FF", borderRadius: [4, 4, 0, 0] },
-            label: { show: true, position: "top", color: "#00E5FF", fontWeight: "bold", fontFamily: "Consolas", fontSize: 10.5, formatter: "{c}" }
-          }
+          { name: "Raw", values: ranging.map(a => a.rawRmseCm), color: "#64748B" },
+          { name: "Fixed constant", values: ranging.map(a => a.constantRmseCm), color: "#00E5FF" },
+          { name: "Linear (in-sample)", values: ranging.map(a => a.linearRmseCm), color: "#F2B66D" }
         ]
-      }, true);
-    } else if (s6ViewMode === "heatmap") {
-      const points = exp.spatialGridPoints;
-      const x = [...new Set(points.map(point => point.x))].sort((a,b) => a-b);
-      const y = [...new Set(points.map(point => point.y))].sort((a,b) => a-b);
-      const xLabels = x.map(value => value.toFixed(2) + " m");
-      const yLabels = y.map(value => value.toFixed(2) + " m");
-      const heatData = points.map(point => [
-        x.indexOf(point.x), y.indexOf(point.y), point.radialRmseCm, point.id, point.n
-      ]);
-
-      s6Chart.setOption({
-        backgroundColor: "transparent",
-        animation: !matchMedia("(prefers-reduced-motion: reduce)").matches,
-        tooltip: {
-          formatter: function (p) {
-            return `<b>${p.data[3]}</b><br/>Archived radial RMSE: <b>${p.data[2]} cm</b><br/>Snapshots: ${p.data[4]}`;
-          },
-          backgroundColor: "rgba(6, 10, 18, 0.94)",
-          borderColor: "#00E5FF",
-          textStyle: { color: "#F8FAFC", fontFamily: "Consolas" }
-        },
-        grid: { left: 130, right: 70, top: 24, bottom: 40 },
-        xAxis: {
-          type: "category",
-          data: xLabels,
-          axisLabel: { color: "#CBD5E1", fontFamily: "Consolas", fontSize: 14 }
-        },
-        yAxis: {
-          type: "category",
-          data: yLabels,
-          axisLabel: { color: "#CBD5E1", fontFamily: "Consolas", fontSize: 14 }
-        },
-        visualMap: {
-          dimension: 2,
-          min: 0,
-          max: Math.ceil(Math.max(...points.map(point => point.radialRmseCm)) / 10) * 10,
-          calculable: true,
-          orient: "vertical",
-          right: 8,
-          top: "center",
-          inRange: { color: ["#10B981", "#00E5FF", "#F59E0B", "#EF4444"] },
-          textStyle: { color: "#CBD5E1", fontFamily: "Consolas" }
-        },
+      },
+      "cross-position": {
+        status: "Leave-one-position-out · Re-fitted models",
+        context: "Each fold re-fits the model · Same calibration dataset, not independent field validation",
+        categories: ranging.map(a => a.id),
+        axis: "CV RMSE (cm)",
         series: [
-          {
-            name: "Archived XY radial RMSE (cm)",
-            type: "heatmap",
-            encode: { x: 0, y: 1, value: 2 },
-            data: heatData,
-            label: {
-              show: true,
-              formatter: function (p) {
-                return p.data[3] + " · " + p.data[2].toFixed(2) + " cm";
-              },
-              color: "#060A12",
-              fontWeight: "bold",
-              fontFamily: "Consolas",
-              fontSize: 14
-            }
-          }
+          { name: "Re-fitted constant", values: ranging.map(a => a.constantCvRmseCm), color: "#00E5FF" },
+          { name: "Re-fitted linear", values: ranging.map(a => a.linearCvRmseCm), color: "#F2B66D" }
         ]
-      }, true);
-    }
+      },
+      position: {
+        status: `Offline 2D multilateration · ${assessment.positioning.synchronizedCycles.toLocaleString("en-US")} cycles`,
+        context: "Median ≤30 cm · P95 ≤50 cm · Dashed bars show proposal limits",
+        categories: assessment.positioning.metrics.map(m => m.label),
+        axis: "Position error (cm)",
+        series: [
+          { name: "Raw", values: assessment.positioning.metrics.map(m => m.rawCm), color: "#64748B" },
+          { name: "Fixed constant", values: assessment.positioning.metrics.map(m => m.constantCm), color: "#00E5FF" },
+          { name: "Linear", values: assessment.positioning.metrics.map(m => m.linearCm), color: "#F2B66D" },
+          { name: "Proposal limit", values: assessment.positioning.metrics.map(m => m.targetCm), color: "#ADC0D2", target: true }
+        ]
+      }
+    };
+    const view = views[s6ViewMode];
+    document.querySelector("[data-calibration-status]").textContent = view.status;
+    document.querySelector("[data-calibration-context]").textContent = view.context;
+    container.setAttribute("aria-label", `${view.status}. ${view.categories.map((category, i) =>
+      `${category}: ${view.series.map(series => `${series.name} ${series.values[i].toFixed(2)} cm`).join(", ")}`
+    ).join(". ")}`);
 
+    s6Chart.setOption({
+      backgroundColor: "transparent",
+      animation: !matchMedia("(prefers-reduced-motion: reduce)").matches,
+      tooltip: {
+        trigger: "axis",
+        axisPointer: { type: "shadow" },
+        valueFormatter: value => `${Number(value).toFixed(2)} cm`,
+        backgroundColor: "rgba(6, 10, 18, 0.94)",
+        borderColor: "#00E5FF",
+        textStyle: { color: "#F8FAFC", fontFamily: "Consolas", fontSize: 14 }
+      },
+      legend: {
+        data: view.series.map(series => series.name),
+        itemWidth: 16,
+        itemHeight: 8,
+        itemGap: 22,
+        textStyle: { color: "#CBD5E1", fontFamily: "Segoe UI", fontSize: 14 },
+        top: 4
+      },
+      grid: { left: 56, right: 24, top: 58, bottom: 36 },
+      xAxis: {
+        type: "category",
+        data: view.categories,
+        axisLabel: { color: "#CBD5E1", fontFamily: "Consolas", fontSize: 14, interval: 0 },
+        axisLine: { lineStyle: { color: "rgba(148,163,184,0.3)" } }
+      },
+      yAxis: {
+        type: "value",
+        name: view.axis,
+        minInterval: 5,
+        nameTextStyle: { color: "#94A3B8", fontFamily: "Consolas" },
+        axisLabel: { color: "#94A3B8", fontFamily: "Consolas" },
+        splitLine: { lineStyle: { color: "rgba(148,163,184,0.12)" } }
+      },
+      series: view.series.map(series => ({
+        name: series.name,
+        type: "bar",
+        data: series.values,
+        barGap: "18%",
+        barMaxWidth: s6ViewMode === "position" ? 62 : 42,
+        itemStyle: {
+          color: series.target ? "transparent" : series.color,
+          borderRadius: [4, 4, 0, 0],
+          ...(series.target ? { borderColor: series.color, borderWidth: 1.5, borderType: "dashed" } : {})
+        },
+        label: {
+          show: true,
+          position: "top",
+          color: series.target || series.name === "Raw" ? "#ADC0D2" : series.color,
+          fontFamily: "Consolas",
+          fontSize: 12,
+          fontWeight: series.color === "#00E5FF" ? "bold" : "normal",
+          formatter: p => series.target ? `≤${p.value}` : p.value.toFixed(2)
+        }
+      }))
+    }, true);
     s6Chart.resize();
   }
 

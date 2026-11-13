@@ -220,155 +220,26 @@ window.DELTA_DATA = {
   ],
 
   /* ------------------------------------------------------------------------
-     2. UWB CALIBRATION & EXPERIMENTAL RESULTS (SLIDE 6 & Q&A CATEGORY 2)
-     Source: https://uwb.pipatintegration.com/ & assets/uwb_report/
+     2. UWB CALIBRATION ASSESSMENT (SLIDE 7 & Q&A CATEGORY 2)
+     Source: supplied technical report, engineering review 12 Nov 2026
      ------------------------------------------------------------------------ */
-  uwbExperiment: {
-    totalParsedRanges: 50748,
-    selectedRawRanges: 33854,
-    eligibleRanges: 33669,
-    xySnapshots: 3492,
-    gridSize: "2.00 × 2.00 m (Z = 1.00 m)",
-    pointsCount: "9 Spatial Points (P1–P9) + P1_REPEAT",
-    formulaLatex: "y = a \\cdot u + b \\quad \\Longrightarrow \\quad u_{\\text{corrected}} = \\frac{y - b}{a}",
-    overallPooled: {
-      rawRmseCm: 17.71,
-      calRmseCm: 16.15,
-      deltaCm: -1.56,
-      reductionPct: -8.85,
-      singleSampleRawCm: 18.02,
-      singleSampleCalCm: 16.48
-    },
-    centerP9: {"rawRmseCm": 13.75101557590549, "calRmseCm": 12.39493702383219, "reductionPct": -9.861661086686702},
+  uwbCalibrationAssessment: {
+    source: "assets/uwb_report/Delta_RTLS_UWB_Calibration_Constant_vs_Linear_Position_Assessment_EN_2026-11-12.pdf",
+    date: "2026-11-12",
     anchors: [
-  {
-    "id": "A1",
-    "pos": "(0, 0) m",
-    "gainA": 1.0176147544824876,
-    "offsetB_cm": 1.760829259051544,
-    "heldoutPooledRawCm": 16.248007170403575,
-    "heldoutPooledCalCm": 12.362197441848851,
-    "changePct": -23.915608159214063,
-    "note": "Held-out RMSE decreased at this anchor."
-  },
-  {
-    "id": "A2",
-    "pos": "(2, 0) m",
-    "gainA": 1.0264896725890005,
-    "offsetB_cm": -5.506032557142726,
-    "heldoutPooledRawCm": 27.33743399755123,
-    "heldoutPooledCalCm": 28.00258251297706,
-    "changePct": 2.433105153488113,
-    "note": "Held-out RMSE increased. Inspect both P9 and P1_REPEAT."
-  },
-  {
-    "id": "A3",
-    "pos": "(0, 2) m",
-    "gainA": 1.0332456106199481,
-    "offsetB_cm": -10.195170700763235,
-    "heldoutPooledRawCm": 11.68439394333127,
-    "heldoutPooledCalCm": 9.843051734552686,
-    "changePct": -15.758987737909225,
-    "note": "Pooled improvement, although P9 worsened."
-  },
-  {
-    "id": "A4",
-    "pos": "(2, 2) m",
-    "gainA": 0.9379472187964698,
-    "offsetB_cm": -0.3568555683679975,
-    "heldoutPooledRawCm": 10.360714750594122,
-    "heldoutPooledCalCm": 2.9894044629110903,
-    "changePct": -71.14673519276586,
-    "note": "Largest held-out RMSE reduction."
-  }
-],
-    spatialGridPoints: [
-  {
-    "id": "P1",
-    "x": 0.5,
-    "y": 0.5,
-    "radialRmseCm": 5.56,
-    "n": 349
-  },
-  {
-    "id": "P2",
-    "x": 1.0,
-    "y": 0.5,
-    "radialRmseCm": 14.33,
-    "n": 348
-  },
-  {
-    "id": "P3",
-    "x": 1.5,
-    "y": 0.5,
-    "radialRmseCm": 10.79,
-    "n": 348
-  },
-  {
-    "id": "P4",
-    "x": 1.5,
-    "y": 1.0,
-    "radialRmseCm": 8.29,
-    "n": 349
-  },
-  {
-    "id": "P5",
-    "x": 1.5,
-    "y": 1.5,
-    "radialRmseCm": 11.18,
-    "n": 352
-  },
-  {
-    "id": "P6",
-    "x": 1.0,
-    "y": 1.5,
-    "radialRmseCm": 12.94,
-    "n": 351
-  },
-  {
-    "id": "P7",
-    "x": 0.5,
-    "y": 1.5,
-    "radialRmseCm": 21.28,
-    "n": 347
-  },
-  {
-    "id": "P8",
-    "x": 0.5,
-    "y": 1.0,
-    "radialRmseCm": 19.48,
-    "n": 348
-  },
-  {
-    "id": "P9",
-    "x": 1.0,
-    "y": 1.0,
-    "radialRmseCm": 18.58,
-    "n": 350
-  }
-],
-    svgPlates: [
-      { code: "Plate 01", title: "Workspace & Testbed Overview", path: "assets/uwb_report/uwb-report/assets/figures/01_overview.svg", desc: "2.00×2.00 m test grid, Anchors A1–A4, and P1–P9 layout" },
-      { code: "Plate 02", title: "Linear Transfer Characteristic", path: "assets/uwb_report/uwb-report/assets/figures/02_transfer_characteristic.svg", desc: "Measured vs. true range regression y = a·u + b across A1–A4" },
-      { code: "Plate 03", title: "Spatial Error Heatmaps (P1–P9)", path: "assets/uwb_report/uwb-report/assets/figures/03_error_heatmaps.svg", desc: "Before vs. after calibration bias & RMSE across all point-anchor cells" },
-      { code: "Plate 04", title: "Raw Range Error Distributions", path: "assets/uwb_report/uwb-report/assets/figures/04_raw_distributions.svg", desc: "Violin & histogram distributions showing sub-cm jitter vs. static bias" },
-      { code: "Plate 05", title: "Held-Out Error CDF (P9 & P1_REPEAT)", path: "assets/uwb_report/uwb-report/assets/figures/05_heldout_error_cdf.svg", desc: "Cumulative distribution of absolute range error on held-out captures" },
-      { code: "Plate 06", title: "Accuracy Threshold Profiles", path: "assets/uwb_report/uwb-report/assets/figures/06_threshold_profiles.svg", desc: "Percentage of samples meeting strict error thresholds (5, 10, 15, 20 cm)" },
-      { code: "Plate 07", title: "MSE Decomposition (Bias² vs Variance)", path: "assets/uwb_report/uwb-report/assets/figures/07_mse_decomposition.svg", desc: "Decomposes MSE into squared bias and within-capture variance" },
-      { code: "Plate 08", title: "Anchor A1 Time-Series Stability", path: "assets/uwb_report/uwb-report/assets/figures/08_time_a1.svg", desc: "Continuous range trace for Anchor A1 across P1–P9 captures" },
-      { code: "Plate 09", title: "Anchor A2 Time-Series Stability", path: "assets/uwb_report/uwb-report/assets/figures/09_time_a2.svg", desc: "Continuous range trace for Anchor A2 showing multipath cells P2/P5" },
-      { code: "Plate 10", title: "Anchor A3 Time-Series Stability", path: "assets/uwb_report/uwb-report/assets/figures/10_time_a3.svg", desc: "Continuous range trace for Anchor A3 before and after gain correction" },
-      { code: "Plate 11", title: "Anchor A4 Time-Series Stability", path: "assets/uwb_report/uwb-report/assets/figures/11_time_a4.svg", desc: "Continuous range traces for Anchor A4 across captures" },
-      { code: "Plate 12", title: "Windowed Temporal Stability", path: "assets/uwb_report/uwb-report/assets/figures/12_temporal_stability.svg", desc: "Within-capture rolling mean drift vs. sample standard deviation" },
-      { code: "Plate 13", title: "Sample Autocorrelation Analysis", path: "assets/uwb_report/uwb-report/assets/figures/13_autocorrelation.svg", desc: "Lag correlation analysis for independent effective sample sizing" },
-      { code: "Plate 14", title: "Channel Availability & Packet Yield", path: "assets/uwb_report/uwb-report/assets/figures/14_availability.svg", desc: "Valid ranging rate across anchors (33,669 eligible of 33,854 selected)" },
-      { code: "Plate 15", title: "RX Power Diagnostics (dBm)", path: "assets/uwb_report/uwb-report/assets/figures/15_rx_power_diagnostics.svg", desc: "Received signal power vs. range residual correlation" },
-      { code: "Plate 16", title: "Return Repeatability (P1 vs P1_REPEAT)", path: "assets/uwb_report/uwb-report/assets/figures/16_return_repeatability.svg", desc: "Mean range changes between captures, with different boot sessions" },
-      { code: "Plate 17", title: "Tag Boot & Session Timeline", path: "assets/uwb_report/uwb-report/assets/figures/17_boot_history.svg", desc: "Chronological capture timeline and firmware session tracking" },
-      { code: "Plate 18", title: "Full 50,748-Sample Capture Inventory", path: "assets/uwb_report/uwb-report/assets/figures/18_capture_inventory.svg", desc: "Audit of all 16 capture files (10 selected and 6 excluded captures)" },
-      { code: "Plate 19", title: "2D (X,Y) Multilateration Point Clouds", path: "assets/uwb_report/uwb-report/assets/figures/19_xy_clouds.svg", desc: "3,492 solved 2D (X,Y) position clouds vs. ground-truth grid P1–P9" },
-      { code: "Plate 20", title: "2D (X,Y) Spatial Error Summary", path: "assets/uwb_report/uwb-report/assets/figures/20_xy_error_summary.svg", desc: "Archived pre-correction XY offsets and per-point radial RMSE" }
-    ]
+      { id: "A1", offsetCm: 0.00, rawRmseCm: 10.90, constantRmseCm: 10.90, linearRmseCm: 8.94, constantCvRmseCm: 10.72, linearCvRmseCm: 13.71 },
+      { id: "A2", offsetCm: 18.28, rawRmseCm: 19.17, constantRmseCm: 5.88, linearRmseCm: 5.87, constantCvRmseCm: 6.85, linearCvRmseCm: 8.39 },
+      { id: "A3", offsetCm: 28.97, rawRmseCm: 30.76, constantRmseCm: 9.94, linearRmseCm: 9.18, constantCvRmseCm: 11.60, linearCvRmseCm: 11.20 },
+      { id: "A4", offsetCm: 17.87, rawRmseCm: 18.44, constantRmseCm: 4.53, linearRmseCm: 3.86, constantCvRmseCm: 5.43, linearCvRmseCm: 5.45 }
+    ],
+    overall: { rawRmseCm: 21.14, constantRmseCm: 8.36, linearRmseCm: 7.40, reductionPct: 60.4, constantCvRmseCm: 9.13, linearCvRmseCm: 10.30 },
+    positioning: {
+      synchronizedCycles: 2441,
+      metrics: [
+        { label: "Median", rawCm: 14.94, constantCm: 8.36, linearCm: 7.84, targetCm: 30 },
+        { label: "P95", rawCm: 26.67, constantCm: 22.65, linearCm: 22.98, targetCm: 50 }
+      ]
+    }
   },
 
   wiringData: {

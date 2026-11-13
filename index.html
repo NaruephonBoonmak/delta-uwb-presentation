@@ -22,7 +22,7 @@
 
   <!-- Main Presentation Stylesheet -->
   <link rel="stylesheet" href="viewport-base.css" />
-  <link rel="stylesheet" href="styles.css?v=dtia-logo" />
+  <link rel="stylesheet" href="styles.css?v=calibration-pdf-v2" />
 </head>
 <body>
   <div class="deck-viewport">
@@ -161,28 +161,30 @@
 
     <!-- ======================================================================
          SLIDE 7 (PHASE 4) — UWB EXPERIMENTAL ACCURACY & CALIBRATION
-         (Merged original Slides 9 + 10 into 1 high-impact scientific dashboard)
+         Fixed constant vs. linear assessment · Engineering review, 12 Nov 2026
          ====================================================================== -->
-    <section class="slide speaker-slide" data-slide="7">
+    <section class="slide speaker-slide calibration-slide" data-slide="7">
       <h1>UWB <span class="accent">Calibration</span></h1>
       <div class="result-layout">
         <div class="result-chart">
-          <span class="story-status" data-calibration-status>Offline range calibration · Before and after</span>
-          <div id="chart-slide6-main" aria-label="UWB range RMSE and archived XY error charts"></div>
+          <span class="story-status" data-calibration-status>Range RMSE · Per-position medians</span>
+          <div id="chart-slide6-main" role="img" aria-label="Raw, fixed constant and linear ranging RMSE by anchor"></div>
+          <p class="calibration-context" data-calibration-context>Fixed offsets (cm): A1 +0.00 · A2 +18.28 · A3 +28.97 · A4 +17.87</p>
         </div>
         <div class="result-metrics">
-          <div class="primary-metric"><span>Static range RMSE · P9 + P1 return</span><strong>17.71 <em>→</em> 16.15 <small>cm</small></strong><b>−8.85%</b></div>
-          <div><span>Anchor A4 · Held-out</span><strong>10.36 <em>→</em> 2.99 <small>cm</small></strong><b>−71.15%</b></div>
-          <div class="sample-count"><strong>5 / 8</strong><span>test point–anchor pairs improved</span></div>
+          <div class="primary-metric"><span>Range RMSE · Raw → fixed constant</span><strong>21.14 <em>→</em> 8.36 <small>cm</small></strong><b>−60.4%</b><span>Retain the fixed constant profile</span></div>
+          <div><span>Cross-position RMSE · Constant / linear</span><strong>9.13 <em>/</em> 10.30 <small>cm</small></strong><span>Constant transfers better · Re-fitted per fold</span></div>
+          <div class="position-metric"><span>Offline 2D position error · Constant</span><strong>8.36 <em>/</em> 22.65 <small>cm</small></strong><span>Median / P95 · Targets ≤30 / ≤50 cm</span><b>PASS <small>· 2,441 synchronized cycles</small></b></div>
         </div>
       </div>
       <div class="speaker-controls">
         <div class="story-steps" aria-label="Calibration chart">
-          <button class="stage-btn active" data-s6-chart-mode="anchors">Range RMSE</button>
-          <button class="stage-btn" data-s6-chart-mode="heatmap">Archived XY</button>
+          <button class="stage-btn active" data-s6-chart-mode="anchors" aria-pressed="true">Range RMSE</button>
+          <button class="stage-btn" data-s6-chart-mode="cross-position" aria-pressed="false">Cross-position</button>
+          <button class="stage-btn" data-s6-chart-mode="position" aria-pressed="false">Position error</button>
         </div>
-        <span class="story-footnote">Related ranging method · <a href="https://doi.org/10.1109/WPNC.2016.7822844" target="_blank" rel="noopener noreferrer">Neirynck et al. (2016)</a> · 50,748 ranges recorded across all captures</span>
-        <button class="stage-btn" data-open-qa-tab="calibration">Data &amp; 20 plates →</button>
+        <span class="story-footnote">Ranging method · <a href="https://doi.org/10.1109/WPNC.2016.7822844" target="_blank" rel="noopener noreferrer">Neirynck et al. (2016)</a><br>Offline assessment · Independent validation &amp; live positioning pending</span>
+        <a class="stage-btn calibration-report" href="assets/uwb_report/Delta_RTLS_UWB_Calibration_Constant_vs_Linear_Position_Assessment_EN_2026-11-12.pdf" target="_blank" rel="noopener noreferrer">Full report · 12 Nov 2026 →</a>
       </div>
     </section>
 
@@ -250,8 +252,8 @@
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="calibration" aria-haspopup="dialog">
-          <span class="qa-menu-preview"><img src="assets/qa/covers/calibration.webp" width="840" height="460" alt=""></span>
-          <span class="qa-menu-label"><strong>UWB<br>Calibration</strong><small>Test results and 20 SVG figures</small></span>
+          <span class="qa-menu-preview calibration-preview"><span>RANGE RMSE</span><strong>21.14 <i>→</i> 8.36 <small>cm</small></strong><span>Fixed constant · −60.4%</span></span>
+          <span class="qa-menu-label"><strong>UWB<br>Calibration</strong><small>Constant vs. linear · PDF assessment</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card" type="button" data-open-qa-tab="wiring" aria-haspopup="dialog">
@@ -260,7 +262,7 @@
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
         <button class="qa-menu-card qa-evidence-card" type="button" data-open-qa-tab="references" aria-haspopup="dialog">
-          <span class="qa-menu-preview"><img src="assets/qa/covers/references.webp" width="840" height="460" alt=""></span>
+          <span class="qa-menu-preview reference-preview"><span>REFERENCE PAPERS</span><strong>UWB · RTLS</strong><span>Neirynck · Schjørring · Yuan et al.</span></span>
           <span class="qa-menu-label"><strong>References &amp;<br>Test Evidence</strong><small>Research, manuals, and team test records</small></span>
           <span class="qa-menu-arrow" aria-hidden="true">→</span>
         </button>
@@ -346,64 +348,53 @@
       </section>
 
       <!-- ====================================================================
-           Q&A CATEGORY 2: UWB CALIBRATION & FULL 20-PLATE SCIENTIFIC ATLAS
+           Q&A CATEGORY 2: SUPPLIED PDF CALIBRATION ASSESSMENT
            ==================================================================== -->
       <div class="qa-pane qa-calibration" data-qa-pane="calibration">
         <div class="eng-panel">
           <div class="eng-panel-header">
-            <div class="eng-panel-title">
-              OFFLINE UWB RANGE CALIBRATION &amp; PER-ANCHOR COEFFICIENTS
-            </div>
-            <span class="status-badge info">STATIC LAB DATA</span>
+            <div class="eng-panel-title">FIXED CONSTANT VS. LINEAR · REPORT SUMMARY</div>
+            <span class="status-badge info">12 NOV 2026 · OFFLINE</span>
           </div>
           <div class="qa-calibration-summary">
             <div class="qa-calibration-method">
-              <div class="eng-panel-title">
-                LINEAR CALIBRATION EQUATION
-              </div>
-              <div style="font-size:13px;text-align:center;padding:4px 0;">
-                $$y = a \cdot u + b \implies u_{\text{corrected}} = \frac{y - b}{a}$$
-              </div>
+              <div class="eng-panel-title">RETAIN THE FIXED CONSTANT PROFILE</div>
               <div class="qa-calibration-description">
-                • <strong>Training Grid:</strong> Perimeter points $P1\text{–}P8$<br/>
-                • <strong>Spatial Held-Out:</strong> Center $P9\ (1.0, 1.0\text{ m})$<br/>
-                • <strong>Temporal Repeat:</strong> P1 → P1_REPEAT (mean range shift)<br/>
-                A1 +24.16 cm · A2 +32.81 cm · A3 -11.14 cm · A4 +5.68 cm<br/>
-                The boot session changed, so the cause of the range shift remains unresolved<br/>
-                <strong>MSE = Bias² + Variance</strong><br/>
-                50,748 parsed ranges · 33,669 eligible · 3,492 archived XY snapshots<br/>
-                P9 range RMSE (point means): 13.75 → 12.39 cm<br/>
-                The fitted coefficients have not been deployed.
+                <p><strong>Range RMSE: 21.14 → 8.36 cm (−60.4%).</strong> The exploratory linear fit reaches 7.40 cm in-sample, but does not replace the fixed profile.</p>
+                <p><strong>Cross-position RMSE:</strong> re-fitted constant 9.13 cm vs. re-fitted linear 10.30 cm. Leave-one-position-out folds re-fit both models; these are not the frozen operational offsets.</p>
+                <p><strong>Calculation:</strong> corrected range = raw range + per-anchor offset. Reference distance includes the 0.25 m anchor-to-tag height difference.</p>
+                <p>Ranging RMSE uses equally weighted per-position medians. Cross-position evaluation reuses the calibration data; independent field validation is pending.</p>
               </div>
             </div>
-
             <div class="qa-table-scroll">
               <table class="eng-table">
-              <thead>
-                <tr>
-                  <th>Anchor (Coords)</th>
-                  <th>Slope ($a$)</th>
-                  <th>Offset ($b$)</th>
-                  <th>Held-Out Raw RMSE</th>
-                  <th>Held-Out Cal RMSE</th>
-                  <th>Change (%)</th>
-                  <th>Engineering Finding</th>
-                </tr>
-              </thead>
+                <caption class="qa-calibration-description">Per-anchor results from the supplied report · All values in cm</caption>
+                <thead><tr>
+                  <th>Anchor</th><th>Fixed offset</th><th>Raw RMSE</th><th>Constant RMSE</th><th>Linear fit RMSE</th><th>Constant CV RMSE</th><th>Linear CV RMSE</th>
+                </tr></thead>
                 <tbody id="qa-uwb-anchors-tbody"></tbody>
               </table>
+              <p class="qa-calibration-description">A1 remains uncorrected because its error changes sign across positions. A2 and A4 benefit strongly from constant correction; A3 retains position-dependent residuals.</p>
             </div>
           </div>
         </div>
-
         <div class="eng-panel">
           <div class="eng-panel-header">
-            <div class="eng-panel-title">
-              COMPLETE 20-PLATE SCIENTIFIC GRAPH ATLAS (CLICK ANY PLATE TO ZOOM HIGH-RES SVG)
-            </div>
-            <span class="status-badge info">PLATES 01–20 VERIFIED</span>
+            <div class="eng-panel-title">OFFLINE 2D POSITIONING · 2,441 SYNCHRONIZED CYCLES</div>
+            <a class="stage-btn calibration-report" href="assets/uwb_report/Delta_RTLS_UWB_Calibration_Constant_vs_Linear_Position_Assessment_EN_2026-11-12.pdf" target="_blank" rel="noopener noreferrer">Source PDF →</a>
           </div>
-          <div class="svg-atlas-grid" id="qa-svg-atlas-grid"></div>
+          <div class="qa-table-scroll">
+            <table class="eng-table">
+              <caption class="qa-calibration-description">Positioning is assessed separately from ranging · All errors and targets in cm</caption>
+              <thead><tr><th>Assessment</th><th>Proposal target</th><th>Raw</th><th>Constant</th><th>Linear</th><th>Result</th></tr></thead>
+              <tbody id="qa-uwb-position-tbody"></tbody>
+            </table>
+          </div>
+          <div class="qa-calibration-description">
+            <p><strong>Both proposal thresholds are met numerically offline.</strong> Independent validation at new stationary locations and real-time X/Y positioning tests remain pending.</p>
+            <p><strong>Monitoring:</strong> check measurement age, temporal variation, anchor disagreement and solver residuals. Strong RX power alone does not guarantee accurate ranging.</p>
+            <p><strong>Profile integrity:</strong> retain raw and corrected ranges separately with a profile identifier and coefficient version to prevent double correction.</p>
+          </div>
         </div>
       </div>
 
@@ -429,7 +420,7 @@
           <h2 id="evidence-research">Published research</h2>
           <ul>
             <li><a href="https://doi.org/10.3390/s20236766" target="_blank" rel="noopener noreferrer">Rácz-Szabó et al. (2020) ↗</a><p>Slide 2 · Review of real-time locating systems for production control and logistics.</p></li>
-            <li><a href="https://doi.org/10.1109/WPNC.2016.7822844" target="_blank" rel="noopener noreferrer">Neirynck et al. (2016) ↗</a><p>Slide 7 · Alternative double-sided two-way ranging addresses clock drift. The prototype’s offline range correction fits a per-anchor linear model.</p></li>
+            <li><a href="https://doi.org/10.1109/WPNC.2016.7822844" target="_blank" rel="noopener noreferrer">Neirynck et al. (2016) ↗</a><p>Slide 7 · Alternative double-sided two-way ranging addresses clock drift. Ranging-method reference; the current calibration assessment uses the supplied 12 Nov 2026 report.</p></li>
             <li><a href="https://doi.org/10.1109/ACCESS.2020.2992475" target="_blank" rel="noopener noreferrer">Keung et al. (2020) ↗</a><p>Slide 3 · Mobile robot route conflicts in a fulfillment system.</p></li>
             <li><a href="https://doi.org/10.3390/electronics11203294" target="_blank" rel="noopener noreferrer">Schjørring et al. (2022) ↗</a><p>Slide 5 · UWB positioning in static and mobile industrial scenarios.</p></li>
             <li><a href="https://doi.org/10.1109/TIM.2021.3074403" target="_blank" rel="noopener noreferrer">Barbieri et al. (2021) ↗</a><p>Slide 5 · Multipath and non-line-of-sight effects in a smart factory.</p></li>
@@ -443,7 +434,7 @@
           <h2 id="evidence-team">Prototype test evidence</h2>
           <ul>
             <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/agvuart/VALIDATION.md" target="_blank" rel="noopener noreferrer">AGV UART validation ↗</a><p>Slide 6 · Host tests and firmware builds for the earlier UART prototype. Rev D hardware validation is pending.</p></li>
-            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-espnow/calibration_series_20261024/assessment/README.md" target="_blank" rel="noopener noreferrer">Held-out range calibration ↗</a><p>Slide 7 · Static range RMSE fell from 17.71 to 16.15 cm across held-out point means. Five of eight point–anchor pairs improved.</p></li>
+            <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-espnow/calibration_series_20261024/assessment/README.md" target="_blank" rel="noopener noreferrer">Held-out range calibration ↗</a><p>Calibration source reference. The current results are summarized from the supplied 12 Nov 2026 PDF.</p></li>
             <li><a href="https://github.com/MechECI404/UWB/blob/48785f3352bf0d741f8e23acb4930fdcc24ef878/data/remington-dual/live_20261029_174727/README.md" target="_blank" rel="noopener noreferrer">Two-tag live capture ↗</a><p>Slides 4 and 8 · Shared lab coordinates and X–Y for both tags. Some records had incomplete or stale ranges.</p></li>
           </ul>
         </section>
@@ -464,7 +455,7 @@
   </aside>
 
   <!-- ========================================================================
-       HIGH-RESOLUTION LIGHTBOX MODAL FOR DIAGRAMS & 20 SVG PLATES
+       HIGH-RESOLUTION LIGHTBOX MODAL FOR DIAGRAMS
        ======================================================================== -->
   <div class="lightbox-modal" id="lightbox-modal" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption" aria-hidden="true" inert>
     <div style="position:absolute;top:20px;right:28px;">
@@ -483,10 +474,10 @@
     </div>
   </div>
 
-  <script src="data.js?v=l298n-rev-d"></script>
-  <script src="canvases.js?v=research"></script>
+  <script src="data.js?v=calibration-pdf-v2"></script>
+  <script src="canvases.js?v=calibration-pdf-v2"></script>
   <script src="assets/stl_bundle.js"></script>
   <script src="scene3d.js?v=twin-sync"></script>
-  <script src="app.js?v=l298n-booth"></script>
+  <script src="app.js?v=calibration-pdf-v2"></script>
 </body>
 </html>

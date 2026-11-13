@@ -228,53 +228,31 @@
   }
 
   function initQaCategory2Calibration() {
-    const tbody = document.getElementById("qa-uwb-anchors-tbody");
-    const grid = document.getElementById("qa-svg-atlas-grid");
-    const exp = window.DELTA_DATA.uwbExperiment;
-
-    if (tbody) {
-      tbody.innerHTML = exp.anchors
-        .map(
-          (a) => `
+    const assessment = window.DELTA_DATA.uwbCalibrationAssessment;
+    const anchors = document.getElementById("qa-uwb-anchors-tbody");
+    if (anchors) {
+      anchors.innerHTML = assessment.anchors.map(a => `
         <tr>
-          <td class="mono qa-value">${a.id} ${a.pos}</td>
-          <td class="mono">${a.gainA.toFixed(4)}</td>
-          <td class="mono">${a.offsetB_cm > 0 ? "+" : ""}${a.offsetB_cm.toFixed(2)} cm</td>
-          <td class="mono">${a.heldoutPooledRawCm.toFixed(2)} cm</td>
-          <td class="mono qa-value-good">${a.heldoutPooledCalCm.toFixed(2)} cm</td>
-          <td class="mono ${a.changePct < 0 ? "qa-value-good" : "qa-value-warn"}">
-            ${a.changePct > 0 ? "+" : ""}${a.changePct.toFixed(2)}%
-          </td>
-          <td class="qa-figure-description">${a.note}</td>
-        </tr>
-      `
-        )
-        .join("");
+          <td class="mono qa-value">${a.id}</td>
+          <td class="mono">+${a.offsetCm.toFixed(2)}</td>
+          <td class="mono">${a.rawRmseCm.toFixed(2)}</td>
+          <td class="mono qa-value-good">${a.constantRmseCm.toFixed(2)}</td>
+          <td class="mono">${a.linearRmseCm.toFixed(2)}</td>
+          <td class="mono">${a.constantCvRmseCm.toFixed(2)}</td>
+          <td class="mono">${a.linearCvRmseCm.toFixed(2)}</td>
+        </tr>`).join("");
     }
-
-    if (grid) {
-      grid.innerHTML = exp.svgPlates
-        .map(
-          (p) => `
-        <button type="button" class="svg-plate-card" data-plate-src="${p.path}" data-plate-title="${p.code}: ${p.title} — ${p.desc}">
-          <img src="${p.path}" alt="${p.title}" loading="lazy" />
-          <span class="p-code">${p.code}</span>
-          <span class="p-title">${p.title}</span>
-          <span class="qa-figure-description">${p.desc}</span>
-        </button>
-      `
-        )
-        .join("");
-
-      grid.querySelectorAll(".svg-plate-card").forEach((card) => {
-        card.addEventListener("click", () => {
-          openLightbox(
-            card.getAttribute("data-plate-src"),
-            card.getAttribute("data-plate-title"),
-            false
-          );
-        });
-      });
+    const positioning = document.getElementById("qa-uwb-position-tbody");
+    if (positioning) {
+      positioning.innerHTML = assessment.positioning.metrics.map(m => `
+        <tr>
+          <td class="qa-value">${m.label} position error</td>
+          <td class="mono">≤${m.targetCm}</td>
+          <td class="mono">${m.rawCm.toFixed(2)}</td>
+          <td class="mono qa-value-good">${m.constantCm.toFixed(2)}</td>
+          <td class="mono">${m.linearCm.toFixed(2)}</td>
+          <td class="qa-value-good">${m.constantCm <= m.targetCm && m.linearCm <= m.targetCm ? "PASS (offline)" : "FAIL"}</td>
+        </tr>`).join("");
     }
   }
 
@@ -299,7 +277,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     LIGHTBOX MODAL FOR HIGH-RES DIAGRAMS & SVG PLATES
+     LIGHTBOX MODAL FOR HIGH-RES DIAGRAMS
      ------------------------------------------------------------------------ */
   function openLightbox(src, caption, darkBg = false) {
     const modal = document.getElementById("lightbox-modal");
@@ -420,7 +398,9 @@
       btn.addEventListener("click", () => {
         const mode = btn.getAttribute("data-s6-chart-mode");
         document.querySelectorAll("[data-s6-chart-mode]").forEach((b) => {
-          b.classList.toggle("active", b.getAttribute("data-s6-chart-mode") === mode);
+          const active = b.getAttribute("data-s6-chart-mode") === mode;
+          b.classList.toggle("active", active);
+          b.setAttribute("aria-pressed", String(active));
         });
         window.DELTA_CANVASES.initOrUpdateSlide6Chart(mode);
       });
